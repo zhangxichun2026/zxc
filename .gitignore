@@ -4,3 +4,6 @@ desktop.ini
 .DS_Store
 *.swp
 *~
+
+# 改名前的原件备份：已从仓库移除（原件保留在 git 历史中，可恢复）
+zhang_备份/
