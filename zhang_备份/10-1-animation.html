@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛博朋克能量核心 - 张熙淳</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace; /* 科技感字体 */
+            background-color: #0a0a0f;
+            /* 高级感：全息网格背景 */
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: bg-pulse 5s infinite alternate;
+        }
+
+        /* 背景呼吸动画 */
+        @keyframes bg-pulse {
+            0% { background-color: #0a0a0f; }
+            100% { background-color: #11111a; }
+        }
+
+        /* 核心盒子：带有旋转边框的容器 */
+        .box-wrapper {
+            position: relative;
+            width: min(72vw, 320px);
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            /* 让盒子在空中漂浮移动 */
+            animation: box-float 12s infinite ease-in-out;
+        }
+
+        /* 漂浮 + 轻微旋转动画 */
+        @keyframes box-float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10vw, -10vh) rotate(5deg); }
+            50% { transform: translate(-10vw, 10vh) rotate(-5deg); }
+            75% { transform: translate(8vw, 8vh) rotate(3deg); }
+        }
+
+        /* 真正的盒子本体：玻璃质感，背景颜色变化 */
+        .box {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 2px;
+            z-index: 10;
+            /* 毛玻璃效果，让它看起来像发光的水晶 */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            /* 背景颜色和发光阴影同步变化（4种颜色 + 霓虹光晕） */
+            animation: cyber-color 8s infinite;
+        }
+
+        /* 核心炫技：霓虹变色 + 发光阴影 */
+        @keyframes cyber-color {
+            0%, 100% { 
+                background: rgba(239, 71, 111, 0.8); 
+                box-shadow: 0 0 20px #ef476f, inset 0 0 20px #ef476f; 
+            }
+            25% { 
+                background: rgba(255, 209, 102, 0.8); 
+                box-shadow: 0 0 20px #ffd166, inset 0 0 20px #ffd166; 
+            }
+            50% { 
+                background: rgba(6, 214, 160, 0.8); 
+                box-shadow: 0 0 20px #06d6a0, inset 0 0 20px #06d6a0; 
+            }
+            75% { 
+                background: rgba(17, 138, 178, 0.8); 
+                box-shadow: 0 0 20px #118ab2, inset 0 0 20px #118ab2; 
+            }
+        }
+
+        /* 文字发光，增加全息感 */
+        .box-text {
+            animation: text-glow 2s infinite alternate;
+        }
+
+        @keyframes text-glow {
+            from { text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+            to { text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 25px rgba(255,255,255,0.8); }
+        }
+
+        /* 用伪元素做一个不断旋转的科技边框 */
+        .box-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border-radius: 30px;
+            border: 2px dashed rgba(0, 242, 254, 0.5);
+            animation: spin-border 10s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 边框反向旋转，制造时空扭曲感 */
+        .box-wrapper::after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            right: -25px;
+            bottom: -25px;
+            border-radius: 40px;
+            border: 1px solid rgba(240, 147, 251, 0.3);
+            animation: spin-border-reverse 15s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes spin-border {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-border-reverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* 盒子内部的小亮点，像能量核心 */
+        .core-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px white, 0 0 30px white;
+            animation: dot-pulse 1s infinite alternate;
+            z-index: 11;
+            pointer-events: none;
+        }
+
+        @keyframes dot-pulse {
+            from { transform: scale(0.8); opacity: 0.5; }
+            to { transform: scale(1.5); opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 外层包裹器，负责漂浮和旋转边框 -->
+    <div class="box-wrapper">
+        <!-- 内部能量点 -->
+        <div class="core-dot"></div>
+        
+        <!-- 核心盒子，负责变色和发光 -->
+        <div class="box">
+            <div class="box-text">24002060415<br>张熙淳</div>
+        </div>
+    </div>
+
+</body>
+</html>

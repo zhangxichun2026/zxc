@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式全屏视口 - 张熙淳</title>
+    <style>
+        /* ★★★ 扩展要求核心：使用 rem 作为长度单位 ★★★ */
+        /* 1rem = 16px。我们会根据视口大小改变 html 的 font-size，
+           这样所有使用 rem 的元素都会自动缩放 */
+        html {
+            font-size: 16px;
+            transition: font-size 0.3s ease; /* 字体缩放平滑过渡 */
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        /* ★★★ 要求1：全屏盒子（视口变化时背景颜色变化） ★★★ */
+        .fullscreen-box {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 1s ease, color 0.5s ease;
+            
+            /* 默认状态：极暗背景，青蓝色点缀（像深邃宇宙） */
+            background-color: #0a0a0f; 
+            color: #00f2fe;
+        }
+
+        /* 姓名文字样式 */
+        .name-text {
+            font-size: 4rem; /* 默认 64px (4 * 16px) */
+            font-weight: 900;
+            letter-spacing: 0.8rem;
+            text-shadow: 0 0 1.5rem currentColor; /* 利用当前颜色发光 */
+            animation: text-pulse 3s infinite alternate;
+        }
+
+        /* 辅助说明文字，也用 rem */
+        .sub-text {
+            font-size: 1rem;
+            margin-top: 2rem;
+            opacity: 0.6;
+            letter-spacing: 0.3rem;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* 文字呼吸动画 */
+        @keyframes text-pulse {
+            0% { opacity: 0.7; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1.02); }
+        }
+
+        /* =========================================================
+           ★★★ 核心：Media Query 媒体查询 (视口变化背景变化) ★★★
+           ========================================================= */
+
+        /* 1. 平板设备 (视口 >= 576px) */
+        @media screen and (min-width: 576px) {
+            html { font-size: 18px; } /* 根字号变大，带动名字变大 */
+            .fullscreen-box { 
+                background-color: #1a0b2e; /* 深空紫 */
+                color: #f093fb;      /* 霓虹粉色 */
+            }
+        }
+
+        /* 2. 电脑屏幕 (视口 >= 768px) */
+        @media screen and (min-width: 768px) {
+            html { font-size: 22px; }
+            .fullscreen-box { 
+                background-color: #001a33; /* 深海蓝 */
+                color: #4facfe;      /* 亮天蓝 */
+            }
+        }
+
+        /* 3. 大屏设备 (视口 >= 1024px) */
+        @media screen and (min-width: 1024px) {
+            html { font-size: 28px; } 
+            .fullscreen-box { 
+                /* 极光渐变背景 */
+                background: linear-gradient(135deg, #0f172a 0%, #2e1065 100%);
+                color: #00f2fe;      /* 赛博青色 */
+            }
+        }
+
+        /* 4. 巨幕 (视口 >= 1440px) */
+        @media screen and (min-width: 1440px) {
+            html { font-size: 36px; } 
+            .fullscreen-box { 
+                background: linear-gradient(135deg, #020617 0%, #4c0519 100%); /* 暗黑玫瑰渐变 */
+                color: #f43f5e;      /* 玫瑰红 */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 全屏盒子 -->
+    <div class="fullscreen-box">
+        <!-- ★★★ 要求3：包含文字张熙淳 ★★★ -->
+        <div class="name-text">张熙淳</div>
+        <div class="sub-text">Resize Window to see the magic</div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> 
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .zhang_box{ }
+        .zhang_zitem{
+            display: flex;
+            padding: 10px 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px dotted #ccc;
+        }
+        .zhang_zitem img{
+            width: 100px;
+        }
+        .zhang_ytext{
+            flex-grow: 1;
+            margin-left: 10px;
+            display:flex;
+            flex-wrap:wrap;
+        }
+        .zhang_ytext h3{
+            width: 100%;
+            font-size: 16px;
+            line-height: 40px;
+            color: #999;
+        }
+        .zhang_author{
+            flex-grow: 1;
+            padding-right: 9px;
+        }
+        .zhang_time{
+            margin-left: 20px;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="zhang_box">
+        <div class="zhang_zitem">
+            <img src="5.jpg">
+            <div class="zhang_ytext">
+                <h3>标题</h3>
+                <span class="zhang_author">张熙淳</span>
+                <span class="zhang_time">2020-10-10</span>
+            </div>
+        </div>
+    </div>
+    <div class="zhang_box">
+        <div class="zhang_zitem">
+            <img src="2.jpg">
+            <div class="zhang_ytext">
+                <h3>标题</h3>
+                <span class="zhang_author">张熙淳</span>
+                <span class="zhang_time">2020-10-10</span>
+            </div>
+        </div>
+    </div>
+    <div class="zhang_box">
+        <div class="zhang_zitem">
+            <img src="3.jpg">
+            <div class="zhang_ytext">
+                <h3>标题</h3>
+                <span class="zhang_author">张熙淳</span>
+                <span class="zhang_time">2020-10-10</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

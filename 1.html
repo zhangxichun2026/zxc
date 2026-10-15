@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Background</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+            background: radial-gradient(circle at top, #1d2a6d, #090d1a 55%, #05070d 100%);
+        }
+
+        #zhang_bgCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 0;
+        }
+
+        .zhang_content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .zhang_content h1 {
+            color: #ffffff;
+            font-size: clamp(2.5rem, 6vw, 6rem);
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 20px rgba(255,255,255,0.35);
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="zhang_bgCanvas"></canvas>
+
+    <div class="zhang_content">
+        <h1>张熙淳</h1>
+    </div>
+
+    <script>
+        const zhang_canvas = document.getElementById('zhang_bgCanvas');
+        const zhang_ctx = zhang_canvas.getContext('2d');
+
+        let zhang_particles = [];
+        const zhang_particleCount = 120;
+
+        function zhang_resizeCanvas() {
+            zhang_canvas.width = window.innerWidth;
+            zhang_canvas.height = window.innerHeight;
+            zhang_initParticles();
+        }
+
+        function zhang_initParticles() {
+            zhang_particles = Array.from({ length: zhang_particleCount }, () => ({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                radius: Math.random() * 2.5 + 1.2
+            }));
+        }
+
+        function zhang_animate() {
+            zhang_ctx.clearRect(0, 0, zhang_canvas.width, zhang_canvas.height);
+
+            for (let zhang_i = 0; zhang_i < zhang_particles.length; zhang_i++) {
+                const zhang_p = zhang_particles[zhang_i];
+
+                zhang_p.x += zhang_p.vx;
+                zhang_p.y += zhang_p.vy;
+
+                if (zhang_p.x <= 0 || zhang_p.x >= zhang_canvas.width) zhang_p.vx *= -1;
+                if (zhang_p.y <= 0 || zhang_p.y >= zhang_canvas.height) zhang_p.vy *= -1;
+
+                zhang_ctx.beginPath();
+                zhang_ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                zhang_ctx.arc(zhang_p.x, zhang_p.y, zhang_p.radius, 0, Math.PI * 2);
+                zhang_ctx.fill();
+
+                for (let zhang_j = zhang_i + 1; zhang_j < zhang_particles.length; zhang_j++) {
+                    const zhang_q = zhang_particles[zhang_j];
+                    const zhang_dx = zhang_p.x - zhang_q.x;
+                    const zhang_dy = zhang_p.y - zhang_q.y;
+                    const zhang_distance = Math.sqrt(zhang_dx * zhang_dx + zhang_dy * zhang_dy);
+
+                    if (zhang_distance < 120) {
+                        zhang_ctx.beginPath();
+                        zhang_ctx.moveTo(zhang_p.x, zhang_p.y);
+                        zhang_ctx.lineTo(zhang_q.x, zhang_q.y);
+                        zhang_ctx.strokeStyle = `rgba(173, 216, 255, ${1 - zhang_distance / 120})`;
+                        zhang_ctx.lineWidth = 1;
+                        zhang_ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(zhang_animate);
+        }
+
+        zhang_resizeCanvas();
+        zhang_animate();
+        window.addEventListener('resize', zhang_resizeCanvas);
+    </script>
+</body>
+</html>

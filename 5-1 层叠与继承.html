@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css.css">
+    <style>
+        p {
+            color: red;
+            font-size: 100px;
+        }
+        .zhang_test{
+            color: green;
+        }
+        #zhang_text{
+            color: purple;
+        }
+        .zhang_box p{
+            color: orange;
+        }
+        #zhang_box #zhang_text{
+            color: silver;
+        }
+        .zhang_text{
+            color: yellow!important;
+             /* hack,可覆盖内嵌css */
+        }
+        /* 优先级: id>class>标签 */
+        #zhang_box{
+            /* 宽400，高400，灰色背景，距离，字间距5px */
+            width:1400px;
+            height:400px;
+            background-color: gray;
+            margin:10px;
+            padding:10px;
+            letter-spacing:25px;
+            /* 圆角矩形50% */
+            border-radius: 50%;
+        }
+    </style>
+    <!-- 后定义的覆盖前定义的 -->
+</head>
+<body>
+    <h2>层叠与继承</h2>
+    <div id="zhang_box" class="zhang_box">
+        <p id="zhang_text" class="zhang_text">415 张熙淳</p>
+        <p>层叠与继承的优先级</p>
+    </div>
+</body>
+</html>

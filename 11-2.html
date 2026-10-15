@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="张熙淳《高级网页设计》课程作业 - CSS3 3D 动画综合展示">
+    <title>CSS3 3D 动画 - 张熙淳</title>
+    <style>
+        /* ===================== 全局与配色变量 =====================
+           用 CSS 自定义属性统一管理配色，方便整体换肤。
+           注意：自定义属性也按本课程约定加了 zhang_ 前缀。            */
+        :root {
+            --zhang_bg: #0a0a0f;
+            --zhang_bg-2: #11111a;
+            --zhang_cyan: #00f2fe;
+            --zhang_pink: #f093fb;
+            --zhang_text: #eaf6ff;
+            --zhang_muted: rgba(234, 246, 255, 0.62);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            padding: 48px 20px 72px;
+            font-family: "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+            color: var(--zhang_text);
+            background-color: var(--zhang_bg);
+            /* 全息网格背景，与第 10 章动画作业保持同一视觉语言 */
+            background-image:
+                linear-gradient(rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* ===================== 页头 ===================== */
+        .zhang_header {
+            max-width: 960px;
+            margin: 0 auto 44px;
+            text-align: center;
+        }
+
+        .zhang_header-title {
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, var(--zhang_cyan), var(--zhang_pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zhang_header-sub {
+            margin-top: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            letter-spacing: 3px;
+            color: var(--zhang_muted);
+        }
+
+        /* ===================== 章节通用 ===================== */
+        .zhang_page {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            gap: 56px;
+        }
+
+        .zhang_section {
+            border: 1px solid rgba(0, 242, 254, 0.18);
+            border-radius: 16px;
+            padding: 28px 24px 32px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .zhang_section-title {
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--zhang_cyan);
+        }
+
+        .zhang_section-desc {
+            margin: 10px 0 26px;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--zhang_muted);
+        }
+
+        /* 代码/属性名统一用等宽字体，和正文区分开 */
+        .zhang_code {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--zhang_pink);
+        }
+
+        /* ===================== 01 立方体 =====================
+           关键点：perspective 写在「父元素」上，营造观察距离；
+           立方体自身 transform-style: preserve-3d 让六个面保留 3D 位置，
+           否则子元素会被压平到一个平面上。                        */
+        .zhang_stage {
+            position: relative;
+            width: min(78vw, 320px);
+            aspect-ratio: 1;
+            margin: 0 auto;
+            display: grid;
+            place-items: center;
+            perspective: 900px;          /* 观察距离，越小透视越夸张 */
+            perspective-origin: 50% 45%; /* 视点略高于中心，能看到顶面 */
+        }
+
+        .zhang_cube {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            transform-style: preserve-3d;
+            /* 绕 X、Y 双轴翻滚，一整圈后回到原点，循环无缝 */
+            animation: cube-tumble 12s linear infinite;
+        }
+
+        @keyframes cube-tumble {
+            0%   { transform: rotateX(-22deg) rotateY(0deg); }
+            100% { transform: rotateX(-22deg) rotateY(360deg); }
+        }
+
+        .zhang_cube-face {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-align: center;
+            color: var(--zhang_text);
+            border: 1px solid rgba(0, 242, 254, 0.55);
+            background: rgba(0, 242, 254, 0.10);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: inset 0 0 24px rgba(0, 242, 254, 0.28);
+        }
+
+        /* 六个面：先原地转到对应朝向，再沿 Z 轴推出半个棱长（80px = 160/2） */
+        .zhang_face-front  { transform: translateZ(80px); }
+        .zhang_face-back   { transform: rotateY(180deg) translateZ(80px); }
+        .zhang_face-right  { transform: rotateY(90deg)  translateZ(80px); }
+        .zhang_face-left   { transform: rotateY(-90deg) translateZ(80px); }
+        .zhang_face-top    { transform: rotateX(90deg)  translateZ(80px); }
+        .zhang_face-bottom { transform: rotateX(-90deg) translateZ(80px); }
+
+        /* 用伪元素给立方体脚下加一圈投影，增强悬浮的立体感（纯 2D 手法打辅助）。
+           注意要用绝对定位，否则它会成为 grid 的第二行，把立方体挤到上半格去。
+           位移写在 transform 里，所以关键帧也要连同位移一起写，不能只写 scale。 */
+        .zhang_stage::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 120px;
+            height: 16px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(0, 242, 254, 0.35), transparent 70%);
+            filter: blur(4px);
+            animation: shadow-breathe 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes shadow-breathe {
+            from { opacity: 0.35; transform: translate(-50%, 92px) scale(0.85); }
+            to   { opacity: 0.7;  transform: translate(-50%, 92px) scale(1.1); }
+        }
+
+        /* ===================== 02 翻转卡片 =====================
+           rotateY(180deg) 把卡片整体翻过去；
+           两个面都设 backface-visibility: hidden，正面转背时自动隐藏，
+           避免出现「镜像穿透」的穿帮画面。                        */
+        .zhang_flip-stage {
+            width: min(80vw, 280px);
+            height: 180px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .zhang_flip {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* 鼠标悬停在卡片上时绕 Y 轴翻转 180 度 */
+        .zhang_flip-stage:hover .zhang_flip {
+            transform: rotateY(180deg);
+        }
+
+        .zhang_flip-face {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            gap: 8px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 14px;
+            backface-visibility: hidden;          /* 背面朝前时隐藏自己 */
+            -webkit-backface-visibility: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.45);
+        }
+
+        .zhang_flip-front {
+            background: linear-gradient(140deg, rgba(0, 242, 254, 0.22), rgba(10, 10, 15, 0.9));
+            box-shadow: 0 12px 34px rgba(0, 242, 254, 0.2);
+        }
+
+        /* 反面先自转 180 度，翻转后文字才是正的 */
+        .zhang_flip-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(140deg, rgba(240, 147, 251, 0.24), rgba(10, 10, 15, 0.9));
+            box-shadow: 0 12px 34px rgba(240, 147, 251, 0.22);
+        }
+
+        .zhang_flip-title {
+            font-size: 17px;
+            letter-spacing: 2px;
+        }
+
+        .zhang_flip-note {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            color: var(--zhang_muted);
+        }
+
+        /* ===================== 03 环形照片墙 =====================
+           8 张卡片每张先绕 Y 轴转过 i×45°，再沿自己的 Z 轴推出 130px，
+           共同围成一个正八边形；整体再持续自转，就形成了 3D 环绕效果。
+           半径估算：卡片半宽 54px ÷ tan(22.5°) ≈ 130px               */
+        .zhang_ring-stage {
+            width: min(90vw, 440px);
+            height: 280px;
+            margin: 0 auto;
+            perspective: 1200px;
+            perspective-origin: 50% 40%;
+        }
+
+        .zhang_ring {
+            position: relative;
+            width: 108px;   /* 半宽 54px，54 ÷ tan22.5° ≈ 130px，正好对应下面的推出半径 */
+            height: 150px;
+            margin: 50px auto 0;
+            transform-style: preserve-3d;
+            animation: ring-spin 24s linear infinite;
+        }
+
+        @keyframes ring-spin {
+            from { transform: rotateX(-8deg) rotateY(0deg); }
+            to   { transform: rotateX(-8deg) rotateY(360deg); }
+        }
+
+        /* 悬停时暂停转动，方便逐张看清 */
+        .zhang_ring-stage:hover .zhang_ring {
+            animation-play-state: paused;
+        }
+
+        .zhang_ring-item {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: #0a0a0f;
+            font-weight: bold;
+            border-radius: 10px;
+            /* --zhang_i 由 HTML 内联给出，配合 calc 生成每张卡片的旋转角 */
+            transform: rotateY(calc(var(--zhang_i) * 45deg)) translateZ(130px);
+            background: linear-gradient(160deg,
+                        hsl(var(--zhang_hue) 92% 72%),
+                        hsl(var(--zhang_hue) 88% 52%));
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+        }
+
+        /* 略停一下错开节奏：每张卡片自己也在轻微上下浮动 */
+        .zhang_ring-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* ===================== 04 属性小结表 ===================== */
+        .zhang_table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .zhang_table caption {
+            caption-side: bottom;
+            padding-top: 14px;
+            font-size: 12px;
+            color: var(--zhang_muted);
+        }
+
+        .zhang_table th,
+        .zhang_table td {
+            padding: 11px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.16);
+            line-height: 1.7;
+        }
+
+        .zhang_table th {
+            color: var(--zhang_cyan);
+            font-weight: normal;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .zhang_table td:first-child {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--zhang_pink);
+            white-space: nowrap;
+        }
+
+        .zhang_table tr:hover td {
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        /* ===================== 页脚 ===================== */
+        .zhang_footer {
+            max-width: 960px;
+            margin: 56px auto 0;
+            padding-top: 22px;
+            border-top: 1px solid rgba(0, 242, 254, 0.16);
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12.5px;
+            letter-spacing: 2px;
+            color: var(--zhang_muted);
+        }
+
+        /* ===================== 小屏适配 ===================== */
+        @media (max-width: 560px) {
+            .zhang_cube { width: 120px; height: 120px; }
+            /* 棱长变了，推出距离也要跟着减半，否则六个面会散开 */
+            .zhang_face-front  { transform: translateZ(60px); }
+            /* 投影落点随棱长一起收近 */
+            .zhang_stage::after {
+                animation-name: shadow-breathe-sm;
+            }
+            @keyframes shadow-breathe-sm {
+                from { opacity: 0.35; transform: translate(-50%, 72px) scale(0.8); }
+                to   { opacity: 0.7;  transform: translate(-50%, 72px) scale(1.05); }
+            }
+            .zhang_face-back   { transform: rotateY(180deg) translateZ(60px); }
+            .zhang_face-right  { transform: rotateY(90deg)  translateZ(60px); }
+            .zhang_face-left   { transform: rotateY(-90deg) translateZ(60px); }
+            .zhang_face-top    { transform: rotateX(90deg)  translateZ(60px); }
+            .zhang_face-bottom { transform: rotateX(-90deg) translateZ(60px); }
+            .zhang_ring-stage { height: 240px; perspective: 900px; }
+            /* 卡片缩到 88px（半宽 44px），半径同步重算：44 ÷ tan22.5° ≈ 106px，
+               这样八边形依然是闭合的，整体宽度也收进小屏里 */
+            .zhang_ring { width: 88px; height: 126px; }
+            .zhang_ring-item { transform: rotateY(calc(var(--zhang_i) * 45deg)) translateZ(106px); }
+        }
+
+        /* 尊重系统的「减少动态效果」设置：关掉持续动画，保留悬停交互 */
+        @media (prefers-reduced-motion: reduce) {
+            .zhang_cube, .zhang_ring, .zhang_stage::after {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="zhang_header">
+        <h1 class="zhang_header-title">CSS3 3D 动画</h1>
+        <p class="zhang_header-sub">24002060415&nbsp;&nbsp;张熙淳</p>
+    </header>
+
+    <main class="zhang_page">
+
+        <!-- ========== 01 旋转立方体 ========== -->
+        <section class="zhang_section">
+            <h2 class="zhang_section-title">01 · 旋转立方体</h2>
+            <p class="zhang_section-desc">
+                六个面先各自<span class="zhang_code">rotateX / rotateY</span>转到对应朝向，再用
+                <span class="zhang_code">translateZ(80px)</span>沿自己的 Z 轴推出半个棱长，
+                拼成立方体；最后给整体加一条<span class="zhang_code">rotateY</span>从 0 到 360 度的
+                <span class="zhang_code">@keyframes</span>，让它持续自转。
+            </p>
+
+            <div class="zhang_stage">
+                <div class="zhang_cube">
+                    <div class="zhang_cube-face zhang_face-front">CSS3</div>
+                    <div class="zhang_cube-face zhang_face-back">张熙淳</div>
+                    <div class="zhang_cube-face zhang_face-right">preserve-3d</div>
+                    <div class="zhang_cube-face zhang_face-left">rotate3d</div>
+                    <div class="zhang_cube-face zhang_face-top">perspective</div>
+                    <div class="zhang_cube-face zhang_face-bottom">translateZ</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 02 翻转卡片 ========== -->
+        <section class="zhang_section">
+            <h2 class="zhang_section-title">02 · 悬停翻转卡片</h2>
+            <p class="zhang_section-desc">
+                把鼠标移到卡片上。容器<span class="zhang_code">:hover</span>时给内层加
+                <span class="zhang_code">rotateY(180deg)</span>，配合
+                <span class="zhang_code">transition</span>平滑过渡；正反两面都设
+                <span class="zhang_code">backface-visibility: hidden</span>，
+                转到背面时自动隐藏，不会出现镜像穿帮。
+            </p>
+
+            <div class="zhang_flip-stage">
+                <div class="zhang_flip">
+                    <div class="zhang_flip-face zhang_flip-front">
+                        <span class="zhang_flip-title">正面 · 悬停我试试</span>
+                        <span class="zhang_flip-note">transition: transform 0.9s</span>
+                    </div>
+                    <div class="zhang_flip-face zhang_flip-back">
+                        <span class="zhang_flip-title">反面 · 翻转成功</span>
+                        <span class="zhang_flip-note">rotateY(180deg)<br>backface-visibility: hidden</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 03 环形照片墙 ========== -->
+        <section class="zhang_section">
+            <h2 class="zhang_section-title">03 · 环形照片墙</h2>
+            <p class="zhang_section-desc">
+                8 张卡片各自<span class="zhang_code">rotateY(i × 45deg)</span>后沿 Z 轴推出
+                <span class="zhang_code">130px</span>，正好围成一个首尾相接的正八边形；
+                整体再持续自转，形成环绕一周的立体效果。
+                半径的算法是「卡片半宽 54px ÷ tan 22.5° ≈ 130px」，这样相邻两张卡片的边刚好贴齐。
+                <strong>鼠标移上去可以让它暂停</strong>，看清每一张。
+            </p>
+
+            <div class="zhang_ring-stage">
+                <div class="zhang_ring">
+                    <div class="zhang_ring-item" style="--zhang_i: 0; --zhang_hue: 190;">01</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 1; --zhang_hue: 215;">02</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 2; --zhang_hue: 250;">03</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 3; --zhang_hue: 285;">04</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 4; --zhang_hue: 315;">05</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 5; --zhang_hue: 345;">06</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 6; --zhang_hue: 15;">07</div>
+                    <div class="zhang_ring-item" style="--zhang_i: 7; --zhang_hue: 45;">08</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== 04 属性小结 ========== -->
+        <section class="zhang_section">
+            <h2 class="zhang_section-title">04 · 属性小结</h2>
+            <p class="zhang_section-desc">本页用到的 3D 相关属性及其作用：</p>
+
+            <table class="zhang_table">
+                <caption>※ perspective 写在父元素上，preserve-3d 写在需要保留三维的子元素上，两者是最容易出错的一对。</caption>
+                <thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>作用</th>
+                        <th>本页用在哪</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>perspective</td>
+                        <td>给父元素设定「观察距离」，值越小透视越强烈，3D 才有纵深感</td>
+                        <td>.zhang_stage / .zhang_flip-stage / .zhang_ring-stage</td>
+                    </tr>
+                    <tr>
+                        <td>perspective-origin</td>
+                        <td>调整观察视点的位置，默认在正中间</td>
+                        <td>立方体与照片墙略微抬高视点</td>
+                    </tr>
+                    <tr>
+                        <td>transform-style<br>preserve-3d</td>
+                        <td>让子元素保留各自的三维位置，不被父元素压平到同一个平面上</td>
+                        <td>.zhang_cube / .zhang_flip / .zhang_ring</td>
+                    </tr>
+                    <tr>
+                        <td>rotateX / rotateY /<br>rotate3d</td>
+                        <td>绕指定轴旋转，是 3D 动画最核心的变换函数</td>
+                        <td>立方体自转、卡片翻转、照片墙环绕</td>
+                    </tr>
+                    <tr>
+                        <td>translateZ</td>
+                        <td>沿 Z 轴前后平移，用来撑出立方体的厚度和照片墙的半径</td>
+                        <td>六个面各推出 80px、照片墙卡片推出 130px</td>
+                    </tr>
+                    <tr>
+                        <td>backface-visibility</td>
+                        <td>元素背面朝向观察者时是否可见，设为 hidden 可避免翻转时穿帮</td>
+                        <td>.zhang_flip-face 正反两面</td>
+                    </tr>
+                    <tr>
+                        <td>transition</td>
+                        <td>给 transform 加过渡，让悬停触发的 3D 变化变得平滑</td>
+                        <td>.zhang_flip 的翻转</td>
+                    </tr>
+                    <tr>
+                        <td>@keyframes +<br>animation</td>
+                        <td>定义并循环播放关键帧动画，实现不需要交互的持续 3D 动效</td>
+                        <td>立方体自转、照片墙环绕</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer class="zhang_footer">
+        CSS3 3D 动画 · 全程纯 CSS 实现，未使用 JavaScript
+    </footer>
+
+</body>
+</html>

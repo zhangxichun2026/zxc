@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .zhang_main{
+            /* 背景颜色#f2f3f4 */
+            background-color: #f2f3f4;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px;
+        }
+        .zhang_box{
+            width: 150px;
+            height: 159px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: #fff;
+            font-size: 40px;
+            display: flex;
+            /* 水平垂直居中 */
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s;
+            box-sizing: border-box;
+            /* width包括了padding和border */
+        }
+        .zhang_box:first-child:hover{
+            background-color: #000;
+            color: #fff;
+            font-size:100px;
+            border-width:30px;
+        }
+        .zhang_box:nth-child(2):hover{
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+        }
+        .zhang_box:nth-child(3):hover{
+            text-shadow:100px 0px 20px rgba(0,0,0,0.5);
+        }
+        .zhang_box:nth-of-type(4):hover{
+            border-radius:50%;
+        }
+        .zhang_box:nth-of-type(5){
+            /* 线性渐变 */
+            background: linear-gradient(#000, #fff);
+        }
+        .zhang_box:nth-of-type(6){
+            /* 径向渐变 */
+            background: radial-gradient(#fff, #000);
+        }
+        /* 相邻兄弟选择器 */
+        /* ~兄弟选择器*/
+        .zhang_box:nth-of-type(6)+.zhang_box:hover{
+            transform:scale(0.5);
+        }
+        .zhang_box:nth-of-type(8):hover{
+            transform:translateX(-100px);
+        }
+        .zhang_box:nth-of-type(9):hover{
+            transform:rotateZ(-180deg);
+        }
+        .zhang_box:nth-of-type(10):hover{
+            transform:skewX(-45deg);
+        }
+        .zhang_box:nth-last-child(2):hover::before{
+            content:"#";
+            color:red;
+        }
+        /*最后一个 */
+        .zhang_box:last-child:hover::after{
+            content: "张熙淳";
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: #000;
+            border-radius: 50%;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            position: absolute;
+        }
+        /* 为伪元素定位做准备 */
+        .zhang_box:last-child {
+            position: relative;
+        }
+        .zhang_box:last-child:hover {
+            background-color: #f9e79f; /* 轻微背景变化，让after更明显 */
+        }
+        .zhang_box:nth-of-type(3n):hover{
+            border:3px solid #f00;
+        }
+        /* 扩展: 鼠标在偶数个盒子上时有变化，变化效果自定义 */
+        .zhang_box:nth-child(even):hover {
+            background-color: #a9cce3;
+            color: #1a5276;
+            font-weight: bold;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #2e86c1 inset, 0 5px 15px rgba(0,0,0,0.2);
+            border-color: #2e86c1;
+        }
+        /* 保持原有的3n悬停红色边框对偶数盒子的影响优先级，用!important或顺序调整？我们保留原有规则，但偶数规则会覆盖边框颜色？
+           原3n边框是红色，偶数悬停也改边框色，为了不冲突，让偶数悬停的边框保持红色外再加深？这里保留原3n规则，偶数的边框色不覆盖红色（保持3n的红色边框），
+           但为了美观，我们用!important让偶数悬停的边框颜色为蓝色？但可能破坏原有3n的红色边框效果。所以我们保留原3n规则，偶数悬停的边框颜色使用蓝色会覆盖红色？
+           测试：当盒子既是偶数又是3的倍数（即6,12）时，3n悬停边框红色，偶数悬停边框蓝色，哪个后定义哪个生效。偶数悬停规则在后面，会覆盖3n的红色边框。
+           为了让原有3n红色边框仍然有效，我们保留原有规则，但偶数悬停时对6和12仍然显示红色边框？可以加例外，但太复杂。所以保留原有3n红色边框不变，
+           偶数悬停边框颜色改为不设置，或者设置一个不冲突的颜色？为了简化，偶数悬停不改变边框颜色，只改背景和阴影，保留原边框（可能是红色或其他）。
+           但我们想看到偶数悬停效果，所以上面写了border-color: #2e86c1，这会覆盖3n的红色。如果希望6和12悬停时仍为红边，可以加 .box:nth-child(6):hover, .box:nth-child(12):hover { border-color: #f00; }
+           但这是额外规则。这里我们保留偶数悬停的蓝色边框，但3n的红色边框会被覆盖，为了让两者都可见，加一条规则：
+           .box:nth-child(even):hover:not(:nth-child(3n)) { border-color: #2e86c1; } 这样3n的偶数仍然红边？但6和12是3n也是偶数，会走3n规则红色。
+           为了简洁，直接覆盖，让6和12悬停显示蓝色边框也可以。但原代码3n红色边框是预期效果，我们保留原规则，偶数悬停不修改边框颜色，只改背景和阴影。
+           因此移除偶数悬停中的border-color，让边框颜色由原有规则决定。
+        */
+        .zhang_box:nth-child(even):hover {
+            background-color: #a9cce3;
+            color: #1a5276;
+            font-weight: bold;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #2e86c1 inset, 0 5px 15px rgba(0,0,0,0.2);
+            /* 不覆盖边框颜色，保留原有边框(可能是红色或默认) */
+        }
+        /* 额外的修正：对于第2个盒子，原有的阴影和新的偶数悬停会同时应用，阴影会叠加，但无伤大雅。为了统一，可以保留 */
+    </style>
+</head>
+<body>
+    <div class="zhang_main">
+        <div class="zhang_box">1</div>
+        <div class="zhang_box">2</div>
+        <div class="zhang_box">3</div>
+        <div class="zhang_box">4</div>
+        <div class="zhang_box">5</div>
+        <div class="zhang_box">6</div>
+        <div class="zhang_box">7</div>
+        <div class="zhang_box">8</div>
+        <div class="zhang_box">9</div>
+        <div class="zhang_box">10</div>
+        <div class="zhang_box">11</div>
+        <div class="zhang_box">12</div>
+    </div>
+</body>
+</html>
