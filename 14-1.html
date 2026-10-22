@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>张熙淳的JavaScript</h2>
+    <script>
+        document.write("hello world,张熙淳");
+        alert("hello world");
+        console.log("hello world,wb");
+        //prompt和confirm
+        var name = prompt("请输入您的姓名");
+        console.log(name);
+        var age = prompt("请输入您的年龄");
+        console.log(age);
+        //confirm
+        var isConfirm = confirm("您确定要提交吗？");
+        console.log(isConfirm);
+        if(isConfirm){
+            document.write("提交成功");
+        }else{
+            document.write("提交失败");
+        }
+    </script>   
+</body>
+</html>
