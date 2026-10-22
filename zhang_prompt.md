@@ -70,3 +70,31 @@
 最终尺寸：立方体棱长 160px（小屏 120px）；照片墙 8 张 108×150px，推距 130px。
 
 ---
+
+## 记录 #4
+
+- **时间**：2026-10-22（CST / Asia/Shanghai）
+- **使用的模型**：Trae（proprietary）
+- **提示词内容**：
+
+```
+设置项目规则，所有变量名称、css类、id名称都以zxc_开始，所有html页面中都包括注释：姓名：张熙淳，日期：功能名称。
+设置项目规则，使用原生的html、css和javascript实现，图标使用font目录下的iconfont图标，不适用第三方库和cdn,使用fetch获取服务器端数据
+```
+
+- **规则摘要（本次从 `zhang_` 前缀升级为 `zxc_` 前缀，同时新增若干条）**：
+  1. **命名前缀**：JS 变量、CSS 类名、HTML id 一律以 `zxc_` 开头（原 `zhang_` 约定作废，新文件一律用 `zxc_`）。
+  2. **HTML 页头注释**：每个 `.html` 文件顶部必须包含注释 `<!-- 姓名：张熙淳，日期：YYYY-MM-DD，功能名称：xxx -->`。
+  3. **技术栈**：仅使用原生 HTML、原生 CSS、原生 JavaScript，**禁止** 引入任何第三方库（如 jQuery、Bootstrap、Vue、React、Tailwind 等），也**禁止** 使用任何 CDN。
+  4. **图标**：图标一律使用本地 `font/` 目录下的 iconfont 字体文件，通过 `<link rel="stylesheet" href="font/iconfont.css">` 引入。HTML 结构 `<i class="iconfont zxc_icon_xxx"></i>`。
+  5. **网络请求**：所有与服务器端的数据交互一律使用原生 `fetch` API，禁止使用 `XMLHttpRequest`、`axios`、`$.ajax` 等其它方式。
+
+---
+
+### 记录 #4 · 生效说明
+
+- 规则作用范围：`D:\高级网页vscode\` 下所有文件（新建文件 **必须** 遵守；既有文件按需逐步迁移）。
+- 规则已同步写入 memory：`c:\Users\Lenovo\.trae-cn\memory\projects\-d-----vscode--p2-de945c851d769220f64a\project_rules.md`，后续会话自动读取。
+- **注意**：当前项目目录下 **尚未创建** `font/` 目录，也无任何 iconfont 文件；用户需将 iconfont.css + 字体文件（.woff2 / .woff / .ttf / .eot）放入 `D:\高级网页vscode\font\` 后图标规则才能落地。
+
+---

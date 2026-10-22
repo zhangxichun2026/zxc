@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，日期：2026-10-22，功能名称：JavaScript 六种基本数据类型演示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 六种基本数据类型 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0e1117;
+            --zxc_surface: #171c26;
+            --zxc_surface_2: #1e2431;
+            --zxc_ink: #eef2f8;
+            --zxc_muted: #94a3b8;
+            --zxc_line: rgba(255, 255, 255, 0.09);
+            --zxc_accent: #38bdf8;
+            --zxc_green: #4ade80;
+            --zxc_amber: #fbbf24;
+            --zxc_radius: 14px;
+            --zxc_shadow: 0 24px 48px -32px #000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(40rem 26rem at 8% -10%, rgba(56, 189, 248, 0.14), transparent 60%),
+                radial-gradient(36rem 24rem at 100% 0%, rgba(74, 222, 128, 0.08), transparent 60%),
+                var(--zxc_bg);
+        }
+
+        .zxc_page { width: min(70rem, 100%); margin: 0 auto; }
+
+        /* ---------- 头部 ---------- */
+        .zxc_header {
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--zxc_line);
+        }
+
+        .zxc_header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.55rem, 4vw, 2.3rem);
+            letter-spacing: 0.02em;
+        }
+
+        .zxc_header h1 span {
+            background: linear-gradient(100deg, var(--zxc_accent), var(--zxc_green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_header p {
+            margin: 0;
+            color: var(--zxc_muted);
+            font-size: clamp(0.92rem, 2vw, 1rem);
+        }
+
+        .zxc_meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.4rem;
+            margin-top: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_meta span::before {
+            content: "▸ ";
+            color: var(--zxc_accent);
+        }
+
+        /* ---------- 列表式卡片 ---------- */
+        .zxc_list { display: flex; flex-direction: column; gap: 0.9rem; }
+
+        .zxc_item {
+            position: relative;
+            padding: 1.1rem 1.25rem 1.1rem 1.6rem;
+            background: linear-gradient(150deg, var(--zxc_surface), var(--zxc_surface_2));
+            border: 1px solid var(--zxc_line);
+            border-radius: var(--zxc_radius);
+            box-shadow: var(--zxc_shadow);
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .zxc_item::before {
+            content: "";
+            position: absolute;
+            top: 1rem;
+            bottom: 1rem;
+            left: 0;
+            width: 4px;
+            border-radius: 4px;
+            background: var(--zxc_c);
+        }
+
+        .zxc_item:hover {
+            transform: translateX(4px);
+            border-color: color-mix(in srgb, var(--zxc_c) 45%, transparent);
+        }
+
+        .zxc_item_head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 0.9rem;
+        }
+
+        .zxc_item_head h2 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .zxc_tag {
+            padding: 0.1rem 0.6rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.72rem;
+            color: var(--zxc_c);
+            background: color-mix(in srgb, var(--zxc_c) 12%, transparent);
+            border: 1px solid color-mix(in srgb, var(--zxc_c) 28%, transparent);
+            border-radius: 999px;
+        }
+
+        .zxc_item > p {
+            margin: 0.45rem 0 0;
+            color: var(--zxc_muted);
+            font-size: 0.88rem;
+        }
+
+        /* ---------- 数据展示 ---------- */
+        .zxc_data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+            gap: 0.6rem;
+            margin: 0.9rem 0 0;
+        }
+
+        .zxc_field {
+            padding: 0.55rem 0.7rem;
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+        }
+
+        .zxc_field dt {
+            font-size: 0.68rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_field dd {
+            margin: 0.15rem 0 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.84rem;
+            word-break: break-all;
+        }
+
+        .zxc_value { color: var(--zxc_green); }
+        .zxc_type { color: var(--zxc_amber); }
+
+        /* ---------- 说明与页脚 ---------- */
+        .zxc_note {
+            margin: 1.6rem 0 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--zxc_muted);
+            background: var(--zxc_surface);
+            border: 1px solid var(--zxc_line);
+            border-left: 4px solid var(--zxc_accent);
+            border-radius: 10px;
+        }
+
+        .zxc_note code {
+            padding: 1px 5px;
+            font-size: 0.9em;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+        }
+
+        .zxc_footer {
+            margin-top: 2rem;
+            font-size: 0.82rem;
+            color: var(--zxc_muted);
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_item { transition: none; }
+            .zxc_item:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JavaScript <span>六种基本数据类型</span></h1>
+            <p>原始类型（Primitive）：String、Number、Boolean、Undefined、Null、Symbol。下面每张卡片里的类型判断与值展示，都由页面内的 JavaScript 实时计算生成。</p>
+            <div class="zxc_meta">
+                <span>张熙淳</span>
+                <span>学号 24002060415</span>
+                <span>2026-10-22</span>
+            </div>
+        </header>
+
+        <main>
+            <section id="zxc_list" class="zxc_list" aria-label="六种基本数据类型演示">
+                <!-- 卡片由 JavaScript 动态生成 -->
+            </section>
+
+            <p class="zxc_note">
+                提示：String、Number、Boolean、Undefined、Null 是日常最常用的五种原始类型；
+                Symbol 是 ES6 引入的原始类型，每次调用都生成唯一值，常用来做对象属性的“私有键”。
+                另外，<code>typeof null</code> 会返回 <code>"object"</code>，这是 JavaScript 诞生初期留下的历史遗留问题，
+                但 <code>null</code> 本身依然属于基本数据类型。对象（Object）属于引用类型，本页不作演示。
+            </p>
+        </main>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // 每种类型配一个强调色，卡片左侧色条与标签共用
+        var zxc_types = [
+            {
+                zxc_name: "String 字符串",
+                zxc_color: "#38bdf8",
+                zxc_desc: "表示文本，可以用单引号、双引号或模板字符串包裹，长度不限。",
+                zxc_code: 'var zxc_userName = "张熙淳";',
+                zxc_value: "张熙淳"
+            },
+            {
+                zxc_name: "Number 数字",
+                zxc_color: "#4ade80",
+                zxc_desc: "整数、小数、科学计数法都属于同一类型，另外还包括 NaN 与 Infinity。",
+                zxc_code: "var zxc_age = 20;",
+                zxc_value: 20
+            },
+            {
+                zxc_name: "Boolean 布尔值",
+                zxc_color: "#fbbf24",
+                zxc_desc: "只有 true 和 false 两个值，是条件判断与逻辑运算的基础。",
+                zxc_code: "var zxc_isStudent = true;",
+                zxc_value: true
+            },
+            {
+                zxc_name: "Undefined 未定义",
+                zxc_color: "#a78bfa",
+                zxc_desc: "变量声明但尚未赋值时，默认值就是 undefined，表示“还没有值”。",
+                zxc_code: "var zxc_pending;",
+                zxc_value: undefined
+            },
+            {
+                zxc_name: "Null 空值",
+                zxc_color: "#f472b6",
+                zxc_desc: "表示一个被有意设置为“空”的值，必须由开发者手动赋值。",
+                zxc_code: "var zxc_empty = null;",
+                zxc_value: null
+            },
+            {
+                zxc_name: "Symbol 符号",
+                zxc_color: "#fb923c",
+                zxc_desc: "ES6 新增的原始类型，每次调用 Symbol() 都返回唯一值，常用作对象属性名以避免冲突。",
+                zxc_code: 'var zxc_key = Symbol("key");',
+                zxc_value: Symbol("key")
+            }
+        ];
+
+        // 把值转成便于阅读的字符串形式
+        function zxc_formatValue(zxc_value) {
+            if (zxc_value === undefined) return "undefined";
+            if (zxc_value === null) return "null";
+            if (typeof zxc_value === "string") return '"' + zxc_value + '"';
+            if (typeof zxc_value === "symbol") return zxc_value.toString();
+            return String(zxc_value);
+        }
+
+        // 判断值是否可以被修改（原始类型均不可变）
+        function zxc_isMutable(zxc_value) {
+            return "不可变（原始类型）";
+        }
+
+        function zxc_render() {
+            var zxc_container = document.getElementById("zxc_list");
+            var zxc_html = "";
+
+            for (var zxc_i = 0; zxc_i < zxc_types.length; zxc_i++) {
+                var zxc_item = zxc_types[zxc_i];
+                var zxc_typeName = typeof zxc_item.zxc_value;
+
+                zxc_html +=
+                    '<article class="zxc_item" style="--zxc_c: ' + zxc_item.zxc_color + '">' +
+                        '<div class="zxc_item_head">' +
+                            "<h2>" + zxc_item.zxc_name + "</h2>" +
+                            '<span class="zxc_tag">typeof → ' + zxc_typeName + "</span>" +
+                        "</div>" +
+                        "<p>" + zxc_item.zxc_desc + "</p>" +
+                        '<dl class="zxc_data">' +
+                            '<div class="zxc_field">' +
+                                "<dt>示例代码</dt>" +
+                                "<dd>" + zxc_item.zxc_code + "</dd>" +
+                            "</div>" +
+                            '<div class="zxc_field">' +
+                                "<dt>当前值</dt>" +
+                                '<dd class="zxc_value">' + zxc_formatValue(zxc_item.zxc_value) + "</dd>" +
+                            "</div>" +
+                            '<div class="zxc_field">' +
+                                "<dt>typeof 结果</dt>" +
+                                '<dd class="zxc_type">' + zxc_typeName + "</dd>" +
+                            "</div>" +
+                            '<div class="zxc_field">' +
+                                "<dt>可变性</dt>" +
+                                "<dd>" + zxc_isMutable(zxc_item.zxc_value) + "</dd>" +
+                            "</div>" +
+                        "</dl>" +
+                    "</article>";
+            }
+
+            zxc_container.innerHTML = zxc_html;
+        }
+
+        zxc_render();
+    </script>
+</body>
+</html>

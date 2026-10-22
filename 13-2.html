@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13-2 Lucide SVG 图标 —— 张熙淳 24002060415</title>
+<style>
+  /* ================= 1. 全局与配色（靛紫暖调版） ================= */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b0a12;
+    --panel: #14121f;
+    --ink: #f2eefb;
+    --muted: #a39bc0;
+    --line: rgba(255, 255, 255, .09);
+    --indigo: #818cf8;
+    --fuchsia: #e879f9;
+    --amber: #fcd34d;
+    --emerald: #34d399;
+    --cyan: #22d3ee;
+    --rose: #fb7185;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    min-height: 100vh;
+    padding: clamp(18px, 4vw, 56px) clamp(14px, 4vw, 48px) 40px;
+    font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(50rem 34rem at 4% -8%, rgba(129, 140, 248, .18), transparent 62%),
+      radial-gradient(46rem 32rem at 102% 2%, rgba(232, 121, 249, .14), transparent 62%),
+      radial-gradient(44rem 32rem at 50% 112%, rgba(34, 211, 238, .08), transparent 62%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: .28;
+    background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 16%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 16%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .wrap { max-width: 1140px; margin: 0 auto; }
+  a { color: inherit; }
+  code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; }
+
+  /* ================= 2. 头部 ================= */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(24px, 4.5vw, 52px);
+    background: linear-gradient(140deg, rgba(24, 21, 38, .96), rgba(15, 13, 24, .94));
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    box-shadow: 0 40px 90px -60px #000;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -150px;
+    right: -110px;
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(129, 140, 248, .22), transparent 66%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -170px;
+    left: -110px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 121, 249, .14), transparent 66%);
+    pointer-events: none;
+  }
+
+  .topline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: clamp(26px, 4vw, 44px);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--indigo);
+    background: rgba(129, 140, 248, .1);
+    border: 1px solid rgba(129, 140, 248, .24);
+    border-radius: 999px;
+  }
+
+  .pill svg { width: 14px; height: 14px; stroke-width: 2; }
+
+  .switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 16px;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    background: rgba(255, 255, 255, .035);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: background .25s, border-color .25s, transform .25s;
+  }
+
+  .switch svg { width: 15px; height: 15px; color: var(--indigo); transition: transform .25s; }
+  .switch:hover { background: rgba(255, 255, 255, .06); border-color: rgba(129, 140, 248, .38); transform: translateY(-2px); }
+  .switch:hover svg { transform: translateX(-4px); }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    gap: clamp(26px, 4vw, 48px);
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.05rem, 5.2vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    font-weight: 800;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(100deg, var(--indigo), var(--fuchsia) 74%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero .lead {
+    max-width: 60ch;
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: clamp(.92rem, 1.4vw, 1.02rem);
+  }
+
+  .hero .lead code {
+    padding: 2px 7px;
+    font-size: .84em;
+    color: var(--indigo);
+    background: rgba(129, 140, 248, .1);
+    border-radius: 6px;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-top: 28px;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+
+  .meta span { display: inline-flex; align-items: center; gap: 8px; }
+  .meta svg { width: 14px; height: 14px; color: var(--indigo); }
+
+  .visual-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 250px;
+    padding: 26px 20px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  .visual-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, #000, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 45%, #000, transparent 72%);
+    pointer-events: none;
+  }
+
+  .hero-visual svg {
+    position: relative;
+    z-index: 1;
+    width: clamp(84px, 10vw, 116px);
+    height: clamp(84px, 10vw, 116px);
+    color: var(--indigo);
+    stroke-width: 1.3;
+    filter: drop-shadow(0 0 26px rgba(129, 140, 248, .4));
+    transform: rotate(-6deg);
+  }
+
+  .visual-tags {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .visual-tags span {
+    padding: 4px 8px;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: .6rem;
+    color: var(--muted);
+    background: rgba(11, 10, 18, .55);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+
+  .noscript {
+    margin-top: 16px;
+    padding: 12px 16px;
+    font-size: .82rem;
+    color: var(--amber);
+    background: rgba(252, 211, 77, .08);
+    border: 1px solid rgba(252, 211, 77, .25);
+    border-radius: 10px;
+  }
+
+  /* ================= 3. 通用区块 ================= */
+  .section { margin-top: clamp(36px, 6vw, 66px); }
+
+  .sec-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 16px;
+    margin-bottom: 20px;
+  }
+
+  .sec-num {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .22em;
+    color: var(--indigo);
+  }
+
+  .sec-head h2 {
+    font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+    line-height: 1.3;
+    letter-spacing: -.01em;
+  }
+
+  .sec-desc {
+    margin-left: auto;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  /* ================= 4. 图标网格 ================= */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    gap: 12px;
+  }
+
+  .icon-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 22px 10px 16px;
+    overflow: hidden;
+    text-align: center;
+    background: linear-gradient(160deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .012));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    transition: transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+  }
+
+  .icon-card::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    background: var(--c);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s ease;
+  }
+
+  .icon-card:hover {
+    transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--c) 45%, transparent);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--c) 9%, transparent), rgba(255, 255, 255, .012));
+    box-shadow: 0 18px 34px -24px color-mix(in srgb, var(--c) 55%, transparent);
+  }
+
+  .icon-card:hover::after { transform: scaleX(1); }
+  .icon-card:hover svg { transform: scale(1.13) rotate(-4deg); }
+
+  .icon-card svg {
+    width: 28px;
+    height: 28px;
+    color: var(--c);
+    stroke-width: 1.8;
+    transition: transform .25s ease;
+  }
+
+  .icon-card .label {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .icon-card .cls {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: .62rem;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .c1 { --c: #818cf8; }
+  .c2 { --c: #e879f9; }
+  .c3 { --c: #fcd34d; }
+  .c4 { --c: #34d399; }
+  .c5 { --c: #22d3ee; }
+  .c6 { --c: #fb7185; }
+
+  /* ================= 5. 参数面板 ================= */
+  .panel {
+    padding: clamp(18px, 3vw, 30px);
+    background: linear-gradient(160deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .012));
+    border: 1px solid var(--line);
+    border-radius: 20px;
+  }
+
+  .panel + .panel { margin-top: 14px; }
+
+  .panel-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 16px;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .panel-title::before {
+    content: "";
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--indigo);
+  }
+
+  .param-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .param-card {
+    padding: 18px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid var(--line);
+    border-radius: 15px;
+  }
+
+  .param-card h3 { font-size: .92rem; line-height: 1.4; }
+  .param-card .hint { margin: 4px 0 18px; font-size: .72rem; color: var(--muted); }
+
+  .param-demo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 18px;
+    min-height: 88px;
+  }
+
+  .param-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .param-item svg { color: var(--indigo); }
+  .param-item span {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: .6rem;
+    color: var(--muted);
+  }
+
+  .size-16 svg { width: 16px; height: 16px; }
+  .size-20 svg { width: 20px; height: 20px; }
+  .size-28 svg { width: 28px; height: 28px; }
+  .size-36 svg { width: 36px; height: 36px; }
+  .size-48 svg { width: 48px; height: 48px; }
+
+  .sw-1 svg { stroke-width: 1; }
+  .sw-15 svg { stroke-width: 1.5; }
+  .sw-2 svg { stroke-width: 2; }
+  .sw-3 svg { stroke-width: 3; }
+
+  .tone-indigo svg { color: var(--indigo); }
+  .tone-fuchsia svg { color: var(--fuchsia); }
+  .tone-cyan svg { color: var(--cyan); }
+  .tone-emerald svg { color: var(--emerald); }
+
+  /* ================= 6. 实时调参 ================= */
+  .playground {
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .preview-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(129, 140, 248, .12), transparent 64%),
+      rgba(255, 255, 255, .018);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  .preview-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 76%);
+    mask-image: radial-gradient(circle at 50% 50%, #000, transparent 76%);
+    pointer-events: none;
+  }
+
+  #preview {
+    position: relative;
+    z-index: 1;
+    --size: 120px;
+    --stroke: 2;
+    --tone: #818cf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #preview svg {
+    width: var(--size);
+    height: var(--size);
+    color: var(--tone);
+    stroke-width: var(--stroke);
+    filter: drop-shadow(0 16px 30px rgba(0, 0, 0, .55));
+    transition: width .12s ease, height .12s ease, color .15s ease;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 24px;
+    background: rgba(255, 255, 255, .022);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  .control-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+
+  .control-top output {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: .72rem;
+    color: var(--indigo);
+  }
+
+  .control input[type="range"] {
+    width: 100%;
+    height: 4px;
+    accent-color: var(--indigo);
+    cursor: pointer;
+  }
+
+  .control input[type="color"] {
+    width: 100%;
+    height: 36px;
+    padding: 3px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .control-note {
+    padding-top: 14px;
+    font-size: .72rem;
+    line-height: 1.8;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+  }
+
+  .control-note code { color: var(--amber); }
+
+  /* ================= 7. 动效 ================= */
+  .anim-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+
+  .anim-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 8px 14px;
+    background: rgba(255, 255, 255, .02);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    transition: border-color .25s, background .25s;
+  }
+
+  .anim-item:hover { border-color: rgba(129, 140, 248, .32); background: rgba(129, 140, 248, .04); }
+  .anim-item svg { width: 32px; height: 32px; color: var(--indigo); stroke-width: 2; transform-box: fill-box; transform-origin: center; }
+  .anim-item span { font-size: .68rem; color: var(--muted); }
+
+  .a-spin svg { color: var(--cyan); animation: spin 3.2s linear infinite; }
+  .a-bounce svg { color: var(--amber); animation: bounce 1.5s ease-in-out infinite; }
+  .a-pulse svg { color: var(--fuchsia); animation: pulse 1.8s ease-in-out infinite; }
+  .a-shake svg { color: var(--emerald); animation: shake 1.6s ease-in-out infinite; }
+  .a-beat svg { animation: beat 1.3s ease-in-out infinite; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    16% { transform: scale(1.22); }
+    32% { transform: scale(1); }
+    48% { transform: scale(1.14); }
+    64% { transform: scale(1); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    45% { transform: translateY(-9px); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(.9); opacity: .55; }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px) rotate(-4deg); }
+    40% { transform: translateX(3px) rotate(4deg); }
+    60% { transform: translateX(-2px) rotate(-2deg); }
+    80% { transform: translateX(2px) rotate(2deg); }
+  }
+
+  /* 描边绘制 */
+  #drawDemo path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 2.8s ease-in-out infinite;
+  }
+
+  @keyframes draw {
+    0% { stroke-dashoffset: 1; }
+    55%, 100% { stroke-dashoffset: 0; }
+  }
+
+  /* ================= 8. 三种使用方式 ================= */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .usage-card {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    transition: transform .25s, border-color .25s;
+  }
+
+  .usage-card:hover { transform: translateY(-4px); border-color: rgba(129, 140, 248, .3); }
+
+  .usage-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    margin-bottom: 16px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(129, 140, 248, .1), transparent 68%),
+      rgba(255, 255, 255, .025);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .usage-preview svg { width: 46px; height: 46px; color: var(--indigo); }
+
+  .usage-preview.light {
+    background: #f4f1ff;
+    border-color: transparent;
+    padding: 10px;
+  }
+
+  .usage-preview.light img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .usage-card h3 { font-size: .9rem; line-height: 1.45; }
+  .usage-card p { flex: 1; margin-top: 6px; font-size: .76rem; line-height: 1.75; color: var(--muted); }
+
+  .usage-card p code {
+    padding: 1px 5px;
+    font-size: .92em;
+    color: var(--indigo);
+    background: rgba(129, 140, 248, .09);
+    border-radius: 4px;
+  }
+
+  .usage-card > code {
+    display: block;
+    margin-top: 12px;
+    padding: 8px 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: .64rem;
+    color: var(--amber);
+    background: #08070d;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  .code-details {
+    margin-top: 14px;
+    padding: 0 18px 18px;
+    background: rgba(255, 255, 255, .022);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+  }
+
+  .code-details summary {
+    padding: 15px 0;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .code-details summary::-webkit-details-marker { display: none; }
+  .code-details summary::before {
+    content: "＋";
+    margin-right: 8px;
+    color: var(--indigo);
+  }
+
+  .code-details[open] summary::before { content: "－"; }
+
+  .code-block {
+    overflow-x: auto;
+    padding: 18px 20px;
+    color: #dbe4f0;
+    background: #07060c;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: .76rem;
+    line-height: 2;
+    tab-size: 2;
+  }
+
+  .c-cmt { color: #64748b; }
+  .c-tag { color: #a5b4fc; }
+  .c-attr { color: #fcd34d; }
+  .c-str { color: #86efac; }
+
+  /* ================= 9. 页脚 ================= */
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: clamp(40px, 6vw, 64px);
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: .8rem;
+    color: var(--muted);
+  }
+
+  .footer a { color: var(--indigo); font-weight: 700; text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ================= 10. 响应式 ================= */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .visual-card { min-height: 200px; }
+    .param-grid, .usage-grid { grid-template-columns: 1fr; }
+    .playground { grid-template-columns: 1fr; }
+    .sec-desc { display: none; }
+  }
+
+  @media (max-width: 760px) {
+    .anim-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 520px) {
+    .hero { border-radius: 20px; }
+    .icon-grid { grid-template-columns: repeat(2, 1fr); }
+    .icon-card { padding: 18px 8px 13px; }
+    .anim-strip { grid-template-columns: repeat(2, 1fr); }
+    .param-item { gap: 6px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+    #drawDemo path { stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= 头部 ================= -->
+  <header class="hero">
+    <div class="topline">
+      <span class="pill"><i data-lucide="pen-tool"></i> Lucide 1.59.0 · 原生 SVG</span>
+      <a class="switch" href="./13-1.html">
+        <i data-lucide="arrow-left"></i>
+        对比：Font Awesome 字体版
+      </a>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <h1>不是字体<br><span>而是真正的矢量图形</span></h1>
+        <p class="lead">
+          Lucide 的每一枚图标都是一个 24×24 的 <code>&lt;svg&gt;</code>。
+          因为它们是真正的 DOM 元素，你可以用 CSS 直接控制
+          <code>width</code>、<code>height</code>、<code>stroke-width</code> 和
+          <code>color</code>，也可以挂动画、做交互。
+          本页的库与图标文件已放在 <code>cdn/lucide/</code>。
+        </p>
+
+        <div class="meta">
+          <span><i data-lucide="hard-drive"></i> 依赖目录：cdn/lucide/</span>
+          <span><i data-lucide="file-code"></i> 13-2.html</span>
+          <span><i data-lucide="id-card"></i> 张熙淳 · 24002060415</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="visual-card">
+          <i data-lucide="compass"></i>
+          <div class="visual-tags">
+            <span>viewBox 0 0 24 24</span>
+            <span>stroke currentColor</span>
+            <span>fill none</span>
+            <span>stroke-linecap round</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <noscript>
+    <p class="noscript">Lucide 图标由本地脚本生成 SVG，请启用 JavaScript 后刷新页面。</p>
+  </noscript>
+
+  <!-- ================= 01 常用图标 ================= -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>常用图标</h2>
+      <span class="sec-desc">24 个图标 · 每个都是独立 SVG</span>
+    </div>
+
+    <div class="icon-grid">
+      <div class="icon-card c1"><i data-lucide="home"></i><span class="label">首页</span><span class="cls">home</span></div>
+      <div class="icon-card c2"><i data-lucide="search"></i><span class="label">搜索</span><span class="cls">search</span></div>
+      <div class="icon-card c3"><i data-lucide="user"></i><span class="label">用户</span><span class="cls">user</span></div>
+      <div class="icon-card c4"><i data-lucide="heart"></i><span class="label">喜欢</span><span class="cls">heart</span></div>
+      <div class="icon-card c5"><i data-lucide="star"></i><span class="label">收藏</span><span class="cls">star</span></div>
+      <div class="icon-card c6"><i data-lucide="mail"></i><span class="label">邮件</span><span class="cls">mail</span></div>
+
+      <div class="icon-card c1"><i data-lucide="calendar"></i><span class="label">日历</span><span class="cls">calendar</span></div>
+      <div class="icon-card c2"><i data-lucide="camera"></i><span class="label">相机</span><span class="cls">camera</span></div>
+      <div class="icon-card c3"><i data-lucide="music"></i><span class="label">音乐</span><span class="cls">music</span></div>
+      <div class="icon-card c4"><i data-lucide="download"></i><span class="label">下载</span><span class="cls">download</span></div>
+      <div class="icon-card c5"><i data-lucide="upload"></i><span class="label">上传</span><span class="cls">upload</span></div>
+      <div class="icon-card c6"><i data-lucide="trash-2"></i><span class="label">删除</span><span class="cls">trash-2</span></div>
+
+      <div class="icon-card c1"><i data-lucide="pencil"></i><span class="label">编辑</span><span class="cls">pencil</span></div>
+      <div class="icon-card c2"><i data-lucide="shield-check"></i><span class="label">安全</span><span class="cls">shield-check</span></div>
+      <div class="icon-card c3"><i data-lucide="zap"></i><span class="label">闪电</span><span class="cls">zap</span></div>
+      <div class="icon-card c4"><i data-lucide="globe"></i><span class="label">全球</span><span class="cls">globe</span></div>
+      <div class="icon-card c5"><i data-lucide="wifi"></i><span class="label">网络</span><span class="cls">wifi</span></div>
+      <div class="icon-card c6"><i data-lucide="battery-full"></i><span class="label">电量</span><span class="cls">battery-full</span></div>
+
+      <div class="icon-card c1"><i data-lucide="sun"></i><span class="label">白天</span><span class="cls">sun</span></div>
+      <div class="icon-card c2"><i data-lucide="moon"></i><span class="label">夜间</span><span class="cls">moon</span></div>
+      <div class="icon-card c3"><i data-lucide="bell"></i><span class="label">通知</span><span class="cls">bell</span></div>
+      <div class="icon-card c4"><i data-lucide="lock"></i><span class="label">锁定</span><span class="cls">lock</span></div>
+      <div class="icon-card c5"><i data-lucide="eye"></i><span class="label">查看</span><span class="cls">eye</span></div>
+      <div class="icon-card c6"><i data-lucide="image"></i><span class="label">图片</span><span class="cls">image</span></div>
+    </div>
+  </section>
+
+  <!-- ================= 02 参数 ================= -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>尺寸、描边与颜色</h2>
+      <span class="sec-desc">SVG 的每个参数都可以直接交给 CSS</span>
+    </div>
+
+    <div class="panel">
+      <p class="panel-title">三个最常用的参数</p>
+
+      <div class="param-grid">
+        <div class="param-card">
+          <h3>尺寸自由</h3>
+          <p class="hint">改 width / height，矢量永远清晰，不会糊。</p>
+          <div class="param-demo">
+            <div class="param-item size-16"><i data-lucide="sparkles"></i><span>16px</span></div>
+            <div class="param-item size-20"><i data-lucide="sparkles"></i><span>20px</span></div>
+            <div class="param-item size-28"><i data-lucide="sparkles"></i><span>28px</span></div>
+            <div class="param-item size-36"><i data-lucide="sparkles"></i><span>36px</span></div>
+            <div class="param-item size-48"><i data-lucide="sparkles"></i><span>48px</span></div>
+          </div>
+        </div>
+
+        <div class="param-card">
+          <h3>描边可调</h3>
+          <p class="hint">同一枚图标，改 stroke-width 就是另一种气质。</p>
+          <div class="param-demo">
+            <div class="param-item sw-1"><i data-lucide="heart"></i><span>stroke 1</span></div>
+            <div class="param-item sw-15"><i data-lucide="heart"></i><span>stroke 1.5</span></div>
+            <div class="param-item sw-2"><i data-lucide="heart"></i><span>stroke 2</span></div>
+            <div class="param-item sw-3"><i data-lucide="heart"></i><span>stroke 3</span></div>
+          </div>
+        </div>
+
+        <div class="param-card">
+          <h3>颜色继承</h3>
+          <p class="hint">描边使用 currentColor，父元素是什么颜色，图标就是什么颜色。</p>
+          <div class="param-demo">
+            <div class="param-item tone-indigo"><i data-lucide="heart"></i><span>indigo</span></div>
+            <div class="param-item tone-fuchsia"><i data-lucide="star"></i><span>fuchsia</span></div>
+            <div class="param-item tone-cyan"><i data-lucide="zap"></i><span>cyan</span></div>
+            <div class="param-item tone-emerald"><i data-lucide="shield-check"></i><span>emerald</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 03 实时调参与动效 ================= -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>SVG 是“活”的</h2>
+      <span class="sec-desc">拖动滑块，直接修改 CSS 变量</span>
+    </div>
+
+    <div class="panel">
+      <p class="panel-title">实时调参</p>
+
+      <div class="playground">
+        <div class="preview-box">
+          <div id="preview"><i data-lucide="compass"></i></div>
+        </div>
+
+        <div class="controls">
+          <div class="control">
+            <div class="control-top"><span>尺寸</span><output id="sizeOut">120px</output></div>
+            <input id="size" type="range" min="32" max="200" value="120" step="2">
+          </div>
+
+          <div class="control">
+            <div class="control-top"><span>描边宽度</span><output id="strokeOut">2</output></div>
+            <input id="stroke" type="range" min="0.5" max="4" value="2" step="0.25">
+          </div>
+
+          <div class="control">
+            <div class="control-top"><span>颜色</span><output id="colorOut">#818cf8</output></div>
+            <input id="tone" type="color" value="#818cf8">
+          </div>
+
+          <p class="control-note">
+            实现方式：容器上设置 <code>--size</code>、<code>--stroke</code>、<code>--tone</code>
+            三个 CSS 变量，SVG 通过 width、height、stroke-width、color 读取。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="panel-title">直接用 CSS 动画驱动 SVG</p>
+      <div class="anim-strip">
+        <div class="anim-item a-beat"><i data-lucide="heart"></i><span>心跳</span></div>
+        <div class="anim-item a-spin"><i data-lucide="refresh-cw"></i><span>旋转</span></div>
+        <div class="anim-item a-bounce"><i data-lucide="rocket"></i><span>弹跳</span></div>
+        <div class="anim-item a-pulse"><i data-lucide="bell"></i><span>呼吸</span></div>
+        <div class="anim-item a-shake"><i data-lucide="shield-check"></i><span>抖动</span></div>
+        <div class="anim-item" id="drawDemo"><i data-lucide="heart"></i><span>描边绘制</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 04 三种使用方式 ================= -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>SVG 的三种使用方式</h2>
+      <span class="sec-desc">同一枚 heart，三种引入方式</span>
+    </div>
+
+    <div class="usage-grid">
+      <article class="usage-card">
+        <div class="usage-preview light">
+          <img src="./1.jpg" alt="1.jpg 示例图">
+        </div>
+        <h3>① 引用外部图片文件</h3>
+        <p>用 <code>&lt;img&gt;</code> 直接引用本地图片，路径相对于当前 HTML 文件。注意：&lt;img&gt; 内部的 currentColor 不会继承页面颜色，适合固定内容的图片。</p>
+        <code>&lt;img src="./1.jpg" alt="1.jpg 示例图"&gt;</code>
+      </article>
+
+      <article class="usage-card">
+        <div class="usage-preview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/>
+          </svg>
+        </div>
+        <h3>② 直接内联 SVG</h3>
+        <p>把 SVG 代码写进 HTML。可以用 currentColor 继承颜色，也能被 CSS 动画、伪元素和 JavaScript 直接控制。</p>
+        <code>&lt;svg viewBox="0 0 24 24"&gt;…&lt;/svg&gt;</code>
+      </article>
+
+      <article class="usage-card">
+        <div class="usage-preview">
+          <i data-lucide="heart"></i>
+        </div>
+        <h3>③ Lucide 运行时生成</h3>
+        <p>页面里先写占位元素，加载本地的 <code>lucide.min.js</code> 后，<code>createIcons()</code> 会把它替换成真正的 SVG。</p>
+        <code>&lt;i data-lucide="heart"&gt;&lt;/i&gt;</code>
+      </article>
+    </div>
+
+    <details class="code-details">
+      <summary>查看内联 SVG 的完整代码</summary>
+      <pre class="code-block"><code><span class="c-cmt">&lt;!-- 24×24 网格：描边图标的标准写法 --&gt;</span>
+&lt;<span class="c-tag">svg</span> <span class="c-attr">viewBox</span>=<span class="c-str">"0 0 24 24"</span>
+     <span class="c-attr">fill</span>=<span class="c-str">"none"</span>
+     <span class="c-attr">stroke</span>=<span class="c-str">"currentColor"</span>
+     <span class="c-attr">stroke-width</span>=<span class="c-str">"2"</span>
+     <span class="c-attr">stroke-linecap</span>=<span class="c-str">"round"</span>
+     <span class="c-attr">stroke-linejoin</span>=<span class="c-str">"round"</span>&gt;
+  &lt;<span class="c-tag">path</span> <span class="c-attr">d</span>=<span class="c-str">"M2 9.5a5.5 5.5 0 0 1 9.591-3.676…"</span> /&gt;
+&lt;/<span class="c-tag">svg</span>&gt;</code></pre>
+    </details>
+  </section>
+
+  <!-- ================= 页脚 ================= -->
+  <footer class="footer">
+    <span>13-2 · Lucide SVG 图标 · 张熙淳 24002060415</span>
+    <span>
+      Lucide 1.59.0（ISC License）·
+      <a href="./13-1.html">← 返回：Font Awesome 字体图标</a>
+    </span>
+  </footer>
+
+</div>
+
+<script src="./cdn/lucide/lucide.min.js"></script>
+<script>
+  // 1. 扫描页面，渲染所有 data-lucide 占位符
+  lucide.createIcons();
+
+  // 2. 描边绘制动画需要把每条路径长度归一化
+  document.querySelectorAll('#drawDemo svg path').forEach(function (path) {
+    path.setAttribute('pathLength', '1');
+  });
+
+  // 3. 实时调参：滑块 → CSS 变量 → SVG
+  var preview = document.getElementById('preview');
+  var size = document.getElementById('size');
+  var stroke = document.getElementById('stroke');
+  var tone = document.getElementById('tone');
+  var sizeOut = document.getElementById('sizeOut');
+  var strokeOut = document.getElementById('strokeOut');
+  var colorOut = document.getElementById('colorOut');
+
+  function syncPreview() {
+    preview.style.setProperty('--size', size.value + 'px');
+    preview.style.setProperty('--stroke', stroke.value);
+    preview.style.setProperty('--tone', tone.value);
+
+    sizeOut.textContent = size.value + 'px';
+    strokeOut.textContent = stroke.value;
+    colorOut.textContent = tone.value;
+  }
+
+  [size, stroke, tone].forEach(function (input) {
+    input.addEventListener('input', syncPreview);
+  });
+
+  syncPreview();
+</script>
+</body>
+</html>

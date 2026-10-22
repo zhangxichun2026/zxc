@@ -1,0 +1,252 @@
+$ $content = @"
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张熙淳 - CSS长度单位</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f4f4f9;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0 30px;
+            color: #2c3e50;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 8px; }
+        .header p { font-size: 14px; color: #7f8c8d; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .card h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+        .unit-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+        .unit-label {
+            width: 100px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        .unit-desc {
+            font-size: 13px;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            width: 220px;
+        }
+        .demo-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .bar-container {
+            background: #ecf0f1;
+            border-radius: 4px;
+            height: 30px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .bar {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .bar-px { width: 200px; background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+        .bar-em { width: 12.5em; background: linear-gradient(90deg, #feca57, #ff9f43); }
+        .bar-rem { width: 12.5rem; background: linear-gradient(90deg, #1dd1a1, #10ac84); }
+        .bar-percent { width: 50%; background: linear-gradient(90deg, #48dbfb, #0abde3); }
+        .bar-vw { width: 30vw; background: linear-gradient(90deg, #5f27cd, #341f97); }
+        .bar-vh { width: 50%; max-width: 300px; background: linear-gradient(90deg, #ff9ff3, #f368e0); }
+        .comparison-section {
+            margin-top: 20px;
+        }
+        .comparison-section h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        .nested-demo {
+            font-size: 16px;
+        }
+        .nested-demo .parent {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .nested-demo .parent p {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .nested-demo .child {
+            background: #d1ecf1;
+            border: 2px dashed #17a2b8;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .nested-demo .child p {
+            font-size: 1.5em;
+        }
+        .vh-demo {
+            height: 30vh;
+            min-height: 150px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 14px;
+        }
+        th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        td:first-child {
+            color: #667eea;
+            font-weight: bold;
+            font-family: "Consolas", monospace;
+        }
+        @media (max-width: 768px) {
+            .unit-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .unit-desc {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>张熙淳 24002060415</h1>
+        <p>CSS 长度单位演示</p>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>长度单位对比</h2>
+            <table>
+                <tr><th>单位</th><th>类型</th><th>说明</th></tr>
+                <tr><td>px</td><td>绝对单位</td><td>像素，最常用</td></tr>
+                <tr><td>em</td><td>相对单位</td><td>相对于父元素字体大小</td></tr>
+                <tr><td>rem</td><td>相对单位</td><td>相对于根元素(html)字体大小</td></tr>
+                <tr><td>%</td><td>相对单位</td><td>相对于父元素尺寸</td></tr>
+                <tr><td>vw</td><td>相对单位</td><td>相对于视口宽度的1%</td></tr>
+                <tr><td>vh</td><td>相对单位</td><td>相对于视口高度的1%</td></tr>
+                <tr><td>vmin</td><td>相对单位</td><td>vw和vh中较小者</td></tr>
+                <tr><td>vmax</td><td>相对单位</td><td>vw和vh中较大者</td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>可视化对比（宽度演示）</h2>
+            <div class="comparison-section">
+                <h3>px - 200px</h3>
+                <div class="bar-container">
+                    <div class="bar bar-px">200px</div>
+                </div>
+                <h3>em - 12.5em (父元素16px)</h3>
+                <div class="bar-container">
+                    <div class="bar bar-em">12.5em = 200px</div>
+                </div>
+                <h3>rem - 12.5rem (根元素16px)</h3>
+                <div class="bar-container">
+                    <div class="bar bar-rem">12.5rem = 200px</div>
+                </div>
+                <h3>% - 50%</h3>
+                <div class="bar-container">
+                    <div class="bar bar-percent">50%</div>
+                </div>
+                <h3>vw - 30vw</h3>
+                <div class="bar-container">
+                    <div class="bar bar-vw">30vw</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>em vs rem 嵌套演示</h2>
+            <div class="nested-demo">
+                <div class="parent">
+                    <p>父元素 font-size: 16px</p>
+                    <div class="child">
+                        <p>子元素 font-size: 1.5em = 24px</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>vh - 视口高度演示</h2>
+            <div class="vh-demo">
+                30vh 高度（调整浏览器窗口高度查看变化）
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>实际应用示例</h2>
+            <div class="unit-row">
+                <span class="unit-label">calc()</span>
+                <div class="demo-box" style="width: calc(100% - 40px); padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; color: #fff; text-align: center;">width: calc(100% - 40px)</div>
+            </div>
+            <div class="unit-row">
+                <span class="unit-label">min()</span>
+                <div class="demo-box" style="width: min(100%, 400px); padding: 12px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-radius: 8px; color: #fff; text-align: center;">width: min(100%, 400px)</div>
+            </div>
+            <div class="unit-row">
+                <span class="unit-label">max()</span>
+                <div class="demo-box" style="width: max(200px, 30%); padding: 12px; background: linear-gradient(135deg, #1dd1a1, #10ac84); border-radius: 8px; color: #fff; text-align: center;">width: max(200px, 30%)</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
