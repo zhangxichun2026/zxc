@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，日期：2026-10-26，功能名称：数7游戏 一百个盒子演示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数7游戏 · 一百个盒子 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0e1117;
+            --zxc_surface: #171c26;
+            --zxc_surface_2: #1e2431;
+            --zxc_ink: #eef2f8;
+            --zxc_muted: #94a3b8;
+            --zxc_line: rgba(255, 255, 255, 0.09);
+            --zxc_accent: #38bdf8;
+            --zxc_green: #4ade80;
+            --zxc_amber: #fbbf24;
+            --zxc_pink: #f472b6;
+            --zxc_radius: 14px;
+            --zxc_shadow: 0 24px 48px -32px #000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(40rem 26rem at 8% -10%, rgba(56, 189, 248, 0.14), transparent 60%),
+                radial-gradient(36rem 24rem at 100% 0%, rgba(244, 114, 182, 0.08), transparent 60%),
+                var(--zxc_bg);
+        }
+
+        .zxc_page { width: min(72rem, 100%); margin: 0 auto; }
+
+        /* ---------- 头部 ---------- */
+        .zxc_header {
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--zxc_line);
+        }
+
+        .zxc_header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.55rem, 4vw, 2.3rem);
+            letter-spacing: 0.02em;
+        }
+
+        .zxc_header h1 span {
+            background: linear-gradient(100deg, var(--zxc_accent), var(--zxc_pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_header p {
+            margin: 0;
+            color: var(--zxc_muted);
+            font-size: clamp(0.92rem, 2vw, 1rem);
+        }
+
+        .zxc_meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.4rem;
+            margin-top: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_meta span::before {
+            content: "▸ ";
+            color: var(--zxc_accent);
+        }
+
+        /* ---------- 统计卡片 ---------- */
+        .zxc_stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .zxc_stat {
+            padding: 0.9rem 1.1rem;
+            background: linear-gradient(150deg, var(--zxc_surface), var(--zxc_surface_2));
+            border: 1px solid var(--zxc_line);
+            border-radius: var(--zxc_radius);
+            box-shadow: var(--zxc_shadow);
+        }
+
+        .zxc_stat dt {
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_stat dd {
+            margin: 0.2rem 0 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .zxc_stat_total dd { color: var(--zxc_accent); }
+        .zxc_stat_pass  dd { color: var(--zxc_pink); }
+        .zxc_stat_show  dd { color: var(--zxc_green); }
+
+        /* ---------- 图例 ---------- */
+        .zxc_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.6rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_legend i {
+            display: inline-block;
+            width: 0.95em;
+            height: 0.95em;
+            margin-right: 0.4rem;
+            border-radius: 4px;
+            vertical-align: -1px;
+        }
+
+        .zxc_legend .zxc_sw_show { background: rgba(74, 222, 128, 0.25); border: 1px solid var(--zxc_green); }
+        .zxc_legend .zxc_sw_pass { background: rgba(244, 114, 182, 0.12); border: 1px dashed var(--zxc_pink); }
+
+        /* ---------- 百盒子网格 ---------- */
+        .zxc_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr));
+            gap: 0.5rem;
+        }
+
+        .zxc_box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: clamp(0.85rem, 2vw, 1.05rem);
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .zxc_box:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 18px -8px #000;
+            z-index: 1;
+        }
+
+        /* 普通盒子：显示数字 */
+        .zxc_box_num {
+            color: var(--zxc_green);
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.35);
+        }
+
+        /* 满足数7规则的盒子：空盒子 */
+        .zxc_box_empty {
+            color: transparent;
+            background: rgba(244, 114, 182, 0.06);
+            border: 1px dashed rgba(244, 114, 182, 0.5);
+        }
+
+        /* 点击空盒子后临时揭开数字 */
+        .zxc_box_empty.zxc_reveal {
+            color: var(--zxc_pink);
+            background: rgba(244, 114, 182, 0.14);
+            border-style: solid;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_box { transition: none; }
+            .zxc_box:hover { transform: none; }
+        }
+
+        /* ---------- 说明与页脚 ---------- */
+        .zxc_note {
+            margin: 1.6rem 0 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--zxc_muted);
+            background: var(--zxc_surface);
+            border: 1px solid var(--zxc_line);
+            border-left: 4px solid var(--zxc_pink);
+            border-radius: 10px;
+        }
+
+        .zxc_note code {
+            padding: 1px 5px;
+            font-size: 0.9em;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+        }
+
+        .zxc_footer {
+            margin-top: 2rem;
+            font-size: 0.82rem;
+            color: var(--zxc_muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>数7游戏 · <span>一百个盒子</span></h1>
+            <p>规则：遇到 7 的倍数、或数字中含有 7（个位是 7、十位是 7）就要"过"——这样的盒子显示为空盒子；其余盒子正常显示数字。点击空盒子可临时揭开它隐藏的数字。</p>
+            <div class="zxc_meta">
+                <span>张熙淳</span>
+                <span>学号 24002060415</span>
+                <span>2026-10-26</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- 统计信息（JS 动态填充） -->
+            <dl class="zxc_stats">
+                <div class="zxc_stat zxc_stat_total">
+                    <dt>盒子总数</dt>
+                    <dd id="zxc_stat_total">-</dd>
+                </div>
+                <div class="zxc_stat zxc_stat_pass">
+                    <dt>空盒子（要"过"）</dt>
+                    <dd id="zxc_stat_pass">-</dd>
+                </div>
+                <div class="zxc_stat zxc_stat_show">
+                    <dt>显示数字的盒子</dt>
+                    <dd id="zxc_stat_show">-</dd>
+                </div>
+            </dl>
+
+            <!-- 图例 -->
+            <div class="zxc_legend">
+                <span><i class="zxc_sw_show"></i>显示数字（不满足规则）</span>
+                <span><i class="zxc_sw_pass"></i>空盒子（满足数7规则，点击可揭开）</span>
+            </div>
+
+            <!-- 100 个盒子（JS 动态生成） -->
+            <section id="zxc_grid" class="zxc_grid" aria-label="一百个盒子"></section>
+
+            <p class="zxc_note">
+                判断逻辑：<code>zxc_num % 7 === 0</code> 即 7 的倍数；
+                <code>String(zxc_num).indexOf("7") !== -1</code> 即数字中含有 7（如 17、71）。
+                两者满足其一就属于"要过"的数，对应空盒子。
+                例如：7（倍数+含7）、14（倍数）、17（含7）、70~79（十位含7 或倍数）都会被挖空。
+            </p>
+        </main>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // 盒子总数
+        var zxc_total = 100;
+
+        // 判断是否满足数7规则：7的倍数 或 数字中含7
+        function zxc_isSeven(zxc_num) {
+            if (zxc_num % 7 === 0) return true;                      // 7 的倍数
+            return String(zxc_num).indexOf("7") !== -1;              // 含数字 7
+        }
+
+        // 生成 100 个盒子并统计
+        function zxc_render() {
+            var zxc_grid = document.getElementById("zxc_grid");
+            var zxc_passCount = 0;
+            var zxc_html = "";
+
+            for (var zxc_i = 1; zxc_i <= zxc_total; zxc_i++) {
+                if (zxc_isSeven(zxc_i)) {
+                    // 满足规则：空盒子（点击可揭开）
+                    zxc_passCount++;
+                    zxc_html += '<div class="zxc_box zxc_box_empty" data-zxc_num="' + zxc_i + '" title="要过：' + zxc_i + '"></div>';
+                } else {
+                    // 不满足规则：显示数字
+                    zxc_html += '<div class="zxc_box zxc_box_num" title="显示：' + zxc_i + '">' + zxc_i + '</div>';
+                }
+            }
+
+            zxc_grid.innerHTML = zxc_html;
+
+            // 填充统计
+            document.getElementById("zxc_stat_total").innerHTML = zxc_total;
+            document.getElementById("zxc_stat_pass").innerHTML = zxc_passCount;
+            document.getElementById("zxc_stat_show").innerHTML = zxc_total - zxc_passCount;
+        }
+
+        // 点击空盒子：临时揭开数字，再点恢复空白
+        function zxc_bindReveal() {
+            document.getElementById("zxc_grid").addEventListener("click", function (zxc_event) {
+                var zxc_box = zxc_event.target;
+                if (zxc_box.className.indexOf("zxc_box_empty") === -1) return;
+
+                var zxc_num = zxc_box.getAttribute("data-zxc_num");
+                if (zxc_box.className.indexOf("zxc_reveal") === -1) {
+                    zxc_box.className = "zxc_box zxc_box_empty zxc_reveal";
+                    zxc_box.innerHTML = zxc_num;
+                } else {
+                    zxc_box.className = "zxc_box zxc_box_empty";
+                    zxc_box.innerHTML = "";
+                }
+            });
+        }
+
+        zxc_render();
+        zxc_bindReveal();
+    </script>
+</body>
+</html>

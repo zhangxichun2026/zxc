@@ -2,28 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张熙淳的JavaScript</title>
 </head>
 <body>
     <h2>张熙淳的JavaScript</h2>
+    <button id="startBtn">开始填写</button>
+    <div id="result"></div>
+
     <script>
-        document.write("hello world,张熙淳");
-        alert("hello world");
-        console.log("hello world,wb");
-        //prompt和confirm
-        var name = prompt("请输入您的姓名");
-        console.log(name);
-        var age = prompt("请输入您的年龄");
-        console.log(age);
-        //confirm
-        var isConfirm = confirm("您确定要提交吗？");
-        console.log(isConfirm);
-        if(isConfirm){
-            document.write("提交成功");
-        }else{
-            document.write("提交失败");
-        }
-    </script>   
+        const resultEl = document.getElementById('result');
+
+        document.getElementById('startBtn').addEventListener('click', function () {
+            // 1. 姓名
+            const name = prompt("请输入您的姓名");
+            if (name === null) {
+                resultEl.innerHTML = "提交失败：您取消了姓名输入";
+                return;
+            }
+            if (name.trim() === "") {
+                resultEl.innerHTML = "提交失败：姓名不能为空";
+                return;
+            }
+
+            // 2. 年龄
+            const age = prompt("请输入您的年龄");
+            if (age === null) {
+                resultEl.innerHTML = "提交失败：您取消了年龄输入";
+                return;
+            }
+            const ageNum = Number(age);
+            if (age.trim() === "" || Number.isNaN(ageNum) || ageNum <= 0) {
+                resultEl.innerHTML = "提交失败：年龄必须是大于 0 的数字";
+                return;
+            }
+            // 3. 确认提交
+            const isConfirm = confirm(`姓名：${name}\n年龄：${ageNum}\n您确定要提交吗？`);
+            if (isConfirm) {
+                resultEl.innerHTML = `
+                    <p>提交成功</p>
+                    <p>姓名：${name}</p>
+                    <p>年龄：${ageNum}</p>
+                `;
+                console.log("提交成功", { name, age: ageNum });
+            } else {
+                resultEl.innerHTML = "提交失败：您取消了提交";
+                console.log("用户取消提交");
+            }
+        });
+    </script>
 </body>
 </html>
