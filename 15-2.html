@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-10-26，使用模型：GLM-5.3-Flash，功能名称：JavaScript 程序结构演示（顺序、条件、循环） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 程序结构 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0e1117;
+            --zxc_surface: #171c26;
+            --zxc_surface_2: #1e2431;
+            --zxc_ink: #eef2f8;
+            --zxc_muted: #94a3b8;
+            --zxc_line: rgba(255, 255, 255, 0.09);
+            --zxc_accent: #38bdf8;
+            --zxc_green: #4ade80;
+            --zxc_amber: #fbbf24;
+            --zxc_pink: #f472b6;
+            --zxc_radius: 14px;
+            --zxc_shadow: 0 24px 48px -32px #000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(40rem 26rem at 8% -10%, rgba(56, 189, 248, 0.14), transparent 60%),
+                radial-gradient(36rem 24rem at 100% 0%, rgba(74, 222, 128, 0.08), transparent 60%),
+                var(--zxc_bg);
+        }
+
+        .zxc_page { width: min(70rem, 100%); margin: 0 auto; }
+
+        /* ---------- 头部 ---------- */
+        .zxc_header {
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--zxc_line);
+        }
+
+        .zxc_header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.55rem, 4vw, 2.3rem);
+            letter-spacing: 0.02em;
+        }
+
+        .zxc_header h1 span {
+            background: linear-gradient(100deg, var(--zxc_accent), var(--zxc_green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_header p {
+            margin: 0;
+            color: var(--zxc_muted);
+            font-size: clamp(0.92rem, 2vw, 1rem);
+        }
+
+        .zxc_meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.4rem;
+            margin-top: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_meta span::before {
+            content: "▸ ";
+            color: var(--zxc_accent);
+        }
+
+        /* ---------- 卡片 ---------- */
+        .zxc_cards { display: flex; flex-direction: column; gap: 1.2rem; }
+
+        .zxc_card {
+            padding: 1.2rem 1.4rem;
+            background: linear-gradient(150deg, var(--zxc_surface), var(--zxc_surface_2));
+            border: 1px solid var(--zxc_line);
+            border-radius: var(--zxc_radius);
+            box-shadow: var(--zxc_shadow);
+        }
+
+        .zxc_card h2 {
+            margin: 0 0 0.4rem;
+            font-size: 1.15rem;
+        }
+
+        .zxc_card h2 small {
+            margin-left: 0.5rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 999px;
+            padding: 0.1rem 0.6rem;
+            vertical-align: 2px;
+        }
+
+        .zxc_card > p {
+            margin: 0 0 0.8rem;
+            color: var(--zxc_muted);
+            font-size: 0.9rem;
+        }
+
+        .zxc_code {
+            margin: 0 0 0.9rem;
+            padding: 0.8rem 1rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        /* ---------- 控件与输出 ---------- */
+        .zxc_bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .zxc_input {
+            width: 9rem;
+            padding: 0.45rem 0.7rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.9rem;
+            color: var(--zxc_ink);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .zxc_input:focus { border-color: var(--zxc_accent); }
+
+        .zxc_btn {
+            padding: 0.45rem 1rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: var(--zxc_ink);
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .zxc_btn:hover { background: rgba(56, 189, 248, 0.22); transform: translateY(-1px); }
+
+        .zxc_btn_green {
+            color: var(--zxc_green);
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.45);
+        }
+
+        .zxc_btn_green:hover { background: rgba(74, 222, 128, 0.2); }
+
+        .zxc_btn_pink {
+            color: var(--zxc_pink);
+            background: rgba(244, 114, 182, 0.1);
+            border-color: rgba(244, 114, 182, 0.45);
+        }
+
+        .zxc_btn_pink:hover { background: rgba(244, 114, 182, 0.2); }
+
+        .zxc_out {
+            min-height: 3.2rem;
+            max-height: 18rem;
+            overflow: auto;
+            padding: 0.7rem 0.9rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.85rem;
+            line-height: 1.9;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+        }
+
+        .zxc_out .zxc_ok  { color: var(--zxc_green); }
+        .zxc_out .zxc_hi  { color: var(--zxc_amber); }
+        .zxc_out .zxc_tip { color: var(--zxc_muted); }
+
+        .zxc_mul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .zxc_mul span {
+            padding: 0.15rem 0.45rem;
+            font-size: 0.78rem;
+            color: var(--zxc_green);
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        /* ---------- 说明与页脚 ---------- */
+        .zxc_note {
+            margin: 1.6rem 0 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--zxc_muted);
+            background: var(--zxc_surface);
+            border: 1px solid var(--zxc_line);
+            border-left: 4px solid var(--zxc_accent);
+            border-radius: 10px;
+        }
+
+        .zxc_note code {
+            padding: 1px 5px;
+            font-size: 0.9em;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+        }
+
+        .zxc_footer {
+            margin-top: 2rem;
+            font-size: 0.82rem;
+            color: var(--zxc_muted);
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_btn { transition: none; }
+            .zxc_btn:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JavaScript <span>程序结构</span>演示</h1>
+            <p>程序的三种基本结构：顺序、条件（分支）、循环。每个卡片都有可运行的示例，点击按钮即可看到执行过程与结果。</p>
+            <div class="zxc_meta">
+                <span>张熙淳</span>
+                <span>学号 24002060415</span>
+                <span>2026-10-26</span>
+            </div>
+        </header>
+
+        <main class="zxc_cards">
+            <!-- 1. 顺序结构 -->
+            <section class="zxc_card">
+                <h2>一、顺序结构<small>自上而下依次执行</small></h2>
+                <p>程序默认的执行方式：从第一条语句开始，按书写顺序一条一条执行，不跳过、不重复。</p>
+                <pre class="zxc_code">var zxc_a = 1;              // 第 1 步
+var zxc_b = 2;              // 第 2 步
+var zxc_sum = zxc_a + zxc_b; // 第 3 步 → 3</pre>
+                <div class="zxc_out" id="zxc_out_seq"></div>
+            </section>
+
+            <!-- 2. 条件结构 -->
+            <section class="zxc_card">
+                <h2>二、条件结构<small>if / else 与 switch</small></h2>
+                <p>根据条件是否成立选择不同的执行路径。输入一个成绩（0~100），分别用 if/else if 和 switch 两种写法判断等级。</p>
+                <pre class="zxc_code">if (zxc_score >= 90)      { zxc_level = "优秀"; }
+else if (zxc_score >= 80) { zxc_level = "良好"; }
+else if (zxc_score >= 60) { zxc_level = "及格"; }
+else                      { zxc_level = "不及格"; }</pre>
+                <div class="zxc_bar">
+                    <input class="zxc_input" id="zxc_score_input" type="number" min="0" max="100" placeholder="输入成绩 0~100" value="85">
+                    <button class="zxc_btn" id="zxc_btn_cond" type="button">判断等级</button>
+                </div>
+                <div class="zxc_out" id="zxc_out_cond"><span class="zxc_tip">等待判断……</span></div>
+            </section>
+
+            <!-- 3. 循环结构 -->
+            <section class="zxc_card">
+                <h2>三、循环结构<small>for / while / do-while</small></h2>
+                <p>重复执行一段代码。for 适合已知次数，while 适合先判断再执行，do-while 至少执行一次。</p>
+                <pre class="zxc_code">for (var zxc_i = 1; zxc_i <= 9; zxc_i++) { /* 九九乘法表 */ }
+var zxc_i = 1, zxc_sum = 0;
+while (zxc_i <= 100) { zxc_sum += zxc_i; zxc_i++; }  // 1+2+…+100
+do { zxc_count++; } while (zxc_count < 0);           // 条件为假也执行 1 次</pre>
+                <div class="zxc_bar">
+                    <button class="zxc_btn zxc_btn_green" id="zxc_btn_for" type="button">for · 九九乘法表</button>
+                    <button class="zxc_btn" id="zxc_btn_while" type="button">while · 1+2+…+100</button>
+                    <button class="zxc_btn zxc_btn_pink" id="zxc_btn_do" type="button">do-while · 至少一次</button>
+                    <button class="zxc_btn" id="zxc_btn_clear" type="button">清空输出</button>
+                </div>
+                <div class="zxc_out" id="zxc_out_loop"><span class="zxc_tip">点击上方按钮运行循环……</span></div>
+            </section>
+        </main>
+
+        <p class="zxc_note">
+            小结：<code>顺序</code> 是默认结构；<code>条件</code> 让程序学会"选择"；
+            <code>循环</code> 让程序学会"重复"。三种结构组合可以表达任何复杂逻辑——
+            这就是结构化程序设计的基础。
+        </p>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ---------- 工具：向指定输出区追加一行 ----------
+        function zxc_log(zxc_id, zxc_text, zxc_cls) {
+            var zxc_box = document.getElementById(zxc_id);
+            var zxc_line = document.createElement("div");
+            if (zxc_cls) zxc_line.className = zxc_cls;
+            zxc_line.innerHTML = zxc_text;
+            zxc_box.appendChild(zxc_line);
+        }
+
+        // ---------- 1. 顺序结构：页面加载时自动演示 ----------
+        function zxc_run_seq() {
+            var zxc_a = 1;                                  // 第 1 步
+            var zxc_b = 2;                                  // 第 2 步
+            var zxc_sum = zxc_a + zxc_b;                    // 第 3 步
+            zxc_log("zxc_out_seq", "<span class='zxc_tip'>页面加载，开始顺序执行：</span>");
+            zxc_log("zxc_out_seq", "第 1 步：zxc_a = 1");
+            zxc_log("zxc_out_seq", "第 2 步：zxc_b = 2");
+            zxc_log("zxc_out_seq", "第 3 步：zxc_sum = zxc_a + zxc_b");
+            zxc_log("zxc_out_seq", "执行完毕，zxc_sum = " + zxc_sum, "zxc_ok");
+        }
+
+        // ---------- 2. 条件结构：if/else 与 switch 双写法 ----------
+        function zxc_run_cond() {
+            var zxc_score = Number(document.getElementById("zxc_score_input").value);
+            var zxc_out = document.getElementById("zxc_out_cond");
+            zxc_out.innerHTML = "";
+
+            // 输入合法性检查（也是条件结构）
+            if (isNaN(zxc_score) || zxc_score < 0 || zxc_score > 100) {
+                zxc_log("zxc_out_cond", "请输入 0~100 之间的数字！", "zxc_hi");
+                return;
+            }
+
+            // 写法一：if / else if / else
+            var zxc_level;
+            if (zxc_score >= 90)      { zxc_level = "优秀"; }
+            else if (zxc_score >= 80) { zxc_level = "良好"; }
+            else if (zxc_score >= 60) { zxc_level = "及格"; }
+            else                      { zxc_level = "不及格"; }
+
+            // 写法二：switch（按十分位分组）
+            var zxc_level2;
+            switch (Math.floor(zxc_score / 10)) {
+                case 10:
+                case 9:  zxc_level2 = "优秀";   break;
+                case 8:  zxc_level2 = "良好";   break;
+                case 7:
+                case 6:  zxc_level2 = "及格";   break;
+                default: zxc_level2 = "不及格"; break;
+            }
+
+            zxc_log("zxc_out_cond", "输入成绩：" + zxc_score);
+            zxc_log("zxc_out_cond", "if/else if 判断 → " + zxc_level, "zxc_ok");
+            zxc_log("zxc_out_cond", "switch 判断　 → " + zxc_level2, "zxc_ok");
+            zxc_log("zxc_out_cond", "两种写法结果" + (zxc_level === zxc_level2 ? "一致 ✓" : "不一致 ✗"), "zxc_tip");
+        }
+
+        // ---------- 3.1 for 循环：九九乘法表 ----------
+        function zxc_run_for() {
+            var zxc_i, zxc_j, zxc_row;
+            for (zxc_i = 1; zxc_i <= 9; zxc_i++) {
+                zxc_row = "";
+                for (zxc_j = 1; zxc_j <= zxc_i; zxc_j++) {
+                    zxc_row += "<span>" + zxc_j + "×" + zxc_i + "=" + (zxc_i * zxc_j) + "</span>";
+                }
+                zxc_log("zxc_out_loop", zxc_row);
+            }
+            zxc_log("zxc_out_loop", "for 循环执行完毕：外层 9 次 × 内层最多 9 次", "zxc_tip");
+        }
+
+        // ---------- 3.2 while 循环：1+2+…+100 ----------
+        function zxc_run_while() {
+            var zxc_i = 1, zxc_sum = 0;
+            while (zxc_i <= 100) {          // 先判断条件，再执行循环体
+                zxc_sum += zxc_i;
+                zxc_i++;
+            }
+            zxc_log("zxc_out_loop", "while 循环：1+2+…+100 = " + zxc_sum, "zxc_ok");
+            zxc_log("zxc_out_loop", "（循环体共执行 100 次，条件 zxc_i <= 100 先判断后执行）", "zxc_tip");
+        }
+
+        // ---------- 3.3 do-while 循环：至少执行一次 ----------
+        function zxc_run_do() {
+            var zxc_count = 0;
+            do {
+                zxc_count++;                // 条件为假，仍然先执行了一次
+            } while (zxc_count < 0);        // 0 < 0 为假，退出
+            zxc_log("zxc_out_loop", "do-while：条件一开始就为假，循环体仍执行了 " + zxc_count + " 次", "zxc_hi");
+            zxc_log("zxc_out_loop", "（do-while 先执行后判断，至少执行 1 次）", "zxc_tip");
+        }
+
+        // ---------- 清空循环输出 ----------
+        function zxc_clear_loop() {
+            document.getElementById("zxc_out_loop").innerHTML =
+                "<span class='zxc_tip'>点击上方按钮运行循环……</span>";
+        }
+
+        // ---------- 初始化：绑定事件 ----------
+        function zxc_init() {
+            zxc_run_seq();
+            document.getElementById("zxc_btn_cond").addEventListener("click", zxc_run_cond);
+            document.getElementById("zxc_btn_for").addEventListener("click", zxc_run_for);
+            document.getElementById("zxc_btn_while").addEventListener("click", zxc_run_while);
+            document.getElementById("zxc_btn_do").addEventListener("click", zxc_run_do);
+            document.getElementById("zxc_btn_clear").addEventListener("click", zxc_clear_loop);
+        }
+
+        zxc_init();
+    </script>
+</body>
+</html>
