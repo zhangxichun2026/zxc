@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-10-29，使用模型：GLM-5.3-Flash，功能名称：影视排行榜选项卡切换（每日/每周/每月/全部） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视排行榜选项卡切换 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_red: #e8442e;
+            --zxc_red_light: #ff7a52;
+            --zxc_ink: #333;
+            --zxc_muted: #999;
+            --zxc_line: #e0e0e0;
+            --zxc_gray_badge_1: #d8dce1;
+            --zxc_gray_badge_2: #a9b0b8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: #eef0f3;
+        }
+
+        .zxc_page { width: min(46rem, 100%); margin: 0 auto; }
+
+        .zxc_head { text-align: center; margin-bottom: 1.6rem; }
+
+        .zxc_head h1 {
+            margin: 0 0 0.4rem;
+            font-size: 1.4rem;
+            letter-spacing: 0.03em;
+        }
+
+        .zxc_head p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        /* ============ 排行榜组件（还原效果图） ============ */
+        .zxc_widget {
+            width: 25rem;
+            max-width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid var(--zxc_line);
+            box-shadow: 0 10px 26px -18px rgba(0, 0, 0, 0.35);
+        }
+
+        /* 选项卡栏 */
+        .zxc_tabs {
+            display: flex;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border-bottom: 1px solid var(--zxc_line);
+        }
+
+        .zxc_tabs li {
+            flex: 1;
+            padding: 0.55rem 0;
+            font-size: 0.88rem;
+            text-align: center;
+            color: var(--zxc_ink);
+            background: linear-gradient(180deg, #fdfdfd, #ececec);
+            border-right: 1px solid #fff;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.18s ease, color 0.18s ease;
+        }
+
+        .zxc_tabs li:last-child { border-right: none; }
+
+        .zxc_tabs li:hover { background: linear-gradient(180deg, #fff, #f3d2cb); }
+
+        .zxc_tabs li.zxc_active {
+            color: #fff;
+            font-weight: bold;
+            background: linear-gradient(180deg, var(--zxc_red_light), var(--zxc_red));
+        }
+
+        /* 榜单区：左右两列 */
+        .zxc_panel {
+            display: flex;
+            padding: 0.5rem 0.9rem 0.7rem;
+            background: #fff;
+        }
+
+        .zxc_panel.zxc_fade { animation: zxc_fade_in 0.28s ease; }
+
+        @keyframes zxc_fade_in {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .zxc_col {
+            flex: 1;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .zxc_col:first-child { border-right: 1px dotted #eee; padding-right: 0.9rem; }
+        .zxc_col:last-child { padding-left: 0.9rem; }
+
+        .zxc_col li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            height: 2rem;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.82rem;
+        }
+
+        .zxc_col li:last-child { border-bottom: none; }
+
+        /* 排名图标：1~3 红色，4~10 灰色 */
+        .zxc_rank {
+            flex: none;
+            width: 1.1rem;
+            height: 1.1rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.7rem;
+            font-weight: bold;
+            line-height: 1.1rem;
+            text-align: center;
+            color: #fff;
+            border-radius: 3px;
+            background: linear-gradient(180deg, var(--zxc_gray_badge_1), var(--zxc_gray_badge_2));
+        }
+
+        .zxc_rank.zxc_top {
+            background: linear-gradient(180deg, var(--zxc_red_light), var(--zxc_red));
+        }
+
+        .zxc_title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .zxc_title:hover { color: var(--zxc_red); text-decoration: underline; }
+
+        /* ============ 效果图缩略图（文件夹里的 4 张图） ============ */
+        .zxc_gallery {
+            width: 25rem;
+            max-width: 100%;
+            margin: 1.2rem auto 0;
+            padding: 0.85rem 0.9rem 0.95rem;
+            background: #fff;
+            border: 1px solid var(--zxc_line);
+            box-shadow: 0 10px 26px -18px rgba(0, 0, 0, 0.35);
+        }
+
+        .zxc_gallery h2 {
+            margin: 0 0 0.6rem;
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_thumbs {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .zxc_thumbs img {
+            flex: 1;
+            min-width: 0;
+            display: block;
+            border: 2px solid #e4e7ec;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.18s ease, transform 0.18s ease;
+        }
+
+        .zxc_thumbs img:hover { transform: translateY(-2px); border-color: #f3b7ad; }
+
+        .zxc_thumbs img.zxc_active {
+            border-color: var(--zxc_red);
+            transform: translateY(-2px);
+        }
+
+        .zxc_footer { margin-top: 1.8rem; font-size: 0.8rem; color: var(--zxc_muted); text-align: center; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_tabs li, .zxc_thumbs img, .zxc_title, .zxc_panel { transition: none; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_head">
+            <h1>影视排行榜 · 选项卡切换</h1>
+            <p>张熙淳 24002060415 · 2026-10-29 · 点击选项卡或下方缩略图，切换对应榜单</p>
+        </header>
+
+        <!-- 排行榜组件 -->
+        <section class="zxc_widget">
+            <ul class="zxc_tabs" id="zxc_tabs">
+                <li class="zxc_active">每日</li>
+                <li>每周</li>
+                <li>每月</li>
+                <li>全部</li>
+            </ul>
+            <div class="zxc_panel" id="zxc_panel">
+                <ul class="zxc_col" id="zxc_col_left"></ul>
+                <ul class="zxc_col" id="zxc_col_right"></ul>
+            </div>
+        </section>
+
+        <!-- 效果图缩略图：来自文件夹的 4 张图，点击同样可切换 -->
+        <section class="zxc_gallery">
+            <h2>效果图对照（点击缩略图同样可切换）</h2>
+            <div class="zxc_thumbs" id="zxc_thumbs">
+                <img src="images/16-4/1.jpg" alt="每日排行效果图" class="zxc_active" data-zxc_idx="0">
+                <img src="images/16-4/2.jpg" alt="每周排行效果图" data-zxc_idx="1">
+                <img src="images/16-4/3.jpg" alt="每月排行效果图" data-zxc_idx="2">
+                <img src="images/16-4/4.jpg" alt="全部排行效果图" data-zxc_idx="3">
+            </div>
+        </section>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 榜单数据（与 4 张效果图一一对应） =================
+        var zxc_data = [
+            // 0 每日
+            ["最美的时光", "咱们结婚吧", "渗透", "继承者们", "烽火佳人",
+             "极品女士第2季", "爱闪亮", "狼烟（2013）", "钱多多炼爱记", "苍狼"],
+            // 1 每周
+            ["咱们结婚吧", "继承者们", "最美的时光", "爱闪亮", "渗透",
+             "狼烟（2013）", "三十岁，你好", "钱多多炼爱记", "特种兵之火凤凰", "极品女士第2季"],
+            // 2 每月
+            ["特种兵之火凤凰", "咱们结婚吧", "继承者们", "金玉满堂", "王的女人",
+             "爱闪亮", "爱情面前谁怕谁", "英雄联盟", "小爸爸", "我们这拨人"],
+            // 3 全部
+            ["永不磨灭的番号", "特种兵之火凤凰", "新还珠格格", "咱们结婚吧", "小爸爸",
+             "心术", "乡村爱情5", "天天有喜", "一不小心爱上你", "夏日甜心"]
+        ];
+
+        var zxc_tabNames = ["每日", "每周", "每月", "全部"];
+        var zxc_current = 0;
+
+        // ================= 工具 =================
+        function zxc_escape(zxc_v) { return String(zxc_v).replace(/</g, "&lt;"); }
+
+        // 生成单个榜单条目
+        function zxc_item_html(zxc_rank, zxc_title) {
+            var zxc_cls = zxc_rank <= 3 ? " zxc_top" : "";
+            return "<li><span class='zxc_rank" + zxc_cls + "'>" + zxc_rank + "</span>" +
+                   "<span class='zxc_title'>" + zxc_escape(zxc_title) + "</span></li>";
+        }
+
+        // ================= 渲染指定选项卡 =================
+        function zxc_render(zxc_idx) {
+            var zxc_list = zxc_data[zxc_idx];
+            var zxc_left = document.getElementById("zxc_col_left");
+            var zxc_right = document.getElementById("zxc_col_right");
+
+            var zxc_html_left = "";
+            var zxc_html_right = "";
+            for (var zxc_i = 0; zxc_i < 10; zxc_i++) {
+                if (zxc_i < 5) {
+                    zxc_html_left += zxc_item_html(zxc_i + 1, zxc_list[zxc_i]);
+                } else {
+                    zxc_html_right += zxc_item_html(zxc_i + 1, zxc_list[zxc_i]);
+                }
+            }
+            zxc_left.innerHTML = zxc_html_left;
+            zxc_right.innerHTML = zxc_html_right;
+
+            // 重新触发入场动画
+            var zxc_panel = document.getElementById("zxc_panel");
+            zxc_panel.classList.remove("zxc_fade");
+            void zxc_panel.offsetWidth;
+            zxc_panel.classList.add("zxc_fade");
+        }
+
+        // ================= 切换选项卡 =================
+        function zxc_switch(zxc_idx) {
+            if (zxc_idx === zxc_current) { return; }
+            zxc_current = zxc_idx;
+
+            // 高亮选项卡
+            var zxc_tabs = document.getElementById("zxc_tabs").children;
+            for (var zxc_i = 0; zxc_i < zxc_tabs.length; zxc_i++) {
+                zxc_tabs[zxc_i].className = zxc_i === zxc_idx ? "zxc_active" : "";
+            }
+
+            // 高亮缩略图
+            var zxc_imgs = document.getElementById("zxc_thumbs").children;
+            for (var zxc_j = 0; zxc_j < zxc_imgs.length; zxc_j++) {
+                zxc_imgs[zxc_j].className = zxc_j === zxc_idx ? "zxc_active" : "";
+            }
+
+            zxc_render(zxc_idx);
+        }
+
+        // ================= 初始化 =================
+        function zxc_init() {
+            zxc_render(0);
+
+            // 绑定选项卡点击
+            var zxc_tabs = document.getElementById("zxc_tabs").children;
+            for (var zxc_i = 0; zxc_i < zxc_tabs.length; zxc_i++) {
+                (function (zxc_idx) {
+                    zxc_tabs[zxc_idx].addEventListener("click", function () { zxc_switch(zxc_idx); });
+                })(zxc_i);
+            }
+
+            // 绑定缩略图点击
+            var zxc_imgs = document.getElementById("zxc_thumbs").children;
+            for (var zxc_j = 0; zxc_j < zxc_imgs.length; zxc_j++) {
+                (function (zxc_idx) {
+                    zxc_imgs[zxc_idx].addEventListener("click", function () { zxc_switch(zxc_idx); });
+                })(zxc_j);
+            }
+        }
+
+        zxc_init();
+    </script>
+</body>
+</html>

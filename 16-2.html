@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-10-29，使用模型：GLM-5.3-Flash，功能名称：JavaScript 对象演示（创建、读写、遍历、方法） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 对象 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0e1117;
+            --zxc_surface: #171c26;
+            --zxc_surface_2: #1e2431;
+            --zxc_ink: #eef2f8;
+            --zxc_muted: #94a3b8;
+            --zxc_line: rgba(255, 255, 255, 0.09);
+            --zxc_accent: #38bdf8;
+            --zxc_green: #4ade80;
+            --zxc_amber: #fbbf24;
+            --zxc_pink: #f472b6;
+            --zxc_violet: #a78bfa;
+            --zxc_radius: 14px;
+            --zxc_shadow: 0 24px 48px -32px #000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(40rem 26rem at 8% -10%, rgba(56, 189, 248, 0.13), transparent 60%),
+                radial-gradient(36rem 24rem at 100% 0%, rgba(244, 114, 182, 0.08), transparent 60%),
+                var(--zxc_bg);
+        }
+
+        .zxc_page { width: min(72rem, 100%); margin: 0 auto; }
+
+        /* ---------- 头部 ---------- */
+        .zxc_header { margin-bottom: clamp(1.5rem, 4vw, 2.5rem); padding-bottom: 1.2rem; border-bottom: 1px solid var(--zxc_line); }
+
+        .zxc_header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.55rem, 4vw, 2.3rem);
+            letter-spacing: 0.02em;
+        }
+
+        .zxc_header h1 span {
+            background: linear-gradient(100deg, var(--zxc_accent), var(--zxc_pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: clamp(0.92rem, 2vw, 1rem); }
+
+        .zxc_meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 0.9rem; font-size: 0.8rem; color: var(--zxc_muted); }
+        .zxc_meta span::before { content: "▸ "; color: var(--zxc_accent); }
+
+        /* ---------- 卡片 ---------- */
+        .zxc_cards { display: flex; flex-direction: column; gap: 1.2rem; }
+
+        .zxc_card {
+            padding: 1.2rem 1.4rem;
+            background: linear-gradient(150deg, var(--zxc_surface), var(--zxc_surface_2));
+            border: 1px solid var(--zxc_line);
+            border-radius: var(--zxc_radius);
+            box-shadow: var(--zxc_shadow);
+        }
+
+        .zxc_card h2 { margin: 0 0 0.4rem; font-size: 1.15rem; }
+
+        .zxc_card h2 small {
+            margin-left: 0.5rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 999px;
+            padding: 0.1rem 0.6rem;
+            vertical-align: 2px;
+        }
+
+        .zxc_card > p { margin: 0 0 0.9rem; color: var(--zxc_muted); font-size: 0.9rem; }
+        .zxc_card > p b { color: var(--zxc_ink); }
+
+        .zxc_code {
+            margin: 0 0 0.9rem;
+            padding: 0.8rem 1rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        /* ---------- 对象可视化：标签卡片 ---------- */
+        .zxc_obj {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            min-height: 5.4rem;
+            padding: 0.9rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+        }
+
+        .zxc_prop {
+            padding: 0.5rem 0.85rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.84rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 9px;
+            transition: transform 0.2s ease;
+        }
+
+        .zxc_prop:hover { transform: translateY(-3px); }
+
+        .zxc_prop i {
+            font-style: normal;
+            color: var(--zxc_accent);
+            margin-right: 0.4rem;
+        }
+
+        .zxc_prop b {
+            font-weight: 500;
+            color: var(--zxc_ink);
+            word-break: break-all;
+        }
+
+        .zxc_prop.zxc_prop_fn {
+            background: rgba(244, 114, 182, 0.1);
+            border-color: rgba(244, 114, 182, 0.5);
+        }
+
+        .zxc_prop.zxc_prop_fn i { color: var(--zxc_pink); }
+
+        /* 新属性入场 */
+        .zxc_prop.zxc_prop_in { animation: zxc_pop_in 0.35s ease; }
+        @keyframes zxc_pop_in {
+            0%   { transform: scale(0.4); opacity: 0; }
+            70%  { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 删除离场 */
+        .zxc_prop.zxc_prop_out { animation: zxc_fly_out 0.3s ease forwards; }
+        @keyframes zxc_fly_out {
+            to { transform: scale(0.4); opacity: 0; }
+        }
+
+        .zxc_empty { color: var(--zxc_muted); font-size: 0.85rem; padding: 0.2rem 0.4rem; align-self: center; }
+
+        /* ---------- 控件与输出 ---------- */
+        .zxc_bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.85rem 0 0; }
+
+        .zxc_input {
+            width: 8.5rem;
+            padding: 0.42rem 0.7rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.9rem;
+            color: var(--zxc_ink);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .zxc_input:focus { border-color: var(--zxc_accent); }
+
+        .zxc_btn {
+            padding: 0.42rem 0.95rem;
+            font-size: 0.84rem;
+            font-family: inherit;
+            color: var(--zxc_ink);
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .zxc_btn:hover { background: rgba(56, 189, 248, 0.22); transform: translateY(-1px); }
+
+        .zxc_btn code {
+            font-family: Consolas, monospace;
+            font-size: 0.82rem;
+            color: var(--zxc_amber);
+            margin-right: 0.35rem;
+        }
+
+        .zxc_btn_green { background: rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.45); }
+        .zxc_btn_green:hover { background: rgba(74, 222, 128, 0.2); }
+
+        .zxc_btn_pink { background: rgba(244, 114, 182, 0.1); border-color: rgba(244, 114, 182, 0.45); }
+        .zxc_btn_pink:hover { background: rgba(244, 114, 182, 0.2); }
+
+        .zxc_btn_violet { background: rgba(167, 139, 250, 0.12); border-color: rgba(167, 139, 250, 0.45); }
+        .zxc_btn_violet:hover { background: rgba(167, 139, 250, 0.24); }
+
+        /* 控制台 */
+        .zxc_console {
+            margin-top: 1rem;
+            padding: 0.75rem 0.95rem;
+            min-height: 4.6rem;
+            max-height: 12rem;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.9;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+        }
+
+        .zxc_console .zxc_ok  { color: var(--zxc_green); }
+        .zxc_console .zxc_hi  { color: var(--zxc_amber); }
+        .zxc_console .zxc_tip { color: var(--zxc_muted); }
+        .zxc_console .zxc_ret { color: var(--zxc_pink); }
+
+        /* 说明与页脚 */
+        .zxc_note {
+            margin: 1.6rem 0 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--zxc_muted);
+            background: var(--zxc_surface);
+            border: 1px solid var(--zxc_line);
+            border-left: 4px solid var(--zxc_accent);
+            border-radius: 10px;
+        }
+
+        .zxc_note code {
+            padding: 1px 5px;
+            font-size: 0.9em;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+        }
+
+        .zxc_footer { margin-top: 2rem; font-size: 0.82rem; color: var(--zxc_muted); text-align: center; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_btn, .zxc_prop { transition: none; animation: none !important; }
+            .zxc_btn:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JavaScript <span>对象</span>演示</h1>
+            <p>对象是一组"键值对"的集合，像一张<strong>学生信息卡</strong>：属性名（键）对应属性值，还可以挂上方法。点按钮即可增删改查，控制台同步打印结果。</p>
+            <div class="zxc_meta">
+                <span>张熙淳</span>
+                <span>学号 24002060415</span>
+                <span>2026-10-29</span>
+            </div>
+        </header>
+
+        <main class="zxc_cards">
+            <!-- 1. 创建与访问 -->
+            <section class="zxc_card">
+                <h2>一、创建对象与访问属性<small>字面量 · 点语法 · 方括号</small></h2>
+                <p>对象用大括号 <b>{ }</b> 创建。属性有两种访问方式：点语法 <b>obj.name</b> 简洁直观；方括号 <b>obj["name"]</b> 适合变量做键名。下面这张"学生卡"就是当前对象。</p>
+                <pre class="zxc_code">var zxc_student = {
+    zxc_name: "张熙淳",        // 字符串
+    zxc_age: 21,               // 数字
+    zxc_major: "计算机科学",   // 字符串
+    zxc_skills: ["HTML", "CSS", "JavaScript"]   // 数组
+};
+zxc_student.zxc_name;               // 点语法 → "张熙淳"
+zxc_student["zxc_major"];           // 方括号 → "计算机科学"</pre>
+                <div class="zxc_obj" id="zxc_obj_student"></div>
+                <div class="zxc_bar">
+                    <button class="zxc_btn" type="button" data-zxc_obj="dot"><code>点语法</code>读 zxc_name</button>
+                    <button class="zxc_btn" type="button" data-zxc_obj="bracket"><code>方括号</code>读 zxc_major</button>
+                    <button class="zxc_btn" type="button" data-zxc_obj="method"><code>调用方法</code>sayHello()</button>
+                    <button class="zxc_btn" type="button" data-zxc_obj="nested"><code>嵌套</code>skills 数组</button>
+                </div>
+            </section>
+
+            <!-- 2. 增删改 -->
+            <section class="zxc_card">
+                <h2>二、属性的增 · 删 · 改<small>动态添加 · delete · 修改</small></h2>
+                <p>JavaScript 对象是<b>动态的</b>：随时可以新增属性、修改值、用 delete 删除。填入属性名和值，操作下面这张卡试试。</p>
+                <pre class="zxc_code">zxc_student.zxc_hobby = "篮球";      // 新增属性
+zxc_student.zxc_age = 22;             // 修改属性
+delete zxc_student.zxc_hobby;         // 删除属性
+"zxc_hobby" in zxc_student;           // 检查属性是否存在</pre>
+                <div class="zxc_bar" style="margin-top:0; margin-bottom:0.85rem;">
+                    <input class="zxc_input" id="zxc_key_input" type="text" placeholder="属性名，如 zxc_hobby" value="zxc_hobby">
+                    <input class="zxc_input" id="zxc_value_input" type="text" placeholder="属性值，如 篮球" value="篮球">
+                </div>
+                <div class="zxc_obj" id="zxc_obj_dynamic"></div>
+                <div class="zxc_bar">
+                    <button class="zxc_btn zxc_btn_green" type="button" data-zxc_edit="add"><code>添加/修改</code>obj[key] = value</button>
+                    <button class="zxc_btn zxc_btn_pink" type="button" data-zxc_edit="del"><code>delete</code>删除属性</button>
+                    <button class="zxc_btn" type="button" data-zxc_edit="in"><code>in</code>检查属性</button>
+                    <button class="zxc_btn" type="button" data-zxc_edit="reset">重置对象</button>
+                </div>
+            </section>
+
+            <!-- 3. 遍历与构造器 -->
+            <section class="zxc_card">
+                <h2>三、遍历对象与构造函数<small>for-in · Object.keys · new</small></h2>
+                <p><b>for-in</b> 逐个访问属性名；<b>Object.keys()</b> 把所有键取成数组。需要批量创建相似对象时，用<b>构造函数</b> + <b>new</b> 当"模板"。</p>
+                <pre class="zxc_code">for (var zxc_key in zxc_student) { /* 遍历所有键 */ }
+
+function zxc_Student(zxc_name, zxc_age) {   // 构造函数
+    this.zxc_name = zxc_name;
+    this.zxc_age = zxc_age;
+}
+var zxc_s1 = new zxc_Student("张熙淳", 21);  // new 创建实例</pre>
+                <div class="zxc_bar">
+                    <button class="zxc_btn" type="button" data-zxc_iter="forin"><code>for-in</code>遍历属性</button>
+                    <button class="zxc_btn" type="button" data-zxc_iter="keys"><code>Object.keys</code>取所有键</button>
+                    <button class="zxc_btn zxc_btn_violet" type="button" data-zxc_iter="new"><code>new</code>构造三个学生</button>
+                </div>
+            </section>
+        </main>
+
+        <p class="zxc_note">
+            小结：对象 = <code>属性</code>（描述数据）+ <code>方法</code>（描述行为）；点语法与方括号等价，键名含变量时只能用方括号；
+            对象可以随时动态增删改属性；<code>for-in</code> / <code>Object.keys()</code> 用来枚举，<code>构造函数 + new</code> 用来批量造对象——
+            掌握这几点，就掌握了 JavaScript 面向对象编程的第一步。
+        </p>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 全局状态 =================
+        var zxc_student = {
+            zxc_name: "张熙淳",
+            zxc_age: 21,
+            zxc_major: "计算机科学",
+            zxc_skills: ["HTML", "CSS", "JavaScript"],
+            zxc_sayHello: function () { return "大家好，我是" + this.zxc_name; }
+        };
+
+        var zxc_dynamic = { zxc_name: "张熙淳", zxc_age: 21, zxc_major: "计算机科学" };
+
+        // ================= 工具函数 =================
+        function zxc_log(zxc_text, zxc_cls) {
+            var zxc_console = document.getElementById("zxc_console");
+            if (!zxc_console) { return; }
+            var zxc_line = document.createElement("div");
+            if (zxc_cls) { zxc_line.className = zxc_cls; }
+            zxc_line.innerHTML = zxc_text;
+            zxc_console.appendChild(zxc_line);
+            zxc_console.scrollTop = zxc_console.scrollHeight;
+        }
+
+        function zxc_escape(zxc_v) { return String(zxc_v).replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+        // 把对象渲染成属性标签卡片
+        function zxc_render_obj(zxc_stageId, zxc_obj, zxc_newKey, zxc_outKey) {
+            var zxc_stage = document.getElementById(zxc_stageId);
+            zxc_stage.innerHTML = "";
+            var zxc_keys = Object.keys(zxc_obj);
+
+            if (zxc_keys.length === 0) {
+                zxc_stage.innerHTML = "<span class='zxc_empty'>（对象空了~）</span>";
+                return;
+            }
+
+            zxc_keys.forEach(function (zxc_k) {
+                var zxc_v = zxc_obj[zxc_k];
+                var zxc_isFn = typeof zxc_v === "function";
+                var zxc_show = zxc_isFn ? "ƒ ()" : (Array.isArray(zxc_v) ? "[" + zxc_v.join(", ") + "]" : zxc_v);
+
+                var zxc_tag = document.createElement("div");
+                zxc_tag.className = "zxc_prop" + (zxc_isFn ? " zxc_prop_fn" : "");
+                if (zxc_k === zxc_newKey) { zxc_tag.className += " zxc_prop_in"; }
+                if (zxc_k === zxc_outKey) { zxc_tag.className += " zxc_prop_out"; }
+                zxc_tag.innerHTML = "<i>" + zxc_escape(zxc_k) + "</i><b>: " + zxc_escape(zxc_show) + "</b>";
+                zxc_stage.appendChild(zxc_tag);
+            });
+        }
+
+        // ================= 一、创建与访问 =================
+        function zxc_obj_act(zxc_act) {
+            if (zxc_act === "dot") {
+                zxc_log("zxc_student.zxc_name → <span class='zxc_ret'>\"" + zxc_escape(zxc_student.zxc_name) + "\"</span>", "zxc_ok");
+            } else if (zxc_act === "bracket") {
+                zxc_log("zxc_student[\"zxc_major\"] → <span class='zxc_ret'>\"" + zxc_escape(zxc_student.zxc_major) + "\"</span>", "zxc_ok");
+            } else if (zxc_act === "method") {
+                zxc_log("zxc_student.zxc_sayHello() → <span class='zxc_ret'>\"" + zxc_escape(zxc_student.zxc_sayHello()) + "\"</span>（方法里的 this 指向对象自己）", "zxc_ok");
+            } else if (zxc_act === "nested") {
+                zxc_log("zxc_student.zxc_skills → <span class='zxc_ret'>[" + zxc_student.zxc_skills.join(", ") + "]</span>，长度 = " + zxc_student.zxc_skills.length + "（对象里可以嵌套数组）", "zxc_ok");
+            }
+        }
+
+        // ================= 二、增删改 =================
+        function zxc_refresh_dynamic(zxc_newKey, zxc_outKey) {
+            zxc_render_obj("zxc_obj_dynamic", zxc_dynamic, zxc_newKey, zxc_outKey);
+        }
+
+        function zxc_edit_act(zxc_act) {
+            var zxc_key = document.getElementById("zxc_key_input").value.trim();
+            var zxc_value = document.getElementById("zxc_value_input").value.trim();
+
+            if (zxc_act === "add") {
+                if (zxc_key === "") { zxc_log("请先填写属性名！", "zxc_hi"); return; }
+                var zxc_existed = zxc_key in zxc_dynamic;
+                zxc_dynamic[zxc_key] = zxc_value;
+                zxc_refresh_dynamic(zxc_key);
+                zxc_log("zxc_dynamic[\"" + zxc_escape(zxc_key) + "\"] = \"" + zxc_escape(zxc_value) + "\" → " + (zxc_existed ? "属性被修改" : "新属性已添加"), "zxc_ok");
+            } else if (zxc_act === "del") {
+                if (zxc_key === "") { zxc_log("请先填写要删除的属性名！", "zxc_hi"); return; }
+                if (!(zxc_key in zxc_dynamic)) { zxc_log("属性 \"" + zxc_escape(zxc_key) + "\" 不存在，delete 无效果", "zxc_hi"); return; }
+                var zxc_val = zxc_dynamic[zxc_key];
+                delete zxc_dynamic[zxc_key];
+                zxc_refresh_dynamic(null, zxc_key);
+                setTimeout(function () { zxc_refresh_dynamic(); }, 350);
+                zxc_log("delete zxc_dynamic[\"" + zxc_escape(zxc_key) + "\"] → 已删除，原值 <span class='zxc_ret'>\"" + zxc_escape(zxc_val) + "\"</span>", "zxc_ok");
+            } else if (zxc_act === "in") {
+                var zxc_has = zxc_key in zxc_dynamic;
+                zxc_log("\"" + zxc_escape(zxc_key) + "\" in zxc_dynamic → <span class='zxc_ret'>" + zxc_has + "</span>", "zxc_ok");
+            } else if (zxc_act === "reset") {
+                zxc_dynamic = { zxc_name: "张熙淳", zxc_age: 21, zxc_major: "计算机科学" };
+                zxc_refresh_dynamic();
+                zxc_log("对象已重置为 { zxc_name, zxc_age, zxc_major }", "zxc_tip");
+            }
+        }
+
+        // ================= 三、遍历与构造器 =================
+        function zxc_iter_act(zxc_act) {
+            if (zxc_act === "forin") {
+                zxc_log("for-in 遍历 zxc_student：", "zxc_ok");
+                for (var zxc_key in zxc_student) {
+                    var zxc_v = zxc_student[zxc_key];
+                    var zxc_show = typeof zxc_v === "function" ? "ƒ ()" : zxc_escape(JSON.stringify(zxc_v));
+                    zxc_log("　" + zxc_escape(zxc_key) + " : " + zxc_show, "zxc_tip");
+                }
+            } else if (zxc_act === "keys") {
+                var zxc_ks = Object.keys(zxc_student);
+                zxc_log("Object.keys(zxc_student) → <span class='zxc_ret'>[" + zxc_ks.join(", ") + "]</span>", "zxc_ok");
+            } else if (zxc_act === "new") {
+                // 构造函数
+                function zxc_Student(zxc_name, zxc_age) {
+                    this.zxc_name = zxc_name;
+                    this.zxc_age = zxc_age;
+                    this.zxc_intro = function () { return "我是" + this.zxc_name + "，" + this.zxc_age + " 岁"; };
+                }
+                var zxc_s1 = new zxc_Student("张熙淳", 21);
+                var zxc_s2 = new zxc_Student("李四", 20);
+                var zxc_s3 = new zxc_Student("王五", 22);
+                zxc_log("new zxc_Student(...) 批量创建了 3 个实例：", "zxc_ok");
+                zxc_log("　s1 → " + zxc_escape(zxc_s1.zxc_intro()), "zxc_tip");
+                zxc_log("　s2 → " + zxc_escape(zxc_s2.zxc_intro()), "zxc_tip");
+                zxc_log("　s3 → " + zxc_escape(zxc_s3.zxc_intro()), "zxc_tip");
+                zxc_log("每个实例都是独立的对象，共用同一个构造函数模板", "zxc_hi");
+            }
+        }
+
+        // ================= 初始化 =================
+        function zxc_init() {
+            // 创建共用控制台（插在 zxc_note 之前）
+            if (!document.getElementById("zxc_console")) {
+                var zxc_note = document.querySelector(".zxc_note");
+                var zxc_panel = document.createElement("section");
+                zxc_panel.className = "zxc_card";
+                zxc_panel.innerHTML = "<h2>执行日志<small>所有调用的返回值都打印在这里</small></h2>" +
+                    "<div class='zxc_console' id='zxc_console'>" +
+                    "<span class='zxc_tip'>点击任意按钮，这里会打印调用与返回值……</span></div>";
+                zxc_note.parentNode.insertBefore(zxc_panel, zxc_note);
+            }
+
+            zxc_render_obj("zxc_obj_student", zxc_student);
+            zxc_refresh_dynamic();
+            zxc_log("页面就绪：学生对象已创建（含 4 个属性 + 1 个方法）", "zxc_tip");
+
+            var zxc_groups = [
+                { zxc_attr: "data-zxc_obj", zxc_fn: zxc_obj_act },
+                { zxc_attr: "data-zxc_edit", zxc_fn: zxc_edit_act },
+                { zxc_attr: "data-zxc_iter", zxc_fn: zxc_iter_act }
+            ];
+            zxc_groups.forEach(function (zxc_g) {
+                Array.prototype.forEach.call(
+                    document.querySelectorAll("[" + zxc_g.zxc_attr + "]"),
+                    function (zxc_btn) {
+                        zxc_btn.addEventListener("click", function () {
+                            zxc_g.zxc_fn(zxc_btn.getAttribute(zxc_g.zxc_attr));
+                        });
+                    }
+                );
+            });
+        }
+
+        zxc_init();
+    </script>
+</body>
+</html>

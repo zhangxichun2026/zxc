@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-10-29，使用模型：GLM-5.3-Flash，功能名称：JavaScript 数组方法可视化演示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数组方法 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0e1117;
+            --zxc_surface: #171c26;
+            --zxc_surface_2: #1e2431;
+            --zxc_ink: #eef2f8;
+            --zxc_muted: #94a3b8;
+            --zxc_line: rgba(255, 255, 255, 0.09);
+            --zxc_accent: #38bdf8;
+            --zxc_green: #4ade80;
+            --zxc_amber: #fbbf24;
+            --zxc_pink: #f472b6;
+            --zxc_violet: #a78bfa;
+            --zxc_radius: 14px;
+            --zxc_shadow: 0 24px 48px -32px #000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(40rem 26rem at 8% -10%, rgba(167, 139, 250, 0.13), transparent 60%),
+                radial-gradient(36rem 24rem at 100% 0%, rgba(56, 189, 248, 0.1), transparent 60%),
+                var(--zxc_bg);
+        }
+
+        .zxc_page { width: min(72rem, 100%); margin: 0 auto; }
+
+        /* ---------- 头部 ---------- */
+        .zxc_header { margin-bottom: clamp(1.5rem, 4vw, 2.5rem); padding-bottom: 1.2rem; border-bottom: 1px solid var(--zxc_line); }
+
+        .zxc_header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.55rem, 4vw, 2.3rem);
+            letter-spacing: 0.02em;
+        }
+
+        .zxc_header h1 span {
+            background: linear-gradient(100deg, var(--zxc_violet), var(--zxc_accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: clamp(0.92rem, 2vw, 1rem); }
+
+        .zxc_meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 0.9rem; font-size: 0.8rem; color: var(--zxc_muted); }
+        .zxc_meta span::before { content: "▸ "; color: var(--zxc_violet); }
+
+        /* ---------- 卡片 ---------- */
+        .zxc_cards { display: flex; flex-direction: column; gap: 1.2rem; }
+
+        .zxc_card {
+            padding: 1.2rem 1.4rem;
+            background: linear-gradient(150deg, var(--zxc_surface), var(--zxc_surface_2));
+            border: 1px solid var(--zxc_line);
+            border-radius: var(--zxc_radius);
+            box-shadow: var(--zxc_shadow);
+        }
+
+        .zxc_card h2 { margin: 0 0 0.4rem; font-size: 1.15rem; }
+
+        .zxc_card h2 small {
+            margin-left: 0.5rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 999px;
+            padding: 0.1rem 0.6rem;
+            vertical-align: 2px;
+        }
+
+        .zxc_card > p { margin: 0 0 0.9rem; color: var(--zxc_muted); font-size: 0.9rem; }
+
+        .zxc_code {
+            margin: 0 0 0.9rem;
+            padding: 0.8rem 1rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        /* ---------- 可视化数组 ---------- */
+        .zxc_stage {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            min-height: 5.6rem;
+            padding: 0.9rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+        }
+
+        .zxc_box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .zxc_box b {
+            min-width: 4.6rem;
+            padding: 0.55rem 0.6rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-align: center;
+            color: #10151d;
+            background: linear-gradient(160deg, var(--zxc_accent), #22a7d9);
+            border-radius: 9px;
+            box-shadow: 0 6px 14px -6px rgba(56, 189, 248, 0.6);
+            transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .zxc_box i {
+            font-style: normal;
+            font-family: Consolas, monospace;
+            font-size: 0.68rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_box:hover b { transform: translateY(-3px); }
+
+        /* 彩色元素 */
+        .zxc_box.zxc_c0 b { background: linear-gradient(160deg, #facc15, #eab308); }
+        .zxc_box.zxc_c1 b { background: linear-gradient(160deg, #fb923c, #f97316); }
+        .zxc_box.zxc_c2 b { background: linear-gradient(160deg, #f87171, #ef4444); }
+        .zxc_box.zxc_c3 b { background: linear-gradient(160deg, #4ade80, #22c55e); }
+        .zxc_box.zxc_c4 b { background: linear-gradient(160deg, #a78bfa, #8b5cf6); }
+        .zxc_box.zxc_c5 b { background: linear-gradient(160deg, #f472b6, #ec4899); }
+        .zxc_box.zxc_c6 b { background: linear-gradient(160deg, #38bdf8, #0ea5e9); }
+        .zxc_box.zxc_c7 b { background: linear-gradient(160deg, #2dd4bf, #14b8a6); }
+
+        /* 新元素入场 */
+        .zxc_box.zxc_box_in b { animation: zxc_pop_in 0.35s ease; }
+        @keyframes zxc_pop_in {
+            0%   { transform: scale(0.3); opacity: 0; }
+            70%  { transform: scale(1.12); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 高亮（被操作/返回的元素） */
+        .zxc_box.zxc_flash b { animation: zxc_flash 0.8s ease; }
+        @keyframes zxc_flash {
+            0%, 100% { box-shadow: 0 6px 14px -6px rgba(56, 189, 248, 0.6); }
+            40%      { box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.85); transform: scale(1.08); }
+        }
+
+        /* 离场 */
+        .zxc_box.zxc_box_out b { animation: zxc_fly_out 0.32s ease forwards; }
+        @keyframes zxc_fly_out {
+            to { transform: translateY(1.4rem) scale(0.3); opacity: 0; }
+        }
+
+        .zxc_empty { color: var(--zxc_muted); font-size: 0.85rem; padding: 0 0.4rem; }
+
+        /* 长度徽章 */
+        .zxc_len {
+            margin-left: auto;
+            font-family: Consolas, monospace;
+            font-size: 0.75rem;
+            color: var(--zxc_accent);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 999px;
+            padding: 0.12rem 0.7rem;
+            white-space: nowrap;
+        }
+
+        /* ---------- 控件与输出 ---------- */
+        .zxc_bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.85rem 0 0; }
+
+        .zxc_input {
+            width: 8.5rem;
+            padding: 0.42rem 0.7rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.9rem;
+            color: var(--zxc_ink);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .zxc_input:focus { border-color: var(--zxc_violet); }
+
+        .zxc_btn {
+            padding: 0.42rem 0.95rem;
+            font-size: 0.84rem;
+            font-family: inherit;
+            color: var(--zxc_ink);
+            background: rgba(167, 139, 250, 0.12);
+            border: 1px solid rgba(167, 139, 250, 0.45);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .zxc_btn:hover { background: rgba(167, 139, 250, 0.24); transform: translateY(-1px); }
+
+        .zxc_btn code {
+            font-family: Consolas, monospace;
+            font-size: 0.82rem;
+            color: var(--zxc_amber);
+            margin-right: 0.35rem;
+        }
+
+        .zxc_btn_green {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.45);
+        }
+
+        .zxc_btn_green:hover { background: rgba(74, 222, 128, 0.2); }
+
+        .zxc_btn_pink {
+            background: rgba(244, 114, 182, 0.1);
+            border-color: rgba(244, 114, 182, 0.45);
+        }
+
+        .zxc_btn_pink:hover { background: rgba(244, 114, 182, 0.2); }
+
+        /* 控制台 */
+        .zxc_console {
+            margin-top: 1rem;
+            padding: 0.75rem 0.95rem;
+            min-height: 4.6rem;
+            max-height: 11rem;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.9;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--zxc_line);
+            border-radius: 8px;
+        }
+
+        .zxc_console .zxc_ok  { color: var(--zxc_green); }
+        .zxc_console .zxc_hi  { color: var(--zxc_amber); }
+        .zxc_console .zxc_tip { color: var(--zxc_muted); }
+        .zxc_console .zxc_ret { color: var(--zxc_pink); }
+
+        /* 说明与页脚 */
+        .zxc_note {
+            margin: 1.6rem 0 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--zxc_muted);
+            background: var(--zxc_surface);
+            border: 1px solid var(--zxc_line);
+            border-left: 4px solid var(--zxc_violet);
+            border-radius: 10px;
+        }
+
+        .zxc_note code {
+            padding: 1px 5px;
+            font-size: 0.9em;
+            color: var(--zxc_amber);
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 4px;
+        }
+
+        .zxc_footer { margin-top: 2rem; font-size: 0.82rem; color: var(--zxc_muted); text-align: center; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zxc_btn, .zxc_box b { transition: none; animation: none !important; }
+            .zxc_btn:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JavaScript <span>数组方法</span>可视化演示</h1>
+            <p>数组是"一排带编号的盒子"。下面的每个演示都会把数组画成彩色方块——增删、截取、遍历，点一下按钮就能看到数组怎么变、方法返回什么。</p>
+            <div class="zxc_meta">
+                <span>张熙淳</span>
+                <span>学号 24002060415</span>
+                <span>2026-10-29</span>
+            </div>
+        </header>
+
+        <main class="zxc_cards">
+            <!-- 1. 增删方法 -->
+            <section class="zxc_card">
+                <h2>一、增删元素<small>push / pop / shift / unshift / splice</small></h2>
+                <p>push 从<b>尾部</b>加、unshift 从<b>头部</b>加；pop / shift 对应删除；splice 是"万能刀"，可以在任意位置插入或删除。在输入框填个水果名试试。</p>
+                <pre class="zxc_code">var zxc_fruits = ["香蕉", "橙子", "苹果", "葡萄", "西瓜"];
+zxc_fruits.push("芒果");            // 尾部添加，返回新长度
+zxc_fruits.pop();                   // 删除尾部，返回被删元素
+zxc_fruits.splice(2, 1, "草莓");    // 从下标2删1个，再插入"草莓"</pre>
+                <div class="zxc_stage" id="zxc_stage_fruit"></div>
+                <div class="zxc_bar">
+                    <input class="zxc_input" id="zxc_fruit_input" type="text" placeholder="水果名，如 芒果" value="芒果">
+                    <button class="zxc_btn zxc_btn_green" type="button" data-zxc_act="push"><code>push</code>尾部添加</button>
+                    <button class="zxc_btn zxc_btn_green" type="button" data-zxc_act="unshift"><code>unshift</code>头部添加</button>
+                    <button class="zxc_btn zxc_btn_pink" type="button" data-zxc_act="pop"><code>pop</code>删尾部</button>
+                    <button class="zxc_btn zxc_btn_pink" type="button" data-zxc_act="shift"><code>shift</code>删头部</button>
+                    <button class="zxc_btn" type="button" data-zxc_act="splice"><code>splice</code>中间插入</button>
+                    <button class="zxc_btn" type="button" data-zxc_act="reverse"><code>reverse</code>反转</button>
+                    <button class="zxc_btn" type="button" data-zxc_act="sort"><code>sort</code>排序</button>
+                    <button class="zxc_btn" type="button" data-zxc_act="reset">重置数组</button>
+                </div>
+            </section>
+
+            <!-- 2. 截取合并转换 -->
+            <section class="zxc_card">
+                <h2>二、截取 · 合并 · 转字符串<small>slice / concat / join / indexOf</small></h2>
+                <p>这组方法<b>不改原数组</b>，只返回新结果：slice 切片，concat 拼接，join 变字符串，indexOf 查位置。切下的部分会闪黄框展示。</p>
+                <pre class="zxc_code">zxc_fruits.slice(1, 3);             // 下标1到3（不含3）→ 新数组
+zxc_fruits.concat(["柠檬", "桃子"]); // 合并成新数组
+zxc_fruits.join(" · ");             // 用分隔符拼成字符串
+zxc_fruits.indexOf("苹果");         // 查下标，找不到返回 -1</pre>
+                <div class="zxc_stage" id="zxc_stage_cut"></div>
+                <div class="zxc_bar">
+                    <button class="zxc_btn" type="button" data-zxc_cut="slice"><code>slice(1,3)</code>切片</button>
+                    <button class="zxc_btn" type="button" data-zxc_cut="concat"><code>concat</code>合并</button>
+                    <button class="zxc_btn" type="button" data-zxc_cut="join"><code>join(" · ")</code>拼字符串</button>
+                    <button class="zxc_btn" type="button" data-zxc_cut="indexOf"><code>indexOf</code>找"苹果"</button>
+                    <button class="zxc_btn" type="button" data-zxc_cut="clear">清空展示</button>
+                </div>
+            </section>
+
+            <!-- 3. 遍历与加工 -->
+            <section class="zxc_card">
+                <h2>三、遍历与加工<small>forEach / map / filter / reduce / find</small></h2>
+                <p>换一个数字数组：forEach 逐个访问，map 逐个加工成新数组，filter 按条件筛选，reduce 汇总成一个值，find 找第一个满足条件的。结果以小方块展示。</p>
+                <pre class="zxc_code">var zxc_nums = [12, 5, 8, 130, 44, 3];
+zxc_nums.map(function (zxc_n) { return zxc_n * 2; });      // 全部×2
+zxc_nums.filter(function (zxc_n) { return zxc_n > 10; });  // 筛出大于10
+zxc_nums.reduce(function (zxc_a, zxc_b) { return zxc_a + zxc_b; }, 0); // 求和</pre>
+                <div class="zxc_stage" id="zxc_stage_num"></div>
+                <div class="zxc_bar">
+                    <button class="zxc_btn" type="button" data-zxc_num="forEach"><code>forEach</code>逐个打印</button>
+                    <button class="zxc_btn" type="button" data-zxc_num="map"><code>map</code>全部 ×2</button>
+                    <button class="zxc_btn zxc_btn_green" type="button" data-zxc_num="filter"><code>filter</code>筛出 &gt;10</button>
+                    <button class="zxc_btn zxc_btn_pink" type="button" data-zxc_num="reduce"><code>reduce</code>求总和</button>
+                    <button class="zxc_btn" type="button" data-zxc_num="find"><code>find</code>首个 &gt;100</button>
+                </div>
+            </section>
+        </main>
+
+        <p class="zxc_note">
+            小结：<code>push/pop/shift/unshift/splice</code> 会<b>修改原数组</b>并多返回被操作元素或新长度；
+            <code>slice/concat/join</code> 不动原数组，返回新数组或字符串；
+            <code>map/filter/find</code> 返回新数组或单个值，<code>forEach/reduce</code> 用来遍历与汇总——
+            记住"谁改原数组、谁返回新值"是用好数组的关键。
+        </p>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 全局状态 =================
+        var zxc_fruits = ["香蕉", "橙子", "苹果", "葡萄", "西瓜"];
+        var zxc_fruits_init = ["香蕉", "橙子", "苹果", "葡萄", "西瓜"];
+        var zxc_nums = [12, 5, 8, 130, 44, 3];
+
+        // 控制台输出
+        function zxc_log(zxc_text, zxc_cls) {
+            var zxc_console = document.getElementById("zxc_console");
+            if (!zxc_console) { return; }
+            var zxc_line = document.createElement("div");
+            if (zxc_cls) { zxc_line.className = zxc_cls; }
+            zxc_line.innerHTML = zxc_text;
+            zxc_console.appendChild(zxc_line);
+            zxc_console.scrollTop = zxc_console.scrollHeight;
+        }
+
+        // 渲染数组到指定舞台
+        // zxc_opts: { zxc_stageId, zxc_arr, zxc_inIndex: 新元素高亮, zxc_outIndex: 离场高亮, zxc_flashIndex: 闪黄 }
+        function zxc_render(zxc_opts) {
+            var zxc_stage = document.getElementById(zxc_opts.zxc_stageId);
+            zxc_stage.innerHTML = "";
+
+            if (zxc_opts.zxc_arr.length === 0) {
+                var zxc_empty = document.createElement("span");
+                zxc_empty.className = "zxc_empty";
+                zxc_empty.textContent = "（数组空了~）";
+                zxc_stage.appendChild(zxc_empty);
+            }
+
+            zxc_opts.zxc_arr.forEach(function (zxc_val, zxc_i) {
+                var zxc_box = document.createElement("div");
+                zxc_box.className = "zxc_box zxc_c" + (zxc_i % 8);
+                if (zxc_i === zxc_opts.zxc_inIndex) { zxc_box.className += " zxc_box_in"; }
+                if (zxc_i === zxc_opts.zxc_flashIndex) { zxc_box.className += " zxc_flash"; }
+                if (zxc_i === zxc_opts.zxc_outIndex) { zxc_box.className += " zxc_box_out"; }
+                zxc_box.innerHTML = "<b>" + zxc_val + "</b><i>[" + zxc_i + "]</i>";
+                zxc_stage.appendChild(zxc_box);
+            });
+
+            var zxc_len = document.createElement("span");
+            zxc_len.className = "zxc_len";
+            zxc_len.textContent = "length = " + zxc_opts.zxc_arr.length;
+            zxc_stage.appendChild(zxc_len);
+        }
+
+        // 渲染通用结果（新数组 / 字符串 / 数字）
+        function zxc_show_result(zxc_stageId, zxc_result, zxc_desc) {
+            var zxc_arr = Array.isArray(zxc_result) ? zxc_result : [zxc_result];
+            var zxc_str = Array.isArray(zxc_result) ? "[" + zxc_result.join(", ") + "]" : String(zxc_result);
+            zxc_render({ zxc_stageId: zxc_stageId, zxc_arr: zxc_arr });
+            zxc_log("→ " + zxc_desc + " 返回 <span class='zxc_ret'>" + zxc_str.replace(/</g, "&lt;") + "</span>", "zxc_ok");
+        }
+
+        // ================= 一、增删方法 =================
+        function zxc_refresh_fruit(zxc_opts) {
+            zxc_opts = zxc_opts || {};
+            zxc_render({
+                zxc_stageId: "zxc_stage_fruit",
+                zxc_arr: zxc_fruits,
+                zxc_inIndex: zxc_opts.zxc_inIndex,
+                zxc_flashIndex: zxc_opts.zxc_flashIndex
+            });
+        }
+
+        function zxc_get_fruit_input() {
+            var zxc_v = document.getElementById("zxc_fruit_input").value.replace(/</g, "&lt;");
+            return zxc_v === "" ? "芒果" : zxc_v;
+        }
+
+        function zxc_fruit_act(zxc_act) {
+            var zxc_val = zxc_get_fruit_input();
+
+            if (zxc_act === "push") {
+                var zxc_len1 = zxc_fruits.push(zxc_val);
+                zxc_refresh_fruit({ zxc_inIndex: zxc_fruits.length - 1 });
+                zxc_log("fruits.push(\"" + zxc_val + "\") → 返回新长度 <span class='zxc_ret'>" + zxc_len1 + "</span>，加到了数组尾部", "zxc_ok");
+            } else if (zxc_act === "unshift") {
+                var zxc_len2 = zxc_fruits.unshift(zxc_val);
+                zxc_refresh_fruit({ zxc_inIndex: 0 });
+                zxc_log("fruits.unshift(\"" + zxc_val + "\") → 返回新长度 <span class='zxc_ret'>" + zxc_len2 + "</span>，加到了数组头部", "zxc_ok");
+            } else if (zxc_act === "pop") {
+                if (zxc_fruits.length === 0) { zxc_log("数组已空，pop 无可删除", "zxc_hi"); return; }
+                var zxc_popped = zxc_fruits.pop();
+                zxc_log("fruits.pop() → 返回被删的 <span class='zxc_ret'>\"" + zxc_popped + "\"</span>（尾部飞出）", "zxc_ok");
+                zxc_render({ zxc_stageId: "zxc_stage_fruit", zxc_arr: zxc_fruits.concat([zxc_popped]), zxc_outIndex: zxc_fruits.length });
+                setTimeout(function () { zxc_refresh_fruit(); }, 380);
+            } else if (zxc_act === "shift") {
+                if (zxc_fruits.length === 0) { zxc_log("数组已空，shift 无可删除", "zxc_hi"); return; }
+                var zxc_shifted = zxc_fruits.shift();
+                zxc_log("fruits.shift() → 返回被删的 <span class='zxc_ret'>\"" + zxc_shifted + "\"</span>（头部飞出）", "zxc_ok");
+                zxc_render({ zxc_stageId: "zxc_stage_fruit", zxc_arr: [zxc_shifted].concat(zxc_fruits), zxc_outIndex: 0 });
+                setTimeout(function () { zxc_refresh_fruit(); }, 380);
+            } else if (zxc_act === "splice") {
+                var zxc_mid = Math.floor(zxc_fruits.length / 2);
+                var zxc_removed = zxc_fruits.splice(zxc_mid, 0, zxc_val);  // 删0个，插入
+                zxc_refresh_fruit({ zxc_inIndex: zxc_mid });
+                zxc_log("fruits.splice(" + zxc_mid + ", 0, \"" + zxc_val + "\") → 从下标 " + zxc_mid + " 插入，返回 <span class='zxc_ret'>[" + zxc_removed.join(", ") + "]</span>", "zxc_ok");
+            } else if (zxc_act === "reverse") {
+                zxc_fruits.reverse();
+                zxc_refresh_fruit();
+                zxc_log("fruits.reverse() → 原数组被倒序（会修改原数组）", "zxc_ok");
+            } else if (zxc_act === "sort") {
+                zxc_fruits.sort();
+                zxc_refresh_fruit();
+                zxc_log("fruits.sort() → 按字符串顺序排序（会修改原数组）", "zxc_ok");
+            } else if (zxc_act === "reset") {
+                zxc_fruits = zxc_fruits_init.slice();
+                zxc_refresh_fruit();
+                zxc_log("数组已重置为 [" + zxc_fruits.join(", ") + "]", "zxc_tip");
+            }
+        }
+
+        // ================= 二、截取合并转换 =================
+        function zxc_cut_act(zxc_act) {
+            if (zxc_act === "clear") {
+                document.getElementById("zxc_stage_cut").innerHTML =
+                    "<span class='zxc_empty'>点击左侧按钮查看返回结果…</span>";
+                return;
+            }
+            if (zxc_act === "slice") {
+                zxc_show_result("zxc_stage_cut", zxc_fruits.slice(1, 3), "fruits.slice(1, 3)（下标1~2，不含3，原数组不变）");
+            } else if (zxc_act === "concat") {
+                zxc_show_result("zxc_stage_cut", zxc_fruits.concat(["柠檬", "桃子"]), "fruits.concat([\"柠檬\", \"桃子\"])（合并为新数组）");
+            } else if (zxc_act === "join") {
+                zxc_show_result("zxc_stage_cut", zxc_fruits.join(" · "), "fruits.join(\" · \")（数组 → 字符串）");
+            } else if (zxc_act === "indexOf") {
+                var zxc_idx = zxc_fruits.indexOf("苹果");
+                var zxc_desc = zxc_idx === -1
+                    ? "fruits.indexOf(\"苹果\") → <span class='zxc_ret'>-1</span>（当前数组里没有\"苹果\"）"
+                    : "fruits.indexOf(\"苹果\") → <span class='zxc_ret'>" + zxc_idx + "</span>（找到了）";
+                zxc_render({
+                    zxc_stageId: "zxc_stage_cut",
+                    zxc_arr: zxc_fruits,
+                    zxc_flashIndex: zxc_idx
+                });
+                zxc_log(zxc_desc, "zxc_ok");
+            }
+        }
+
+        // ================= 三、遍历与加工 =================
+        function zxc_num_act(zxc_act) {
+            if (zxc_act === "forEach") {
+                var zxc_out = [];
+                zxc_nums.forEach(function (zxc_n) { zxc_out.push("第" + zxc_out.length + "个:" + zxc_n); });
+                zxc_render({ zxc_stageId: "zxc_stage_num", zxc_arr: zxc_nums });
+                zxc_log("forEach 逐个访问（无返回值）：", "zxc_ok");
+                zxc_log("→ " + zxc_out.join("　"), "zxc_tip");
+            } else if (zxc_act === "map") {
+                var zxc_mapped = zxc_nums.map(function (zxc_n) { return zxc_n * 2; });
+                zxc_render({ zxc_stageId: "zxc_stage_num", zxc_arr: zxc_mapped, zxc_inIndex: 0 });
+                zxc_log("map ×2 → 返回新数组 <span class='zxc_ret'>[" + zxc_mapped.join(", ") + "]</span>（原数组不变）", "zxc_ok");
+            } else if (zxc_act === "filter") {
+                var zxc_filtered = zxc_nums.filter(function (zxc_n) { return zxc_n > 10; });
+                zxc_render({ zxc_stageId: "zxc_stage_num", zxc_arr: zxc_filtered, zxc_inIndex: 0 });
+                zxc_log("filter >10 → 返回 <span class='zxc_ret'>[" + zxc_filtered.join(", ") + "]</span>（条件为真的元素）", "zxc_ok");
+            } else if (zxc_act === "reduce") {
+                var zxc_sum = zxc_nums.reduce(function (zxc_a, zxc_b) { return zxc_a + zxc_b; }, 0);
+                zxc_render({ zxc_stageId: "zxc_stage_num", zxc_arr: [zxc_sum], zxc_inIndex: 0 });
+                zxc_log("reduce 求和：" + zxc_nums.join(" + ") + " = <span class='zxc_ret'>" + zxc_sum + "</span>", "zxc_ok");
+            } else if (zxc_act === "find") {
+                var zxc_found = zxc_nums.find(function (zxc_n) { return zxc_n > 100; });
+                zxc_render({
+                    zxc_stageId: "zxc_stage_num",
+                    zxc_arr: zxc_nums,
+                    zxc_flashIndex: zxc_nums.indexOf(zxc_found)
+                });
+                zxc_log("find >100 → <span class='zxc_ret'>" + zxc_found + "</span>（只返回第一个满足条件的元素，找不到是 undefined）", "zxc_ok");
+            }
+        }
+
+        // ================= 初始化 =================
+        function zxc_init() {
+            // 控制台固定在页面底部卡片之外？不——直接在每个区块下共用一个控制台（放在页脚上方）
+            // 若页面中没有控制台容器，则动态创建一个
+            if (!document.getElementById("zxc_console")) {
+                var zxc_note = document.querySelector(".zxc_note");
+                var zxc_panel = document.createElement("section");
+                zxc_panel.className = "zxc_card";
+                zxc_panel.innerHTML = "<h2>执行日志<small>所有方法的返回值都打印在这里</small></h2>" +
+                    "<div class='zxc_console' id='zxc_console'>" +
+                    "<span class='zxc_tip'>点击任意方法按钮，这里会打印调用与返回值……</span></div>";
+                zxc_note.parentNode.insertBefore(zxc_panel, zxc_note);
+            }
+
+            zxc_refresh_fruit();
+            zxc_render({ zxc_stageId: "zxc_stage_num", zxc_arr: zxc_nums });
+            zxc_cut_act("clear");
+            zxc_log("页面就绪：当前 fruits = [" + zxc_fruits.join(", ") + "]，nums = [" + zxc_nums.join(", ") + "]", "zxc_tip");
+
+            // 绑定三个区块的按钮
+            var zxc_groups = [
+                { zxc_attr: "data-zxc_act", zxc_fn: zxc_fruit_act },
+                { zxc_attr: "data-zxc_cut", zxc_fn: zxc_cut_act },
+                { zxc_attr: "data-zxc_num", zxc_fn: zxc_num_act }
+            ];
+            zxc_groups.forEach(function (zxc_g) {
+                Array.prototype.forEach.call(
+                    document.querySelectorAll("[" + zxc_g.zxc_attr + "]"),
+                    function (zxc_btn) {
+                        zxc_btn.addEventListener("click", function () {
+                            zxc_g.zxc_fn(zxc_btn.getAttribute(zxc_g.zxc_attr));
+                        });
+                    }
+                );
+            });
+        }
+
+        zxc_init();
+    </script>
+</body>
+</html>
