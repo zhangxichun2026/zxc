@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-02，使用模型：GLM-5.3-Flash，功能名称：远程接口测试工具 GET/POST 显示返回数据与错误提示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接口测试工具 · fetch GET/POST · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1100px 500px at 80% -10%, #241a33 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 62rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.4rem; }
+
+        .zxc_header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        .zxc_card {
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 12px;
+            padding: 1.1rem 1.2rem 1.25rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .zxc_card h2 { margin: 0 0 0.8rem; font-size: 1rem; color: var(--zxc_accent); }
+
+        /* 请求行：方法 + URL + 发送 */
+        .zxc_reqline { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+        .zxc_select, .zxc_input {
+            font-size: 0.85rem;
+            color: var(--zxc_ink);
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.55rem 0.75rem;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .zxc_select { flex: none; cursor: pointer; }
+
+        .zxc_input { flex: 1; min-width: 14rem; font-family: Consolas, monospace; }
+
+        .zxc_select:focus, .zxc_input:focus { border-color: var(--zxc_accent); }
+
+        .zxc_btn {
+            flex: none;
+            padding: 0.55rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #1f6feb, #4ea8de);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn:disabled { opacity: 0.5; cursor: wait; transform: none; }
+
+        .zxc_btn.zxc_danger { background: linear-gradient(135deg, #b62324, #f85149); }
+
+        .zxc_btn.zxc_small { padding: 0.35rem 0.85rem; font-size: 0.76rem; font-weight: normal; }
+
+        /* 请求体 */
+        .zxc_body_label { margin: 0.9rem 0 0.4rem; font-size: 0.8rem; color: var(--zxc_muted); }
+
+        .zxc_body_label b { color: var(--zxc_warn); }
+
+        .zxc_textarea {
+            width: 100%;
+            min-height: 5.5rem;
+            resize: vertical;
+            font-family: Consolas, monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--zxc_ink);
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.7rem 0.8rem;
+            outline: none;
+        }
+
+        .zxc_textarea:focus { border-color: var(--zxc_accent); }
+
+        /* 常用接口预设 */
+        .zxc_presets { margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+        .zxc_presets span { font-size: 0.76rem; color: var(--zxc_muted); margin-right: 0.2rem; }
+
+        /* 响应元信息 */
+        .zxc_meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
+
+        .zxc_chip {
+            padding: 0.3rem 0.75rem;
+            font-size: 0.78rem;
+            border-radius: 999px;
+            background: #1c2333;
+            border: 1px solid var(--zxc_border);
+        }
+
+        .zxc_chip b { font-weight: bold; margin-left: 0.3rem; }
+
+        .zxc_chip.zxc_ok b { color: var(--zxc_ok); }
+        .zxc_chip.zxc_bad b { color: var(--zxc_bad); }
+        .zxc_chip.zxc_warn b { color: var(--zxc_warn); }
+        .zxc_chip.zxc_accent b { color: var(--zxc_accent); }
+
+        /* 响应输出 */
+        .zxc_output {
+            max-height: 26rem;
+            overflow: auto;
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.8rem 0.9rem;
+            font-family: Consolas, monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #a5d6ff;
+        }
+
+        .zxc_output .zxc_key { color: var(--zxc_pink); }
+        .zxc_output .zxc_str { color: var(--zxc_ok); }
+        .zxc_output .zxc_num { color: var(--zxc_warn); }
+
+        /* 错误面板 */
+        .zxc_errbox {
+            display: none;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.84rem;
+            line-height: 1.7;
+            color: #ffb3ad;
+            background: rgba(248, 81, 73, 0.12);
+            border: 1px solid rgba(248, 81, 73, 0.45);
+            border-radius: 8px;
+        }
+
+        .zxc_errbox b { color: var(--zxc_bad); }
+
+        .zxc_errbox ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+
+        .zxc_footer { margin-top: 2rem; text-align: center; font-size: 0.8rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>远程数据接口测试工具</h1>
+            <p>张熙淳 24002060415 · 2026-11-02 · 原生 fetch 发送请求，显示状态码 / 耗时 / 返回数据 / 错误提示</p>
+        </header>
+
+        <!-- 请求区 -->
+        <section class="zxc_card">
+            <h2>请求 Request</h2>
+            <div class="zxc_reqline">
+                <select class="zxc_select" id="zxc_method">
+                    <option value="GET" selected>GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input class="zxc_input" id="zxc_url" value="https://jsonplaceholder.typicode.com/posts" spellcheck="false">
+                <button class="zxc_btn" id="zxc_send">发送</button>
+            </div>
+
+            <p class="zxc_body_label">请求体（仅 <b>POST / PUT</b> 时发送，Content-Type: application/json）</p>
+            <textarea class="zxc_textarea" id="zxc_body" spellcheck="false">{
+  "title": "张熙淳的测试帖子",
+  "body": "这是通过 fetch POST 创建的内容",
+  "userId": 1
+}</textarea>
+
+            <div class="zxc_presets">
+                <span>常用接口：</span>
+                <button class="zxc_btn zxc_small" data-zxc_m="GET" data-zxc_u="https://jsonplaceholder.typicode.com/posts">GET 100 篇帖子</button>
+                <button class="zxc_btn zxc_small" data-zxc_m="GET" data-zxc_u="https://jsonplaceholder.typicode.com/users">GET 用户列表</button>
+                <button class="zxc_btn zxc_small" data-zxc_m="GET" data-zxc_u="https://dog.ceo/api/breeds/image/random">GET 随机狗图</button>
+                <button class="zxc_btn zxc_small" data-zxc_m="GET" data-zxc_u="https://dummyjson.com/products?limit=8">GET 商品列表</button>
+                <button class="zxc_btn zxc_small" data-zxc_m="POST" data-zxc_u="https://jsonplaceholder.typicode.com/posts">POST 新建帖子</button>
+                <button class="zxc_btn zxc_small zxc_danger" data-zxc_m="GET" data-zxc_u="https://api.zxc-not-exist.com/data">GET 错误地址（看报错）</button>
+            </div>
+        </section>
+
+        <!-- 响应区 -->
+        <section class="zxc_card">
+            <h2>响应 Response</h2>
+            <div class="zxc_meta" id="zxc_meta" style="display:none">
+                <span class="zxc_chip zxc_accent">请求方法<b id="zxc_m_method">-</b></span>
+                <span class="zxc_chip zxc_ok">状态码<b id="zxc_m_status">-</b></span>
+                <span class="zxc_chip zxc_warn">耗时<b id="zxc_m_time">-</b></span>
+                <span class="zxc_chip zxc_accent">数据类型<b id="zxc_m_type">-</b></span>
+            </div>
+
+            <div class="zxc_errbox" id="zxc_errbox"></div>
+
+            <pre class="zxc_output" id="zxc_output">（点击「发送」后，这里显示接口返回的数据）</pre>
+        </section>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 fetch + HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        var zxc_btn_send = document.getElementById("zxc_send");
+        var zxc_output = document.getElementById("zxc_output");
+        var zxc_errbox = document.getElementById("zxc_errbox");
+
+        // ============ 简易 JSON 着色（仅用于展示） ============
+        function zxc_hl(zxc_s) {
+            return zxc_s
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/"([^"]+)":/g, "<span class='zxc_key'>\"$1\"</span>:")
+                .replace(/: ?"((?:[^"\\]|\\.)*)"/g, ": <span class='zxc_str'>\"$1\"</span>")
+                .replace(/: ?(-?\d+\.?\d*(e[+-]?\d+)?)/gi, ": <span class='zxc_num'>$1</span>")
+                .replace(/: ?(true|false|null)/g, ": <span class='zxc_num'>$1</span>");
+        }
+
+        function zxc_show_meta(zxc_id, zxc_val) {
+            document.getElementById("zxc_meta").style.display = "flex";
+            document.getElementById(zxc_id).textContent = zxc_val;
+        }
+
+        function zxc_show_error(zxc_title, zxc_msgs) {
+            var zxc_html = "<b>" + zxc_title + "</b><ul>";
+            for (var zxc_i = 0; zxc_i < zxc_msgs.length; zxc_i++) {
+                zxc_html += "<li>" + zxc_msgs[zxc_i] + "</li>";
+            }
+            zxc_errbox.innerHTML = zxc_html + "</ul>";
+            zxc_errbox.style.display = "block";
+            zxc_output.textContent = "（请求未成功，错误原因见上方提示）";
+        }
+
+        // ============ 发送请求 ============
+        function zxc_send_request() {
+            var zxc_method = document.getElementById("zxc_method").value;
+            var zxc_url = document.getElementById("zxc_url").value.trim();
+
+            // ---- 客户端校验 ----
+            zxc_errbox.style.display = "none";
+            if (!zxc_url) {
+                zxc_show_error("客户端校验未通过", ["URL 不能为空"]);
+                return;
+            }
+            if (zxc_url.indexOf("http://") !== 0 && zxc_url.indexOf("https://") !== 0) {
+                zxc_show_error("客户端校验未通过", ["URL 必须以 http:// 或 https:// 开头"]);
+                return;
+            }
+
+            // ---- 组装 fetch 参数 ----
+            var zxc_options = { method: zxc_method, headers: {} };
+            if (zxc_method === "POST" || zxc_method === "PUT") {
+                var zxc_body_text = document.getElementById("zxc_body").value.trim();
+                if (zxc_body_text) {
+                    try {
+                        JSON.parse(zxc_body_text);   // 先校验请求体是否是合法 JSON
+                        zxc_options.headers["Content-Type"] = "application/json";
+                        zxc_options.body = zxc_body_text;
+                    } catch (zxc_e) {
+                        zxc_show_error("请求体不是合法 JSON", [zxc_e.message]);
+                        return;
+                    }
+                }
+            }
+
+            zxc_btn_send.disabled = true;
+            zxc_btn_send.textContent = "请求中…";
+            zxc_output.textContent = "正在通过 fetch 请求 " + zxc_method + " " + zxc_url + " ……";
+            var zxc_t0 = Date.now();
+
+            fetch(zxc_url, zxc_options)
+                .then(function (zxc_res) {
+                    var zxc_cost = Date.now() - zxc_t0;
+                    zxc_show_meta("zxc_m_method", zxc_method);
+                    zxc_show_meta("zxc_m_status", zxc_res.status + " " + zxc_res.statusText);
+                    zxc_show_meta("zxc_m_time", zxc_cost + " ms");
+                    zxc_show_meta("zxc_m_type", (zxc_res.headers.get("content-type") || "未知").split(";")[0]);
+                    return zxc_res.text();   // 先取文本，非法 JSON 也能显示原文
+                })
+                .then(function (zxc_text) {
+                    zxc_btn_send.disabled = false;
+                    zxc_btn_send.textContent = "发送";
+                    try {
+                        var zxc_obj = JSON.parse(zxc_text);
+                        var zxc_pretty = JSON.stringify(zxc_obj, null, 2);
+                        if (zxc_pretty.length > 20000) { zxc_pretty = zxc_pretty.substring(0, 20000) + "\n……（过长已截断）"; }
+                        zxc_output.innerHTML = zxc_hl(zxc_pretty);
+                    } catch (zxc_e) {
+                        // 返回的不是 JSON（例如普通文本/HTML），显示原文并提示
+                        zxc_show_meta("zxc_m_type", "非 JSON（原文显示）");
+                        zxc_output.textContent = zxc_text.substring(0, 5000);
+                    }
+                })
+                .catch(function (zxc_err) {
+                    // fetch 只在网络层失败时 reject：断网、DNS 解析失败、CORS 拦截等
+                    zxc_btn_send.disabled = false;
+                    zxc_btn_send.textContent = "发送";
+                    zxc_show_error("请求失败（fetch 网络层错误）", [
+                        "错误信息：" + zxc_err.message,
+                        "常见原因：域名不存在 / 网络断开 / 该接口不允许跨域(CORS)"
+                    ]);
+                });
+        }
+
+        zxc_btn_send.addEventListener("click", zxc_send_request);
+
+        // 回车快捷发送
+        document.getElementById("zxc_url").addEventListener("keydown", function (zxc_e) {
+            if (zxc_e.key === "Enter") { zxc_send_request(); }
+        });
+
+        // 预设按钮：快速填充方法与 URL
+        var zxc_presets = document.querySelectorAll(".zxc_presets button");
+        for (var zxc_i = 0; zxc_i < zxc_presets.length; zxc_i++) {
+            zxc_presets[zxc_i].addEventListener("click", function () {
+                document.getElementById("zxc_method").value = this.getAttribute("data-zxc_m");
+                document.getElementById("zxc_url").value = this.getAttribute("data-zxc_u");
+                zxc_send_request();
+            });
+        }
+    </script>
+</body>
+</html>

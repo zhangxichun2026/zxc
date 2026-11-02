@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-02，使用模型：GLM-5.3-Flash，功能名称：JSON 语法与解析演示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 演示 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1100px 500px at 80% -10%, #14263b 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 62rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        .zxc_grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+
+        .zxc_card {
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem 1.25rem;
+        }
+
+        .zxc_card.wide { grid-column: 1 / -1; }
+
+        .zxc_card h2 { margin: 0 0 0.7rem; font-size: 1.02rem; color: var(--zxc_accent); }
+
+        .zxc_card h2 small { color: var(--zxc_muted); font-size: 0.75rem; font-weight: normal; margin-left: 0.5rem; }
+
+        .zxc_rules { margin: 0; padding-left: 1.2rem; font-size: 0.86rem; line-height: 1.9; color: var(--zxc_ink); }
+
+        .zxc_rules b { color: var(--zxc_warn); }
+
+        /* 代码 / JSON 文本展示 */
+        .zxc_code {
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.8rem 0.9rem;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #a5d6ff;
+            margin: 0 0 0.8rem;
+        }
+
+        .zxc_code .zxc_key { color: var(--zxc_pink); }
+        .zxc_code .zxc_str { color: var(--zxc_ok); }
+        .zxc_code .zxc_num { color: var(--zxc_warn); }
+
+        .zxc_btn {
+            display: inline-block;
+            padding: 0.45rem 1rem;
+            margin: 0 0.5rem 0.5rem 0;
+            font-size: 0.82rem;
+            color: #fff;
+            background: linear-gradient(135deg, #1f6feb, #4ea8de);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn.zxc_danger { background: linear-gradient(135deg, #b62324, #f85149); }
+        .zxc_btn.zxc_warn { background: linear-gradient(135deg, #9e6a03, #e3b341); }
+
+        /* 解析结果：属性标签 */
+        .zxc_result { margin-top: 0.6rem; }
+
+        .zxc_kv {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin: 0 0.4rem 0.4rem 0;
+            padding: 0.28rem 0.6rem;
+            font-size: 0.78rem;
+            background: #1c2333;
+            border: 1px solid var(--zxc_border);
+            border-radius: 6px;
+            animation: zxc_pop 0.25s ease;
+        }
+
+        @keyframes zxc_pop {
+            from { opacity: 0; transform: scale(0.85); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .zxc_kv b { color: var(--zxc_pink); font-weight: normal; }
+        .zxc_kv span { color: var(--zxc_ok); }
+
+        .zxc_err {
+            margin-top: 0.6rem;
+            padding: 0.5rem 0.7rem;
+            font-size: 0.78rem;
+            color: #ffb3ad;
+            background: rgba(248, 81, 73, 0.12);
+            border: 1px solid rgba(248, 81, 73, 0.45);
+            border-radius: 6px;
+        }
+
+        /* 数据表格 */
+        .zxc_table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+
+        .zxc_table th, .zxc_table td {
+            padding: 0.5rem 0.7rem;
+            border: 1px solid var(--zxc_border);
+            text-align: left;
+        }
+
+        .zxc_table th { background: #1c2333; color: var(--zxc_accent); font-weight: normal; }
+
+        .zxc_table tr { animation: zxc_pop 0.3s ease; }
+
+        .zxc_tip { margin-top: 0.7rem; font-size: 0.78rem; color: var(--zxc_muted); line-height: 1.8; }
+
+        .zxc_tip b { color: var(--zxc_warn); }
+
+        .zxc_footer { margin-top: 2.2rem; text-align: center; font-size: 0.8rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JSON — JavaScript Object Notation</h1>
+            <p>张熙淳 24002060415 · 2026-11-02 · 轻量级数据交换格式：语法规则 / JSON.parse / JSON.stringify</p>
+        </header>
+
+        <main class="zxc_grid">
+            <!-- 一、语法规则 -->
+            <section class="zxc_card wide">
+                <h2>一、JSON 语法规则 <small>与 JS 对象字面量的区别</small></h2>
+                <ol class="zxc_rules">
+                    <li>数据的<b>键（名称）必须用双引号</b>包裹：<code>"name": "张熙淳"</code></li>
+                    <li>值只能是 6 种：<b>字符串（双引号）、数值、布尔、null、数组、对象</b>——不能是函数、undefined、变量</li>
+                    <li>键值对之间用<b>逗号</b>分隔，最后一项<b>不能有多余逗号</b></li>
+                    <li>JSON 是纯文本，任何语言都能读写，常用于<b>接口数据传输与配置文件</b></li>
+                </ol>
+            </section>
+
+            <!-- 二、JSON.parse -->
+            <section class="zxc_card">
+                <h2>二、JSON.parse() <small>字符串 → JS 对象</small></h2>
+                <div class="zxc_code" id="zxc_parse_src"></div>
+                <button class="zxc_btn" id="zxc_btn_parse">解析这段 JSON</button>
+                <button class="zxc_btn zxc_danger" id="zxc_btn_bad">解析错误 JSON（触发异常）</button>
+                <div class="zxc_result" id="zxc_parse_out"></div>
+                <div class="zxc_err" id="zxc_parse_err" style="display:none"></div>
+                <p class="zxc_tip">解析非法 JSON 会抛出 <b>SyntaxError</b>，必须用 <b>try...catch</b> 捕获。</p>
+            </section>
+
+            <!-- 三、JSON.stringify -->
+            <section class="zxc_card">
+                <h2>三、JSON.stringify() <small>JS 对象 → JSON 字符串</small></h2>
+                <div class="zxc_code" id="zxc_strify_src"></div>
+                <button class="zxc_btn" id="zxc_btn_strify">转换为 JSON 字符串</button>
+                <button class="zxc_btn zxc_warn" id="zxc_btn_pretty">格式化输出（缩进 2 空格）</button>
+                <pre class="zxc_code" id="zxc_strify_out" style="min-height:5.2rem">（点击按钮查看结果）</pre>
+                <p class="zxc_tip">注意：<b>greet 方法被自动丢弃</b>——JSON 无法表示函数。</p>
+            </section>
+
+            <!-- 四、综合案例 -->
+            <section class="zxc_card wide">
+                <h2>四、综合案例 <small>解析学生 JSON 数组并渲染表格</small></h2>
+                <pre class="zxc_code" id="zxc_students_src"></pre>
+                <button class="zxc_btn" id="zxc_btn_table">解析并渲染成表格</button>
+                <div id="zxc_table_box" style="margin-top:0.8rem"></div>
+            </section>
+        </main>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 一、示例 JSON 字符串 =================
+        var zxc_sample = '{ "name": "张熙淳", "age": 20, "isStudent": true, "skills": ["HTML", "CSS", "JavaScript"], "address": { "city": "北京", "zip": "100000" } }';
+        var zxc_bad_sample = '{ name: "张熙淳", age: 20, }'; // 键没加双引号 + 多余逗号
+
+        // JSON 字符串高亮显示（简易着色，仅用于展示）
+        function zxc_hl(zxc_s) {
+            var zxc_html = zxc_s
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/"([^"]+)":/g, "<span class='zxc_key'>\"$1\"</span>:")
+                .replace(/: ?"([^"]*)"/g, ": <span class='zxc_str'>\"$1\"</span>")
+                .replace(/: ?(\d+\.?\d*)/g, ": <span class='zxc_num'>$1</span>")
+                .replace(/: ?(true|false|null)/g, ": <span class='zxc_num'>$1</span>");
+            return zxc_html;
+        }
+
+        document.getElementById("zxc_parse_src").innerHTML = zxc_hl(zxc_sample);
+
+        // ================= 二、JSON.parse =================
+        function zxc_render_obj(zxc_obj, zxc_box) {
+            var zxc_html = "";
+            for (var zxc_k in zxc_obj) {
+                if (!zxc_obj.hasOwnProperty(zxc_k)) { continue; }
+                var zxc_v = zxc_obj[zxc_k];
+                var zxc_show;
+                if (typeof zxc_v === "object" && zxc_v !== null) {
+                    zxc_show = JSON.stringify(zxc_v);
+                } else {
+                    zxc_show = String(zxc_v);
+                }
+                zxc_html += "<span class='zxc_kv'><b>" + zxc_k + "</b><span>" + zxc_show + "</span></span>";
+            }
+            zxc_box.innerHTML = zxc_html;
+        }
+
+        document.getElementById("zxc_btn_parse").addEventListener("click", function () {
+            var zxc_out = document.getElementById("zxc_parse_out");
+            var zxc_err = document.getElementById("zxc_parse_err");
+            zxc_err.style.display = "none";
+            try {
+                var zxc_obj = JSON.parse(zxc_sample);   // 核心：字符串 → 对象
+                zxc_render_obj(zxc_obj, zxc_out);
+            } catch (zxc_e) {
+                zxc_out.innerHTML = "";
+                zxc_err.style.display = "block";
+                zxc_err.textContent = "解析失败：" + zxc_e.message;
+            }
+        });
+
+        document.getElementById("zxc_btn_bad").addEventListener("click", function () {
+            var zxc_out = document.getElementById("zxc_parse_out");
+            var zxc_err = document.getElementById("zxc_parse_err");
+            zxc_out.innerHTML = "";
+            try {
+                JSON.parse(zxc_bad_sample);
+            } catch (zxc_e) {
+                zxc_err.style.display = "block";
+                zxc_err.textContent = "捕获异常 SyntaxError：" + zxc_e.message;
+            }
+        });
+
+        // ================= 三、JSON.stringify =================
+        var zxc_user = {
+            name: "李雷",
+            age: 21,
+            hobbies: ["篮球", "编程"],
+            greet: function () { return "你好，我是" + this.name; } // 函数会被 stringify 丢弃
+        };
+
+        document.getElementById("zxc_strify_src").innerHTML =
+            "<span class='zxc_key'>var zxc_user</span> = { name: '李雷', age: 21, hobbies: ['篮球', '编程'], greet: function () { … } };";
+
+        function zxc_do_strify(zxc_pretty) {
+            var zxc_str = zxc_pretty
+                ? JSON.stringify(zxc_user, null, 2)   // 带缩进的格式化输出
+                : JSON.stringify(zxc_user);           // 紧凑的一行
+            document.getElementById("zxc_strify_out").textContent = zxc_str;
+        }
+
+        document.getElementById("zxc_btn_strify").addEventListener("click", function () { zxc_do_strify(false); });
+        document.getElementById("zxc_btn_pretty").addEventListener("click", function () { zxc_do_strify(true); });
+
+        // ================= 四、综合案例：学生表 =================
+        var zxc_students_json = '[' +
+            '{ "id": 1, "name": "张熙淳", "age": 20, "courses": ["HTML", "CSS"] },' +
+            '{ "id": 2, "name": "李雷",   "age": 21, "courses": ["JavaScript", "JSON"] },' +
+            '{ "id": 3, "name": "韩梅梅", "age": 19, "courses": ["CSS3", "动画"] }' +
+        ']';
+
+        document.getElementById("zxc_students_src").textContent = zxc_students_json;
+
+        document.getElementById("zxc_btn_table").addEventListener("click", function () {
+            var zxc_list = JSON.parse(zxc_students_json);
+            var zxc_html = "<table class='zxc_table'><tr><th>学号</th><th>姓名</th><th>年龄</th><th>课程</th></tr>";
+            for (var zxc_i = 0; zxc_i < zxc_list.length; zxc_i++) {
+                var zxc_s = zxc_list[zxc_i];
+                zxc_html += "<tr><td>" + zxc_s.id + "</td><td>" + zxc_s.name + "</td><td>" + zxc_s.age +
+                            "</td><td>" + zxc_s.courses.join("、") + "</td></tr>";
+            }
+            zxc_html += "</table>";
+            document.getElementById("zxc_table_box").innerHTML = zxc_html;
+        });
+    </script>
+</body>
+</html>

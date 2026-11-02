@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-02，使用模型：GLM-5.3-Flash，功能名称：商品列表页 fetch 加载接口数据 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表 · fetch 接口数据 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1100px 500px at 85% -10%, #142a20 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 66rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.4rem; }
+
+        .zxc_header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        .zxc_api {
+            margin: 0 auto 1.4rem;
+            max-width: 40rem;
+            padding: 0.55rem 0.9rem;
+            font-family: Consolas, monospace;
+            font-size: 0.78rem;
+            color: var(--zxc_ok);
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .zxc_status {
+            display: none;
+            margin: 0 auto 1rem;
+            max-width: 40rem;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .zxc_status.zxc_loading { display: block; color: var(--zxc_warn); background: rgba(227, 179, 65, 0.12); border: 1px solid rgba(227, 179, 65, 0.45); }
+        .zxc_status.zxc_error { display: block; color: #ffb3ad; background: rgba(248, 81, 73, 0.12); border: 1px solid rgba(248, 81, 73, 0.45); }
+
+        .zxc_status .zxc_spin {
+            display: inline-block;
+            width: 0.85rem; height: 0.85rem;
+            vertical-align: -2px;
+            margin-right: 0.4rem;
+            border: 2px solid var(--zxc_warn);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: zxc_spin 0.8s linear infinite;
+        }
+
+        @keyframes zxc_spin { to { transform: rotate(360deg); } }
+
+        .zxc_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+            gap: 1rem;
+        }
+
+        .zxc_item {
+            display: block;
+            text-decoration: none;
+            color: var(--zxc_ink);
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+            animation: zxc_pop 0.3s ease;
+        }
+
+        @keyframes zxc_pop {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .zxc_item:hover { transform: translateY(-4px); border-color: var(--zxc_accent); }
+
+        .zxc_item img {
+            width: 100%;
+            height: 9.5rem;
+            object-fit: cover;
+            display: block;
+            background: #fff;
+        }
+
+        .zxc_body { padding: 0.7rem 0.8rem 0.85rem; }
+
+        .zxc_title {
+            margin: 0 0 0.3rem;
+            font-size: 0.88rem;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .zxc_meta { margin: 0; font-size: 0.74rem; color: var(--zxc_muted); }
+
+        .zxc_row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.45rem; }
+
+        .zxc_price { color: var(--zxc_bad); font-size: 1.05rem; font-weight: bold; }
+
+        .zxc_price small { font-size: 0.7rem; }
+
+        .zxc_rate { color: var(--zxc_warn); font-size: 0.76rem; }
+
+        .zxc_footer { margin-top: 2.4rem; text-align: center; font-size: 0.8rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>商品列表（列表页）</h1>
+            <p>张熙淳 24002060415 · 2026-11-02 · 点击任意商品卡片 → 跳转 17-3-detail.html 查看详情</p>
+        </header>
+
+        <div class="zxc_api">列表 GET https://dummyjson.com/products?limit=8</div>
+
+        <div class="zxc_status" id="zxc_status"></div>
+
+        <main class="zxc_grid" id="zxc_grid"></main>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 fetch + HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        var zxc_API_LIST = "https://dummyjson.com/products?limit=8";
+        var zxc_status = document.getElementById("zxc_status");
+
+        function zxc_show_status(zxc_text, zxc_type) {
+            if (!zxc_text) { zxc_status.className = "zxc_status"; zxc_status.innerHTML = ""; return; }
+            zxc_status.className = "zxc_status " + zxc_type;
+            zxc_status.innerHTML = (zxc_type === "zxc_loading" ? "<span class='zxc_spin'></span>" : "") + zxc_text;
+        }
+
+        function zxc_escape(zxc_s) { return String(zxc_s).replace(/</g, "&lt;"); }
+
+        function zxc_render_list(zxc_products) {
+            var zxc_grid = document.getElementById("zxc_grid");
+            var zxc_html = "";
+            for (var zxc_i = 0; zxc_i < zxc_products.length; zxc_i++) {
+                var zxc_p = zxc_products[zxc_i];
+                // 关键点：详情页通过 URL 参数 ?id=xxx 传递商品编号
+                zxc_html +=
+                    "<a class='zxc_item' href='17-3-detail.html?id=" + zxc_p.id + "'>" +
+                        "<img src='" + zxc_p.thumbnail + "' alt='" + zxc_escape(zxc_p.title) + "'>" +
+                        "<div class='zxc_body'>" +
+                            "<h3 class='zxc_title'>" + zxc_escape(zxc_p.title) + "</h3>" +
+                            "<p class='zxc_meta'>" + zxc_escape(zxc_p.brand) + " · " + zxc_escape(zxc_p.category) + "</p>" +
+                            "<div class='zxc_row'>" +
+                                "<span class='zxc_price'><small>$</small>" + zxc_p.price.toFixed(2) + "</span>" +
+                                "<span class='zxc_rate'>★ " + zxc_p.rating.toFixed(2) + "</span>" +
+                            "</div>" +
+                        "</div>" +
+                    "</a>";
+            }
+            zxc_grid.innerHTML = zxc_html;
+        }
+
+        function zxc_load_list() {
+            zxc_show_status("正在通过 fetch 请求商品列表……", "zxc_loading");
+            fetch(zxc_API_LIST)                          // 原生 fetch，接口支持跨域
+                .then(function (zxc_res) {
+                    if (!zxc_res.ok) { throw new Error("HTTP 状态码 " + zxc_res.status); }
+                    return zxc_res.json();
+                })
+                .then(function (zxc_data) {
+                    zxc_show_status("");
+                    zxc_render_list(zxc_data.products);
+                })
+                .catch(function (zxc_err) {
+                    zxc_show_status("请求失败：" + zxc_err.message + "，请检查网络后刷新重试。", "zxc_error");
+                });
+        }
+
+        zxc_load_list();
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-02，使用模型：GLM-5.3-Flash，功能名称：JavaScript 两种定时器 setTimeout与setInterval演示 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 定时器 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1100px 500px at 80% -10%, #14263b 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 62rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        .zxc_grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1.1rem; }
+
+        .zxc_card {
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem 1.25rem;
+        }
+
+        .zxc_card.wide { grid-column: 1 / -1; }
+
+        .zxc_card h2 { margin: 0 0 0.3rem; font-size: 1.02rem; color: var(--zxc_accent); }
+
+        .zxc_card h2 small { color: var(--zxc_muted); font-size: 0.75rem; font-weight: normal; margin-left: 0.5rem; }
+
+        .zxc_code {
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            font-family: Consolas, monospace;
+            font-size: 0.76rem;
+            line-height: 1.7;
+            color: #a5d6ff;
+            white-space: pre-wrap;
+            margin: 0.6rem 0 0.9rem;
+        }
+
+        .zxc_btn {
+            display: inline-block;
+            padding: 0.45rem 1rem;
+            margin: 0 0.5rem 0.5rem 0;
+            font-size: 0.82rem;
+            color: #fff;
+            background: linear-gradient(135deg, #1f6feb, #4ea8de);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+        .zxc_btn.zxc_danger { background: linear-gradient(135deg, #b62324, #f85149); }
+
+        .zxc_btn.zxc_warn { background: linear-gradient(135deg, #9e6a03, #e3b341); }
+
+        .zxc_input {
+            width: 5rem;
+            padding: 0.45rem 0.6rem;
+            margin-right: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--zxc_ink);
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .zxc_input:focus { border-color: var(--zxc_accent); }
+
+        /* 输出区域 */
+        .zxc_out {
+            min-height: 3.4rem;
+            background: #0a0e14;
+            border: 1px dashed var(--zxc_border);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.82rem;
+            line-height: 1.8;
+        }
+
+        .zxc_out .zxc_time { color: var(--zxc_muted); font-family: Consolas, monospace; font-size: 0.74rem; margin-right: 0.4rem; }
+        .zxc_out .zxc_ok { color: var(--zxc_ok); }
+        .zxc_out .zxc_warn { color: var(--zxc_warn); }
+        .zxc_out .zxc_bad { color: var(--zxc_bad); }
+        .zxc_out .zxc_accent { color: var(--zxc_accent); }
+
+        /* 秒表数字 */
+        .zxc_clock {
+            font-family: Consolas, monospace;
+            font-size: 2.6rem;
+            font-weight: bold;
+            text-align: center;
+            color: var(--zxc_ok);
+            letter-spacing: 0.05em;
+            margin: 0.4rem 0 0.8rem;
+        }
+
+        /* 对比表 */
+        .zxc_table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+
+        .zxc_table th, .zxc_table td { padding: 0.55rem 0.8rem; border: 1px solid var(--zxc_border); text-align: left; }
+
+        .zxc_table th { background: #1c2333; color: var(--zxc_accent); font-weight: normal; }
+
+        .zxc_table code { color: var(--zxc_warn); font-family: Consolas, monospace; }
+
+        .zxc_footer { margin-top: 2.2rem; text-align: center; font-size: 0.8rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>JavaScript 的两种定时器</h1>
+            <p>张熙淳 24002060415 · 2026-11-02 · setTimeout（一次性）与 setInterval（循环执行）</p>
+        </header>
+
+        <main class="zxc_grid">
+            <!-- 一、setTimeout -->
+            <section class="zxc_card">
+                <h2>一、setTimeout <small>只执行一次，可 clearTimeout 取消</small></h2>
+                <div class="zxc_code">var zxc_id = setTimeout(函数, 毫秒);
+clearTimeout(zxc_id);   // 取消尚未执行的定时器</div>
+                <input class="zxc_input" id="zxc_delay_sec" type="number" min="1" max="60" value="5"> 秒后提醒
+                <div style="margin-top:0.7rem">
+                    <button class="zxc_btn" id="zxc_btn_later">定时提醒</button>
+                    <button class="zxc_btn zxc_danger" id="zxc_btn_cancel">取消提醒</button>
+                </div>
+                <div class="zxc_out" id="zxc_out_later">（设置秒数后点击「定时提醒」）</div>
+            </section>
+
+            <!-- 二、setInterval -->
+            <section class="zxc_card">
+                <h2>二、setInterval <small>每隔指定毫秒循环执行，可 clearInterval 停止</small></h2>
+                <div class="zxc_code">var zxc_id = setInterval(函数, 毫秒);
+clearInterval(zxc_id);   // 停止循环</div>
+                <div class="zxc_clock" id="zxc_clock">00:00.0</div>
+                <button class="zxc_btn" id="zxc_btn_start">开始计时</button>
+                <button class="zxc_btn zxc_warn" id="zxc_btn_stop">暂停</button>
+                <button class="zxc_btn zxc_danger" id="zxc_btn_reset">清零</button>
+                <div class="zxc_out" id="zxc_out_clock">（秒表使用 setInterval 每 100ms 累加一次）</div>
+            </section>
+
+            <!-- 三、对比总结 -->
+            <section class="zxc_card wide">
+                <h2>三、两种定时器对比</h2>
+                <table class="zxc_table">
+                    <tr><th>对比项</th><th>setTimeout</th><th>setInterval</th></tr>
+                    <tr><td>执行次数</td><td>延迟到达后执行 <code>1 次</code></td><td>每间隔一段时间执行，<code>无限次</code></td></tr>
+                    <tr><td>典型用途</td><td>延迟提示、防抖、动画单步</td><td>秒表、轮播图、倒计时、实时刷新</td></tr>
+                    <tr><td>停止方法</td><td><code>clearTimeout(id)</code></td><td><code>clearInterval(id)</code></td></tr>
+                    <tr><td>返回值</td><td colspan="2">都是定时器编号 id，传给对应的 clear 方法即可取消</td></tr>
+                </table>
+            </section>
+        </main>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 一、setTimeout：延迟提醒 =================
+        var zxc_later_id = null;   // 保存定时器编号
+
+        function zxc_now_str() {
+            var zxc_d = new Date();
+            return "[" + zxc_d.getHours() + ":" + ("0" + zxc_d.getMinutes()).slice(-2) + ":" + ("0" + zxc_d.getSeconds()).slice(-2) + "]";
+        }
+
+        function zxc_log_later(zxc_html) {
+            document.getElementById("zxc_out_later").innerHTML += "<div><span class='zxc_time'>" + zxc_now_str() + "</span>" + zxc_html + "</div>";
+        }
+
+        document.getElementById("zxc_btn_later").addEventListener("click", function () {
+            var zxc_sec = parseInt(document.getElementById("zxc_delay_sec").value, 10);
+            if (!(zxc_sec >= 1 && zxc_sec <= 60)) {
+                zxc_log_later("<span class='zxc_bad'>请输入 1 ~ 60 之间的秒数</span>");
+                return;
+            }
+            if (zxc_later_id !== null) { clearTimeout(zxc_later_id); }  // 旧的未触发定时器直接取消
+            zxc_log_later("<span class='zxc_accent'>已设置定时器，" + zxc_sec + " 秒后提醒（再次设置会自动取消上一次）</span>");
+
+            zxc_later_id = setTimeout(function () {          // 核心：延迟一次性执行
+                zxc_log_later("<span class='zxc_ok'>⏰ 时间到！这是 setTimeout 延迟 " + zxc_sec + " 秒后的提醒，它只执行一次</span>");
+                zxc_later_id = null;
+            }, zxc_sec * 1000);
+        });
+
+        document.getElementById("zxc_btn_cancel").addEventListener("click", function () {
+            if (zxc_later_id !== null) {
+                clearTimeout(zxc_later_id);                  // 核心：取消定时器
+                zxc_later_id = null;
+                zxc_log_later("<span class='zxc_bad'>已调用 clearTimeout 取消本次提醒</span>");
+            } else {
+                zxc_log_later("<span class='zxc_warn'>当前没有待执行的提醒</span>");
+            }
+        });
+
+        // ================= 二、setInterval：秒表 =================
+        var zxc_watch_id = null;   // 循环定时器编号
+        var zxc_ms = 0;            // 累计毫秒数
+
+        function zxc_format(zxc_total_ms) {
+            var zxc_m = Math.floor(zxc_total_ms / 60000);
+            var zxc_s = Math.floor(zxc_total_ms % 60000 / 1000);
+            var zxc_tenth = Math.floor(zxc_total_ms % 1000 / 100);
+            return ("0" + zxc_m).slice(-2) + ":" + ("0" + zxc_s).slice(-2) + "." + zxc_tenth;
+        }
+
+        function zxc_log_clock(zxc_html) {
+            document.getElementById("zxc_out_clock").innerHTML += "<div><span class='zxc_time'>" + zxc_now_str() + "</span>" + zxc_html + "</div>";
+        }
+
+        document.getElementById("zxc_btn_start").addEventListener("click", function () {
+            if (zxc_watch_id !== null) { return; }   // 防止重复启动多个循环
+            zxc_watch_id = setInterval(function () { // 核心：每 100ms 循环执行一次
+                zxc_ms += 100;
+                document.getElementById("zxc_clock").textContent = zxc_format(zxc_ms);
+            }, 100);
+            zxc_log_clock("<span class='zxc_ok'>秒表已启动（setInterval 每 100ms 执行一次）</span>");
+        });
+
+        document.getElementById("zxc_btn_stop").addEventListener("click", function () {
+            if (zxc_watch_id === null) { return; }
+            clearInterval(zxc_watch_id);             // 核心：停止循环
+            zxc_watch_id = null;
+            zxc_log_clock("<span class='zxc_warn'>已暂停，当前读数 " + zxc_format(zxc_ms) + "</span>");
+        });
+
+        document.getElementById("zxc_btn_reset").addEventListener("click", function () {
+            if (zxc_watch_id !== null) { clearInterval(zxc_watch_id); zxc_watch_id = null; }
+            zxc_ms = 0;
+            document.getElementById("zxc_clock").textContent = "00:00.0";
+            zxc_log_clock("<span class='zxc_bad'>已清零并停止</span>");
+        });
+    </script>
+</body>
+</html>

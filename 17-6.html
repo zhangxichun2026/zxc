@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-02，使用模型：GLM-5.3-Flash，功能名称：Promise与async异步流程演示 包饺子 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise 与 async 异步演示 · 包饺子 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem 3rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1100px 500px at 80% -10%, #2b1f14 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 56rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.6rem; }
+
+        .zxc_header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.85rem; }
+
+        /* 流程节点 */
+        .zxc_flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            align-items: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .zxc_step {
+            width: 22rem;
+            max-width: 100%;
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .zxc_step .zxc_head_row { display: flex; align-items: baseline; gap: 0.5rem; }
+
+        .zxc_step h3 { margin: 0; font-size: 0.95rem; color: var(--zxc_muted); font-weight: normal; flex: 1; }
+
+        .zxc_step .zxc_state { font-size: 0.76rem; color: var(--zxc_muted); }
+
+        .zxc_step .zxc_dur { font-size: 0.74rem; color: var(--zxc_muted); font-family: Consolas, monospace; }
+
+        /* 状态：进行中 / 完成 */
+        .zxc_step.zxc_running { border-color: var(--zxc_warn); box-shadow: 0 0 12px -4px var(--zxc_warn); }
+
+        .zxc_step.zxc_running h3 { color: var(--zxc_warn); }
+
+        .zxc_step.zxc_running .zxc_state { color: var(--zxc_warn); }
+
+        .zxc_step.zxc_running .zxc_state::before {
+            content: "";
+            display: inline-block;
+            width: 0.7rem; height: 0.7rem;
+            vertical-align: -1px;
+            margin-right: 0.35rem;
+            border: 2px solid var(--zxc_warn);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: zxc_spin 0.8s linear infinite;
+        }
+
+        .zxc_step.zxc_done { border-color: var(--zxc_ok); }
+
+        .zxc_step.zxc_done h3 { color: var(--zxc_ok); }
+
+        .zxc_step.zxc_done .zxc_state { color: var(--zxc_ok); }
+
+        @keyframes zxc_spin { to { transform: rotate(360deg); } }
+
+        .zxc_bar { height: 5px; margin-top: 0.5rem; background: #0a0e14; border-radius: 99px; overflow: hidden; }
+
+        .zxc_bar i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--zxc_accent), var(--zxc_ok)); transition: width 0.2s linear; }
+
+        /* 并行区：和面 + 和馅 */
+        .zxc_parallel { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+        .zxc_arrow { color: var(--zxc_muted); font-size: 1.1rem; }
+
+        .zxc_parallel .zxc_step { width: 10.5rem; }
+
+        /* 控制按钮 */
+        .zxc_ctrl { text-align: center; margin-bottom: 1.4rem; }
+
+        .zxc_btn {
+            padding: 0.55rem 1.6rem;
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #b3541e, #e3b341);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 0.4rem;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+        .zxc_btn.zxc_danger { background: linear-gradient(135deg, #b62324, #f85149); }
+
+        /* 时间轴日志 */
+        .zxc_log {
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-family: Consolas, monospace;
+            font-size: 0.78rem;
+            line-height: 1.9;
+            min-height: 6rem;
+            max-height: 18rem;
+            overflow: auto;
+        }
+
+        .zxc_log .zxc_t { color: var(--zxc_muted); margin-right: 0.5rem; }
+        .zxc_log .zxc_ok { color: var(--zxc_ok); }
+        .zxc_log .zxc_warn { color: var(--zxc_warn); }
+        .zxc_log .zxc_accent { color: var(--zxc_accent); }
+        .zxc_log .zxc_pink { color: var(--zxc_pink); }
+
+        /* 核心代码 */
+        .zxc_code {
+            background: #0a0e14;
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-family: Consolas, monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #a5d6ff;
+            white-space: pre-wrap;
+            margin-top: 1.2rem;
+        }
+
+        .zxc_code .zxc_k { color: var(--zxc_pink); }
+
+        .zxc_footer { margin-top: 2rem; text-align: center; font-size: 0.8rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>包饺子流程 — Promise 与 async/await 异步演示</h1>
+            <p>张熙淳 24002060415 · 2026-11-02 · 每一步用 setTimeout 模拟耗时，点击按钮开始</p>
+        </header>
+
+        <!-- 流程图 -->
+        <div class="zxc_flow">
+            <div class="zxc_step" id="zxc_step_1">
+                <div class="zxc_head_row"><h3>1. 买原料</h3><span class="zxc_dur">6s</span><span class="zxc_state">等待中</span></div>
+                <div class="zxc_bar"><i></i></div>
+            </div>
+            <span class="zxc_arrow">↓</span>
+            <div class="zxc_step" id="zxc_step_2">
+                <div class="zxc_head_row"><h3>2. 取原料</h3><span class="zxc_dur">2s</span><span class="zxc_state">等待中</span></div>
+                <div class="zxc_bar"><i></i></div>
+            </div>
+            <span class="zxc_arrow">↓ 同时进行（Promise.all）</span>
+            <div class="zxc_parallel">
+                <div class="zxc_step" id="zxc_step_3">
+                    <div class="zxc_head_row"><h3>3a. 和面</h3><span class="zxc_dur">4s</span><span class="zxc_state">等待中</span></div>
+                    <div class="zxc_bar"><i></i></div>
+                </div>
+                <div class="zxc_step" id="zxc_step_4">
+                    <div class="zxc_head_row"><h3>3b. 和馅</h3><span class="zxc_dur">3s</span><span class="zxc_state">等待中</span></div>
+                    <div class="zxc_bar"><i></i></div>
+                </div>
+            </div>
+            <span class="zxc_arrow">↓ 两项都完成后</span>
+            <div class="zxc_step" id="zxc_step_5">
+                <div class="zxc_head_row"><h3>4. 包饺子</h3><span class="zxc_dur">3s</span><span class="zxc_state">等待中</span></div>
+                <div class="zxc_bar"><i></i></div>
+            </div>
+            <span class="zxc_arrow">↓</span>
+            <div class="zxc_step" id="zxc_step_6">
+                <div class="zxc_head_row"><h3>5. 吃饺子</h3><span class="zxc_dur">2s</span><span class="zxc_state">等待中</span></div>
+                <div class="zxc_bar"><i></i></div>
+            </div>
+        </div>
+
+        <div class="zxc_ctrl">
+            <button class="zxc_btn" id="zxc_btn_run">开始包饺子</button>
+            <button class="zxc_btn zxc_danger" id="zxc_btn_reset">重置</button>
+        </div>
+
+        <!-- 时间轴日志 -->
+        <div class="zxc_log" id="zxc_log"><span class="zxc_t">[00:00.0]</span>点击「开始包饺子」，观察流程的时间轴 —— 和面与和馅将同时进行。</div>
+
+        <!-- 核心代码 -->
+        <pre class="zxc_code"><span class="zxc_k">function</span> zxc_step(名称, 秒) {
+  <span class="zxc_k">return new</span> Promise(解决 => setTimeout(解决, 秒 * 1000)); <span style="color:#8b949e">// setTimeout 模拟耗时</span>
+}
+<span class="zxc_k">async function</span> zxc_run() {
+  <span class="zxc_k">await</span> zxc_step("买原料", 6);                 <span style="color:#8b949e">// 顺序执行</span>
+  <span class="zxc_k">await</span> zxc_step("取原料", 2);
+  <span class="zxc_k">await</span> Promise.all([                          <span style="color:#8b949e">// 两项同时进行</span>
+    zxc_step("和面", 4),
+    zxc_step("和馅", 3)
+  ]);
+  <span class="zxc_k">await</span> zxc_step("包饺子", 3);
+  <span class="zxc_k">await</span> zxc_step("吃饺子", 2);
+}</pre>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript
+        </footer>
+    </div>
+
+    <script>
+        // ================= 基础：单个异步步骤 =================
+        // 用 setTimeout 模拟每一步的耗时，返回一个 Promise
+        function zxc_step(zxc_id, zxc_name, zxc_sec) {
+            return new Promise(function (zxc_resolve) {
+                var zxc_el = document.getElementById(zxc_id);
+                var zxc_bar_i = zxc_el.querySelector(".zxc_bar i");
+                var zxc_state = zxc_el.querySelector(".zxc_state");
+
+                zxc_el.className = "zxc_step zxc_running";
+                zxc_state.innerHTML = "进行中…";
+
+                // 用 setInterval 每 100ms 刷新进度条（视觉辅助）
+                var zxc_start = Date.now();
+                var zxc_total = zxc_sec * 1000;
+                var zxc_timer = setInterval(function () {
+                    var zxc_pct = Math.min((Date.now() - zxc_start) / zxc_total * 100, 100);
+                    zxc_bar_i.style.width = zxc_pct + "%";
+                }, 100);
+
+                setTimeout(function () {                  // 核心：setTimeout 模拟该步骤耗时
+                    clearInterval(zxc_timer);
+                    zxc_bar_i.style.width = "100%";
+                    zxc_el.className = "zxc_step zxc_done";
+                    zxc_state.innerHTML = "完成 ✔";
+                    zxc_resolve(zxc_name);                // Promise 完成
+                }, zxc_total);
+            });
+        }
+
+        // ================= 时间轴日志 =================
+        var zxc_t0 = 0;
+
+        function zxc_log(zxc_html) {
+            var zxc_ms = Date.now() - zxc_t0;
+            var zxc_s = Math.floor(zxc_ms / 1000);
+            var zxc_tenth = Math.floor(zxc_ms % 1000 / 100);
+            var zxc_t = "[" + ("0" + zxc_s).slice(-2) + ":" + zxc_tenth + "s]";
+            var zxc_box = document.getElementById("zxc_log");
+            zxc_box.innerHTML += "<div><span class='zxc_t'>" + zxc_t + "</span>" + zxc_html + "</div>";
+            zxc_box.scrollTop = zxc_box.scrollHeight;
+        }
+
+        // ================= 主流程：async/await 顺序 + Promise.all 并行 =================
+        async function zxc_run() {
+            var zxc_btn_run = document.getElementById("zxc_btn_run");
+            zxc_btn_run.disabled = true;
+            zxc_t0 = Date.now();
+            document.getElementById("zxc_log").innerHTML = "";
+
+            zxc_log("<span class='zxc_warn'>🥟 开始包饺子！整个流程用 Promise + async/await 编排</span>");
+
+            // 步骤1：买原料（6 秒）
+            await zxc_step("zxc_step_1", "买原料", 6);
+            zxc_log("<span class='zxc_ok'>✔ 买原料完成（面、菜、肉都买好了）</span>");
+
+            // 步骤2：取原料（2 秒）
+            await zxc_step("zxc_step_2", "取原料", 2);
+            zxc_log("<span class='zxc_ok'>✔ 取原料完成（原料已摆上案板）</span>");
+
+            // 步骤3：和面 与 和馅 —— 用 Promise.all 同时进行
+            zxc_log("<span class='zxc_pink'>⚡ 和面、和馅同时开始（Promise.all 并行）…</span>");
+            var zxc_start_all = Date.now();
+            await Promise.all([
+                zxc_step("zxc_step_3", "和面", 4),
+                zxc_step("zxc_step_4", "和馅", 3)
+            ]);
+            var zxc_all_cost = ((Date.now() - zxc_start_all) / 1000).toFixed(1);
+            zxc_log("<span class='zxc_ok'>✔ 和面、和馅都完成了，并行总耗时 " + zxc_all_cost + "s（取最长者 4s，而不是 4+3=7s）</span>");
+
+            // 步骤4：包饺子（3 秒）
+            await zxc_step("zxc_step_5", "包饺子", 3);
+            zxc_log("<span class='zxc_ok'>✔ 包饺子完成（一个个白白胖胖的饺子出锅啦）</span>");
+
+            // 步骤5：吃饺子（2 秒）
+            await zxc_step("zxc_step_6", "吃饺子", 2);
+            var zxc_total_cost = ((Date.now() - zxc_t0) / 1000).toFixed(1);
+            zxc_log("<span class='zxc_pink'>🎉 吃饺子完成！全程共 " + zxc_total_cost + "s —— async/await 让异步代码像同步一样清晰</span>");
+
+            zxc_btn_run.disabled = false;
+        }
+
+        // ================= 重置 =================
+        function zxc_reset() {
+            for (var zxc_i = 1; zxc_i <= 6; zxc_i++) {
+                var zxc_el = document.getElementById("zxc_step_" + zxc_i);
+                zxc_el.className = "zxc_step";
+                zxc_el.querySelector(".zxc_bar i").style.width = "0%";
+                zxc_el.querySelector(".zxc_state").innerHTML = "等待中";
+            }
+            document.getElementById("zxc_log").innerHTML =
+                "<span class='zxc_t'>[00:00.0]</span>已重置。点击「开始包饺子」重新演示。";
+        }
+
+        document.getElementById("zxc_btn_run").addEventListener("click", zxc_run);
+        document.getElementById("zxc_btn_reset").addEventListener("click", zxc_reset);
+    </script>
+</body>
+</html>
