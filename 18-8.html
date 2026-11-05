@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-05，使用模型：GLM-5.3-Flash，功能名称：ECharts数据大屏 三列布局 中国地图+多维图表（本地cdn库） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商数据大屏 · 张熙淳</title>
+    <!-- 库文件已下载到本地 cdn 目录，不使用在线 CDN（符合项目规则） -->
+    <script src="cdn/echarts.min.js"></script>
+    <script src="cdn/china.js"></script>
+    <style>
+        :root {
+            --zxc_bg: #070b14;
+            --zxc_card: rgba(22, 27, 38, 0.85);
+            --zxc_border: rgba(78, 168, 222, 0.28);
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_pink: #f778ba;
+            --zxc_purple: #b392f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            padding: 0.7rem 0.9rem 0.9rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background:
+                radial-gradient(900px 380px at 50% -8%, #14263b 0%, transparent 60%),
+                radial-gradient(700px 420px at 100% 100%, #142b22 0%, transparent 55%),
+                var(--zxc_bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============ 顶部标题栏 ============ */
+        .zxc_topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            background: linear-gradient(180deg, rgba(28, 35, 51, 0.9), rgba(16, 20, 30, 0.9));
+            padding: 0.5rem 1.2rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .zxc_topbar .zxc_side { width: 220px; font-size: 0.74rem; color: var(--zxc_muted); }
+
+        .zxc_topbar .zxc_side b { color: var(--zxc_warn); font-size: 0.95rem; letter-spacing: 0.05em; }
+
+        .zxc_topbar h1 {
+            margin: 0;
+            font-size: 1.35rem;
+            letter-spacing: 0.35em;
+            background: linear-gradient(90deg, #4ea8de, #e6edf3, #4ea8de);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zxc_topbar .zxc_clock { width: 220px; text-align: right; font-size: 0.74rem; color: var(--zxc_muted); }
+
+        .zxc_topbar .zxc_clock b { display: block; font-size: 1rem; color: #a5d6ff; letter-spacing: 0.1em; }
+
+        /* ============ 三列主区 ============ */
+        .zxc_main {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1.35fr 1fr;
+            gap: 0.7rem;
+        }
+
+        .zxc_col {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 0.7rem;
+            min-height: 0;
+        }
+
+        .zxc_col.zxc_center { grid-template-rows: 1.55fr 1fr; }
+
+        .zxc_card {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--zxc_border);
+            border-radius: 10px;
+            background: var(--zxc_card);
+            padding: 0.55rem 0.7rem 0.4rem;
+            min-height: 0;
+        }
+
+        .zxc_card h2 {
+            margin: 0 0 0.2rem;
+            font-size: 0.82rem;
+            color: #a5d6ff;
+            border-left: 3px solid var(--zxc_accent);
+            padding-left: 0.5rem;
+            letter-spacing: 0.08em;
+        }
+
+        .zxc_chart { flex: 1; min-height: 0; }
+    </style>
+</head>
+<body>
+    <!-- ============ 顶部 ============ -->
+    <header class="zxc_topbar">
+        <div class="zxc_side">今日销售额 <b>￥ 3,186,540</b></div>
+        <h1>智慧电商数据大屏</h1>
+        <div class="zxc_clock">张熙淳 24002060415<b id="zxc_clock">--:--:--</b></div>
+    </header>
+
+    <!-- ============ 三列 ============ -->
+    <main class="zxc_main">
+        <!-- 左列 -->
+        <div class="zxc_col">
+            <section class="zxc_card">
+                <h2>销售目标完成率</h2>
+                <div class="zxc_chart" id="zxc_gauge"></div>
+            </section>
+            <section class="zxc_card">
+                <h2>品类销售占比</h2>
+                <div class="zxc_chart" id="zxc_pie"></div>
+            </section>
+        </div>
+
+        <!-- 中列：上=地理信息图，下=3D柱状图 -->
+        <div class="zxc_col zxc_center">
+            <section class="zxc_card">
+                <h2>全国订单分布地图</h2>
+                <div class="zxc_chart" id="zxc_map"></div>
+            </section>
+            <section class="zxc_card">
+                <h2>月度销售额（3D 柱状图）</h2>
+                <div class="zxc_chart" id="zxc_bar3d"></div>
+            </section>
+        </div>
+
+        <!-- 右列 -->
+        <div class="zxc_col">
+            <section class="zxc_card">
+                <h2>实时订单趋势（自动刷新）</h2>
+                <div class="zxc_chart" id="zxc_line"></div>
+            </section>
+            <section class="zxc_card">
+                <h2>热销商品 TOP5</h2>
+                <div class="zxc_chart" id="zxc_topbar"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // ================= 地图注册（本地 china.js 中的 GeoJSON） =================
+        echarts.registerMap("zxc_china", window.zxc_china_geo);
+
+        // 深色大屏公共配置
+        var zxc_dark = {
+            textStyle: { color: "#8b949e", fontFamily: "Microsoft YaHei" }
+        };
+
+        // ================= 0. 顶部时钟 =================
+        function zxc_tick_clock() {
+            var zxc_now = new Date();
+            var zxc_p = function (zxc_n) { return zxc_n < 10 ? "0" + zxc_n : "" + zxc_n; };
+            document.getElementById("zxc_clock").textContent =
+                zxc_now.getFullYear() + "-" + zxc_p(zxc_now.getMonth() + 1) + "-" + zxc_p(zxc_now.getDate()) + " " +
+                zxc_p(zxc_now.getHours()) + ":" + zxc_p(zxc_now.getMinutes()) + ":" + zxc_p(zxc_now.getSeconds());
+        }
+        zxc_tick_clock();
+        setInterval(zxc_tick_clock, 1000);
+
+        // ================= 1. 左上：仪表盘 =================
+        var zxc_gauge = echarts.init(document.getElementById("zxc_gauge"));
+        zxc_gauge.setOption({
+            backgroundColor: "transparent",
+            series: [{
+                type: "gauge",
+                startAngle: 210, endAngle: -30,
+                min: 0, max: 100,
+                progress: { show: true, width: 14, itemStyle: { color: "#4ea8de" } },
+                axisLine: { lineStyle: { width: 14, color: [[1, "rgba(78,168,222,0.15)"]] } },
+                axisTick: { show: false },
+                splitLine: { length: 6, lineStyle: { color: "#263247" } },
+                axisLabel: { color: "#8b949e", distance: 16, fontSize: 10 },
+                pointer: { length: "58%", width: 5, itemStyle: { color: "#e3b341" } },
+                detail: {
+                    valueAnimation: true,
+                    formatter: "{value}%",
+                    color: "#a5d6ff", fontSize: 26, offsetCenter: [0, "62%"]
+                },
+                title: { show: false },
+                data: [{ value: 83, name: "完成率" }]
+            }]
+        });
+
+        // ================= 2. 左下：品类占比饼图 =================
+        var zxc_pie = echarts.init(document.getElementById("zxc_pie"));
+        zxc_pie.setOption({
+            backgroundColor: "transparent",
+            tooltip: { trigger: "item", formatter: "{b}: {c} 万 ({d}%)" },
+            legend: {
+                orient: "vertical", right: 6, top: "middle",
+                textStyle: { color: "#8b949e", fontSize: 10 }, itemWidth: 12, itemHeight: 8
+            },
+            series: [{
+                type: "pie",
+                radius: ["42%", "68%"],
+                center: ["38%", "52%"],
+                itemStyle: { borderColor: "#0d1117", borderWidth: 2 },
+                label: { show: false },
+                data: [
+                    { value: 320, name: "数码家电", itemStyle: { color: "#4ea8de" } },
+                    { value: 240, name: "服饰鞋包", itemStyle: { color: "#3fb950" } },
+                    { value: 180, name: "美妆个护", itemStyle: { color: "#f778ba" } },
+                    { value: 140, name: "食品生鲜", itemStyle: { color: "#e3b341" } },
+                    { value: 70,  name: "图书文娱", itemStyle: { color: "#b392f0" } },
+                    { value: 50,  name: "其他",     itemStyle: { color: "#8b949e" } }
+                ]
+            }]
+        });
+
+        // ================= 3. 中上：全国订单分布地图（地理信息） =================
+        var zxc_map = echarts.init(document.getElementById("zxc_map"));
+        var zxc_prov_data = [
+            { name: "广东省", value: 586 }, { name: "浙江省", value: 512 },
+            { name: "江苏省", value: 498 }, { name: "上海市", value: 421 },
+            { name: "北京市", value: 405 }, { name: "四川省", value: 312 },
+            { name: "山东省", value: 296 }, { name: "湖北省", value: 254 },
+            { name: "河南省", value: 241 }, { name: "福建省", value: 227 },
+            { name: "湖南省", value: 203 }, { name: "陕西省", value: 176 },
+            { name: "安徽省", value: 168 }, { name: "辽宁省", value: 142 },
+            { name: "重庆市", value: 131 }, { name: "江西省", value: 118 }
+        ];
+        var zxc_cities = [
+            { name: "深圳", value: [114.06, 22.55, 586] },
+            { name: "杭州", value: [120.15, 30.28, 512] },
+            { name: "上海", value: [121.47, 31.23, 498] },
+            { name: "北京", value: [116.4, 39.9, 405] },
+            { name: "成都", value: [104.07, 30.67, 312] },
+            { name: "武汉", value: [114.3, 30.6, 254] },
+            { name: "西安", value: [108.94, 34.34, 176] },
+            { name: "沈阳", value: [123.43, 41.8, 142] }
+        ];
+        zxc_map.setOption({
+            backgroundColor: "transparent",
+            tooltip: {
+                trigger: "item",
+                formatter: function (zxc_p) {
+                    return zxc_p.seriesType === "effectScatter"
+                        ? zxc_p.name + "：订单 " + zxc_p.value[2] + " 千单"
+                        : (zxc_p.name || "") + "：" + (zxc_p.value ? zxc_p.value + " 千单" : "暂无数据");
+                }
+            },
+            visualMap: {
+                min: 0, max: 600,
+                left: 8, bottom: 8,
+                text: ["高", "低"],
+                textStyle: { color: "#8b949e", fontSize: 10 },
+                inRange: { color: ["#123a5c", "#1f6feb", "#4ea8de", "#a5d6ff"] },
+                calculable: false
+            },
+            geo: {
+                map: "zxc_china",
+                roam: true,                          // 可拖拽缩放
+                zoom: 1.12,
+                itemStyle: {
+                    areaColor: "#0f1a2b",
+                    borderColor: "rgba(78,168,222,0.55)",
+                    borderWidth: 1,
+                    shadowColor: "rgba(78,168,222,0.35)",
+                    shadowBlur: 12
+                },
+                emphasis: {
+                    itemStyle: { areaColor: "#1f6feb" },
+                    label: { color: "#e6edf3", fontSize: 10 }
+                },
+                label: { show: false }
+            },
+            series: [
+                {   // 省份订单量（地图着色）
+                    type: "map",
+                    map: "zxc_china",
+                    geoIndex: 0,
+                    data: zxc_prov_data
+                },
+                {   // 重点城市涟漪散点
+                    type: "effectScatter",
+                    coordinateSystem: "geo",
+                    symbolSize: function (zxc_v) { return 6 + zxc_v[2] / 60; },
+                    rippleEffect: { brushType: "stroke", scale: 3.2 },
+                    itemStyle: { color: "#e3b341", shadowBlur: 10, shadowColor: "#e3b341" },
+                    label: {
+                        show: true, formatter: "{b}", position: "right",
+                        color: "#a5d6ff", fontSize: 10
+                    },
+                    data: zxc_cities
+                }
+            ]
+        });
+
+        // ================= 4. 中下：3D 柱状图（月度销售额） =================
+        var zxc_bar3d = echarts.init(document.getElementById("zxc_bar3d"));
+        var zxc_months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+        zxc_bar3d.setOption({
+            backgroundColor: "transparent",
+            tooltip: {},
+            visualMap: {
+                show: false, min: 60, max: 200,
+                inRange: { color: ["#1f6feb", "#4ea8de", "#3fb950", "#e3b341"] }
+            },
+            grid3D: {
+                boxWidth: 130, boxDepth: 26,
+                viewControl: { alpha: 26, beta: -35, distance: 210, autoRotate: true, autoRotateSpeed: 3 },
+                light: { main: { intensity: 1.2 }, ambient: { intensity: 0.45 } },
+                axisLine: { lineStyle: { color: "#263247" } },
+                axisLabel: { textStyle: { color: "#8b949e", fontSize: 10 } },
+                splitLine: { lineStyle: { color: "rgba(38,50,71,0.6)" } }
+            },
+            xAxis3D: { type: "category", data: zxc_months },
+            yAxis3D: { type: "category", data: ["销售额"] },
+            zAxis3D: { type: "value", max: 200 },
+            series: [{
+                type: "bar3D",
+                barSize: 5,
+                shading: "lambert",
+                data: [86, 92, 105, 98, 120, 135, 128, 142, 118, 155, 168, 190].map(function (zxc_v, zxc_i) {
+                    return { value: [zxc_i, 0, zxc_v] };
+                })
+            }]
+        });
+
+        // ================= 5. 右上：实时订单趋势（动态刷新） =================
+        var zxc_line = echarts.init(document.getElementById("zxc_line"));
+        var zxc_times = (function () {
+            var zxc_arr = [], zxc_n = new Date();
+            for (var zxc_i = 9; zxc_i >= 0; zxc_i--) {
+                var zxc_t = new Date(zxc_n.getTime() - zxc_i * 2000);
+                zxc_arr.push(("0" + zxc_t.getMinutes()).slice(-2) + ":" + ("0" + zxc_t.getSeconds()).slice(-2));
+            }
+            return zxc_arr;
+        })();
+        var zxc_orders = [320, 342, 301, 354, 390, 330, 368, 402, 386, 421];
+        zxc_line.setOption({
+            backgroundColor: "transparent",
+            tooltip: { trigger: "axis" },
+            xAxis: {
+                type: "category", boundaryGap: false,
+                data: zxc_times,
+                axisLine: { lineStyle: { color: "#263247" } },
+                axisLabel: { color: "#8b949e", fontSize: 10 }
+            },
+            yAxis: {
+                type: "value",
+                splitLine: { lineStyle: { color: "rgba(38,50,71,0.6)" } },
+                axisLabel: { color: "#8b949e", fontSize: 10 }
+            },
+            series: [{
+                type: "line", smooth: true, symbol: "circle", symbolSize: 5,
+                lineStyle: { color: "#3fb950", width: 2 },
+                itemStyle: { color: "#3fb950" },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: "rgba(63,185,80,0.35)" },
+                        { offset: 1, color: "rgba(63,185,80,0)" }
+                    ])
+                },
+                data: zxc_orders
+            }]
+        });
+        // 每 2 秒推进一个点，模拟实时数据
+        setInterval(function () {
+            zxc_times.push(("0" + new Date().getMinutes()).slice(-2) + ":" + ("0" + new Date().getSeconds()).slice(-2));
+            zxc_times.shift();
+            zxc_orders.push(300 + Math.round(Math.random() * 150));
+            zxc_orders.shift();
+            zxc_line.setOption({ xAxis: { data: zxc_times }, series: [{ data: zxc_orders }] });
+        }, 2000);
+
+        // ================= 6. 右下：热销商品 TOP5 横向条形图 =================
+        var zxc_topbar = echarts.init(document.getElementById("zxc_topbar"));
+        zxc_topbar.setOption({
+            backgroundColor: "transparent",
+            tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+            grid: { left: 8, right: 30, top: 8, bottom: 4, containLabel: true },
+            xAxis: {
+                type: "value",
+                splitLine: { lineStyle: { color: "rgba(38,50,71,0.6)" } },
+                axisLabel: { color: "#8b949e", fontSize: 10 }
+            },
+            yAxis: {
+                type: "category",
+                data: ["无线耳机 Pro", "智能手环 8", "机械键盘 K870", "4K 显示器 27", "电动牙刷 X3"],
+                axisLine: { lineStyle: { color: "#263247" } },
+                axisLabel: { color: "#a5d6ff", fontSize: 11 }
+            },
+            series: [{
+                type: "bar",
+                barWidth: 12,
+                itemStyle: {
+                    borderRadius: 6,
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        { offset: 0, color: "#1f6feb" },
+                        { offset: 1, color: "#e3b341" }
+                    ])
+                },
+                label: { show: true, position: "right", color: "#e3b341", fontSize: 10 },
+                data: [1865, 1542, 1398, 1204, 986]
+            }]
+        });
+
+        // ================= 窗口自适应：全部图表重绘 =================
+        window.addEventListener("resize", function () {
+            zxc_gauge.resize(); zxc_pie.resize(); zxc_map.resize();
+            zxc_bar3d.resize(); zxc_line.resize(); zxc_topbar.resize();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-05，使用模型：GLM-5.3-Flash，功能名称：Canvas绘制电商系统架构图 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 电商系统架构图 · 张熙淳</title>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_bad: #f85149;
+            --zxc_pink: #f778ba;
+            --zxc_purple: #b392f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 1.6rem 1rem 2.5rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1000px 460px at 80% -10%, #14263b 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 60rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.4rem; font-size: 1.4rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.84rem; }
+
+        .zxc_stage {
+            border: 1px solid var(--zxc_border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #0a0e14;
+        }
+
+        canvas { display: block; width: 100%; }
+
+        .zxc_ctrl { text-align: center; margin-top: 1rem; }
+
+        .zxc_btn {
+            padding: 0.5rem 1.4rem;
+            font-size: 0.85rem;
+            color: #fff;
+            background: linear-gradient(135deg, #1f6feb, #4ea8de);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 0.4rem;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn.zxc_danger { background: linear-gradient(135deg, #b62324, #f85149); }
+
+        .zxc_legend {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.78rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_legend span::before {
+            content: "";
+            display: inline-block;
+            width: 0.75rem; height: 0.75rem;
+            margin-right: 0.35rem;
+            border-radius: 3px;
+            vertical-align: -1px;
+        }
+
+        .zxc_legend .zxc_l1::before { background: #f778ba; }
+        .zxc_legend .zxc_l2::before { background: #b392f0; }
+        .zxc_legend .zxc_l3::before { background: #4ea8de; }
+        .zxc_legend .zxc_l4::before { background: #3fb950; }
+        .zxc_legend .zxc_l5::before { background: #e3b341; }
+
+        .zxc_footer { margin-top: 1.4rem; text-align: center; font-size: 0.78rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>电商系统架构图（Canvas 绘制）</h1>
+            <p>张熙淳 24002060415 · 2026-11-05 · 五层架构 + 网关双通道 + 数据流动画</p>
+        </header>
+
+        <div class="zxc_stage">
+            <canvas id="zxc_canvas"></canvas>
+        </div>
+
+        <div class="zxc_ctrl">
+            <button class="zxc_btn" id="zxc_btn_toggle">暂停数据流</button>
+            <button class="zxc_btn zxc_danger" id="zxc_btn_rebuild">重新绘制</button>
+        </div>
+
+        <div class="zxc_legend">
+            <span class="zxc_l1">用户层</span>
+            <span class="zxc_l2">客户端层</span>
+            <span class="zxc_l3">网关层</span>
+            <span class="zxc_l4">业务服务层</span>
+            <span class="zxc_l5">数据层</span>
+        </div>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript（Canvas 2D）
+        </footer>
+    </div>
+
+    <script>
+        // ================= 逻辑坐标 960x720，自适应缩放 =================
+        var zxc_W = 960, zxc_H = 720;
+        var zxc_canvas = document.getElementById("zxc_canvas");
+        var zxc_ctx = zxc_canvas.getContext("2d");
+        var zxc_anim_on = true;
+        var zxc_packets = [];
+        var zxc_t = 0;
+
+        function zxc_resize() {
+            var zxc_dpr = window.devicePixelRatio || 1;
+            var zxc_w = zxc_canvas.clientWidth || 900;
+            var zxc_scale = zxc_w / zxc_W;
+            zxc_canvas.width = zxc_W * zxc_dpr;
+            zxc_canvas.height = zxc_H * zxc_dpr;
+            zxc_canvas.style.height = (zxc_H * zxc_scale) + "px";
+            zxc_ctx.setTransform(zxc_dpr * zxc_scale, 0, 0, zxc_dpr * zxc_scale, 0, 0);
+        }
+
+        function zxc_round(zxc_x, zxc_y, zxc_w, zxc_h, zxc_r, zxc_fill, zxc_stroke, zxc_dash) {
+            zxc_ctx.beginPath();
+            zxc_ctx.moveTo(zxc_x + zxc_r, zxc_y);
+            zxc_ctx.arcTo(zxc_x + zxc_w, zxc_y, zxc_x + zxc_w, zxc_y + zxc_h, zxc_r);
+            zxc_ctx.arcTo(zxc_x + zxc_w, zxc_y + zxc_h, zxc_x, zxc_y + zxc_h, zxc_r);
+            zxc_ctx.arcTo(zxc_x, zxc_y + zxc_h, zxc_x, zxc_y, zxc_r);
+            zxc_ctx.arcTo(zxc_x, zxc_y, zxc_x + zxc_w, zxc_y, zxc_r);
+            zxc_ctx.closePath();
+            if (zxc_fill) { zxc_ctx.fillStyle = zxc_fill; zxc_ctx.fill(); }
+            if (zxc_stroke) {
+                if (zxc_dash) { zxc_ctx.setLineDash([6, 4]); } else { zxc_ctx.setLineDash([]); }
+                zxc_ctx.strokeStyle = zxc_stroke;
+                zxc_ctx.lineWidth = 1.5;
+                zxc_ctx.stroke();
+                zxc_ctx.setLineDash([]);
+            }
+        }
+
+        function zxc_text(zxc_str, zxc_x, zxc_y, zxc_size, zxc_color, zxc_bold) {
+            zxc_ctx.font = (zxc_bold ? "bold " : "") + zxc_size + "px 'Microsoft YaHei', sans-serif";
+            zxc_ctx.textAlign = "center";
+            zxc_ctx.textBaseline = "middle";
+            zxc_ctx.fillStyle = zxc_color;
+            zxc_ctx.fillText(zxc_str, zxc_x, zxc_y);
+        }
+
+        // ================= 电商系统五层架构 =================
+        var zxc_layers = [
+            { zxc_name: "用户层",   zxc_color: "#f778ba", zxc_y: 40,  zxc_h: 80,
+              zxc_items: [{ zxc_n: "买家 🛒" }, { zxc_n: "卖家 🏪" }, { zxc_n: "平台管理员 🔧" }] },
+            { zxc_name: "客户端层", zxc_color: "#b392f0", zxc_y: 150, zxc_h: 90,
+              zxc_items: [{ zxc_n: "PC 网页" }, { zxc_n: "移动 App" }, { zxc_n: "小程序" }, { zxc_n: "H5 商城" }] },
+            { zxc_name: "网关层",   zxc_color: "#4ea8de", zxc_y: 270, zxc_h: 90,
+              zxc_items: [{ zxc_n: "Nginx 负载均衡" }, { zxc_n: "API 网关(鉴权·限流·路由)" }] },
+            { zxc_name: "业务服务层", zxc_color: "#3fb950", zxc_y: 390, zxc_h: 100,
+              zxc_items: [{ zxc_n: "用户服务" }, { zxc_n: "商品服务" }, { zxc_n: "购物车" }, { zxc_n: "订单服务" }, { zxc_n: "支付服务" }, { zxc_n: "库存服务" }] },
+            { zxc_name: "数据层",   zxc_color: "#e3b341", zxc_y: 520, zxc_h: 100,
+              zxc_items: [{ zxc_n: "MySQL 主从" }, { zxc_n: "Redis 缓存" }, { zxc_n: "Elasticsearch" }, { zxc_n: "消息队列 MQ" }, { zxc_n: "OSS 对象存储" }] }
+        ];
+
+        // 层间箭头语义
+        var zxc_pairs = [
+            { zxc_top: 120,  zxc_bot: 150, zxc_label_l: "浏览/下单 ↓", zxc_label_r: "页面渲染 ↑" },
+            { zxc_top: 240,  zxc_bot: 270, zxc_label_l: "HTTPS 请求 ↓", zxc_label_r: "响应/静态资源 ↑" },
+            { zxc_top: 360,  zxc_bot: 390, zxc_label_l: "路由转发 ↓", zxc_label_r: "服务结果 ↑" },
+            { zxc_top: 490,  zxc_bot: 520, zxc_label_l: "读写/缓存 ↓", zxc_label_r: "数据返回 ↑" }
+        ];
+
+        function zxc_draw() {
+            zxc_ctx.clearRect(0, 0, zxc_W, zxc_H);
+
+            // 背景网格
+            zxc_ctx.strokeStyle = "rgba(78,168,222,0.06)";
+            zxc_ctx.lineWidth = 1;
+            for (var zxc_gx = 0; zxc_gx < zxc_W; zxc_gx += 40) {
+                zxc_ctx.beginPath(); zxc_ctx.moveTo(zxc_gx, 0); zxc_ctx.lineTo(zxc_gx, zxc_H); zxc_ctx.stroke();
+            }
+            for (var zxc_gy = 0; zxc_gy < zxc_H; zxc_gy += 40) {
+                zxc_ctx.beginPath(); zxc_ctx.moveTo(0, zxc_gy); zxc_ctx.lineTo(zxc_W, zxc_gy); zxc_ctx.stroke();
+            }
+
+            zxc_text("电商系统架构图", zxc_W / 2, 18, 20, "#e6edf3", true);
+
+            var zxc_i, zxc_j, zxc_L;
+
+            // ---- 每层：虚线外框 + 竖排层名 + 模块卡片 ----
+            for (zxc_i = 0; zxc_i < zxc_layers.length; zxc_i++) {
+                zxc_L = zxc_layers[zxc_i];
+                zxc_round(70, zxc_L.zxc_y, zxc_W - 140, zxc_L.zxc_h, 12, "rgba(255,255,255,0.02)", zxc_L.zxc_color, true);
+
+                zxc_ctx.save();
+                zxc_ctx.translate(88, zxc_L.zxc_y + zxc_L.zxc_h / 2);
+                zxc_ctx.rotate(-Math.PI / 2);
+                zxc_text(zxc_L.zxc_name, 0, 0, 12, zxc_L.zxc_color, true);
+                zxc_ctx.restore();
+
+                var zxc_n = zxc_L.zxc_items.length;
+                var zxc_box_w = Math.min(148, (zxc_W - 220) / zxc_n - 12);
+                var zxc_total_w = zxc_n * zxc_box_w + (zxc_n - 1) * 12;
+                var zxc_start_x = zxc_W / 2 - zxc_total_w / 2;
+
+                for (zxc_j = 0; zxc_j < zxc_n; zxc_j++) {
+                    var zxc_item = zxc_L.zxc_items[zxc_j];
+                    var zxc_bx = zxc_start_x + zxc_j * (zxc_box_w + 12);
+                    var zxc_by = zxc_L.zxc_y + zxc_L.zxc_h / 2 - 20;
+                    var zxc_glow = 0.5 + 0.5 * Math.sin(zxc_t / 40 + zxc_i + zxc_j);
+
+                    zxc_round(zxc_bx, zxc_by, zxc_box_w, 40, 8, "rgba(255,255,255,0.045)", null, false);
+                    zxc_ctx.globalAlpha = 0.35 + zxc_glow * 0.65;
+                    zxc_round(zxc_bx, zxc_by, zxc_box_w, 40, 8, null, zxc_L.zxc_color, false);
+                    zxc_ctx.globalAlpha = 1;
+
+                    // 长文本自动缩小字号
+                    var zxc_fs = zxc_item.zxc_n.length > 8 ? 11 : 13;
+                    zxc_text(zxc_item.zxc_n, zxc_bx + zxc_box_w / 2, zxc_by + 20, zxc_fs, zxc_L.zxc_color, true);
+                }
+            }
+
+            // ---- 层间双向箭头 ----
+            for (zxc_i = 0; zxc_i < zxc_pairs.length; zxc_i++) {
+                var zxc_p = zxc_pairs[zxc_i];
+                var zxc_cx = zxc_W / 2;
+
+                zxc_ctx.strokeStyle = "#4ea8de";
+                zxc_ctx.lineWidth = 2;
+                zxc_ctx.beginPath();
+                zxc_ctx.moveTo(zxc_cx - 90, zxc_p.zxc_top);
+                zxc_ctx.lineTo(zxc_cx - 90, zxc_p.zxc_bot - 6);
+                zxc_ctx.stroke();
+                zxc_ctx.beginPath();
+                zxc_ctx.moveTo(zxc_cx - 90, zxc_p.zxc_bot);
+                zxc_ctx.lineTo(zxc_cx - 96, zxc_p.zxc_bot - 8);
+                zxc_ctx.lineTo(zxc_cx - 84, zxc_p.zxc_bot - 8);
+                zxc_ctx.closePath();
+                zxc_ctx.fillStyle = "#4ea8de";
+                zxc_ctx.fill();
+
+                zxc_ctx.strokeStyle = "#e3b341";
+                zxc_ctx.beginPath();
+                zxc_ctx.moveTo(zxc_cx + 90, zxc_p.zxc_bot - 6);
+                zxc_ctx.lineTo(zxc_cx + 90, zxc_p.zxc_top);
+                zxc_ctx.stroke();
+                zxc_ctx.beginPath();
+                zxc_ctx.moveTo(zxc_cx + 90, zxc_p.zxc_top - 6);
+                zxc_ctx.lineTo(zxc_cx + 84, zxc_p.zxc_top + 4);
+                zxc_ctx.lineTo(zxc_cx + 96, zxc_p.zxc_top + 4);
+                zxc_ctx.closePath();
+                zxc_ctx.fillStyle = "#e3b341";
+                zxc_ctx.fill();
+
+                zxc_text(zxc_p.zxc_label_l, zxc_cx - 170, (zxc_p.zxc_top + zxc_p.zxc_bot) / 2, 11, "#8b949e", false);
+                zxc_text(zxc_p.zxc_label_r, zxc_cx + 170, (zxc_p.zxc_top + zxc_p.zxc_bot) / 2, 11, "#8b949e", false);
+            }
+
+            // ---- 流动数据包 ----
+            for (zxc_i = 0; zxc_i < zxc_packets.length; zxc_i++) {
+                var zxc_pk = zxc_packets[zxc_i];
+                var zxc_progress = (zxc_t + zxc_pk.zxc_offset) % 120 / 120;
+                var zxc_py;
+                if (zxc_pk.zxc_dir === 1) {
+                    zxc_py = zxc_pk.zxc_top + (zxc_pk.zxc_bot - zxc_pk.zxc_top) * zxc_progress;
+                } else {
+                    zxc_py = zxc_pk.zxc_bot - (zxc_pk.zxc_bot - zxc_pk.zxc_top) * zxc_progress;
+                }
+                zxc_ctx.globalAlpha = Math.sin(zxc_progress * Math.PI);
+                zxc_ctx.beginPath();
+                zxc_ctx.arc(zxc_pk.zxc_x, zxc_py, 3.2, 0, Math.PI * 2);
+                zxc_ctx.fillStyle = zxc_pk.zxc_color;
+                zxc_ctx.shadowColor = zxc_pk.zxc_color;
+                zxc_ctx.shadowBlur = 8;
+                zxc_ctx.fill();
+                zxc_ctx.shadowBlur = 0;
+                zxc_ctx.globalAlpha = 1;
+            }
+
+            zxc_text("▲ 蓝色：请求下行（下单链路）　黄色：响应上行（数据回流）　典型链路：买家下单 → 网关 → 订单服务 → 扣库存 → 写 MySQL/MQ ▲", zxc_W / 2, 668, 11.5, "#8b949e", false);
+        }
+
+        function zxc_init_packets() {
+            zxc_packets = [];
+            var zxc_tops = [120, 240, 360, 490];
+            var zxc_bots = [150, 270, 360, 520];
+            for (var zxc_i = 0; zxc_i < zxc_tops.length; zxc_i++) {
+                zxc_packets.push({ zxc_x: zxc_W / 2 - 90, zxc_top: zxc_tops[zxc_i], zxc_bot: zxc_bots[zxc_i], zxc_dir: 1,  zxc_offset: zxc_i * 23, zxc_color: "#4ea8de" });
+                zxc_packets.push({ zxc_x: zxc_W / 2 + 90, zxc_top: zxc_tops[zxc_i], zxc_bot: zxc_bots[zxc_i], zxc_dir: -1, zxc_offset: 60 + zxc_i * 31, zxc_color: "#e3b341" });
+            }
+        }
+
+        zxc_init_packets();
+
+        function zxc_loop() {
+            if (zxc_anim_on) { zxc_t++; }
+            zxc_draw();
+            requestAnimationFrame(zxc_loop);
+        }
+
+        zxc_resize();
+        zxc_loop();
+
+        document.getElementById("zxc_btn_toggle").addEventListener("click", function () {
+            zxc_anim_on = !zxc_anim_on;
+            this.textContent = zxc_anim_on ? "暂停数据流" : "继续数据流";
+        });
+
+        document.getElementById("zxc_btn_rebuild").addEventListener("click", function () {
+            zxc_init_packets();
+            zxc_t = 0;
+        });
+
+        window.addEventListener("resize", zxc_resize);
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-05，使用模型：GLM-5.3-Flash，功能名称：Mermaid绘制智能客服系统流程图与ER图（本地cdn库） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid 图表 · 智能客服系统 · 张熙淳</title>
+    <!-- 库文件已下载到本地 cdn 目录，不使用在线 CDN（符合项目规则） -->
+    <script src="cdn/mermaid.min.js"></script>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 1.6rem 1rem 2.5rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1000px 460px at 80% -10%, #14263b 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 58rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.4rem; font-size: 1.4rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.84rem; }
+
+        .zxc_card {
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 12px;
+            padding: 1.1rem 1.2rem 1.25rem;
+            margin-bottom: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .zxc_card h2 { margin: 0 0 0.6rem; font-size: 1rem; color: var(--zxc_accent); }
+
+        .zxc_card h2 small { color: var(--zxc_muted); font-size: 0.75rem; font-weight: normal; margin-left: 0.5rem; }
+
+        /* Mermaid 渲染出的 SVG 在深色卡片中居中 */
+        .zxc_mermaid { display: flex; justify-content: center; }
+
+        .zxc_mermaid svg { max-width: 100%; height: auto; }
+
+        .zxc_tip { margin: 0.5rem 0 0; font-size: 0.78rem; color: var(--zxc_muted); }
+
+        .zxc_error { color: #ffb3ad; font-size: 0.82rem; padding: 0.6rem; border: 1px solid rgba(248,81,73,0.45); border-radius: 8px; }
+
+        .zxc_footer { margin-top: 1.2rem; text-align: center; font-size: 0.78rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>Mermaid 图表：智能客服系统</h1>
+            <p>张熙淳 24002060415 · 2026-11-05 · mermaid 库已下载到本地 cdn 目录，文本语法定义图结构</p>
+        </header>
+
+        <!-- 一、业务流程图 -->
+        <section class="zxc_card">
+            <h2>一、智能客服系统流程图 <small>flowchart TD</small></h2>
+            <pre class="mermaid zxc_mermaid" id="zxc_flow">
+flowchart TD
+    A([用户发起咨询]) --> B[智能客服机器人]
+    B --> C[意图识别 NLU<br/>分词 · 实体抽取 · 相似度匹配]
+    C --> D{命中知识库?}
+    D -- 是 --> E[返回标准答案]
+    E --> F{用户是否满意?}
+    D -- 否 --> H[转人工客服]
+    F -- 是 --> G([会话结束<br/>记录满意度评价])
+    F -- 否 --> H
+    H --> I[人工解决问题]
+    I --> J[生成工单]
+    J --> K[答案沉淀入知识库]
+    K -. 反馈学习 · 优化模型 .-> C
+            </pre>
+            <p class="zxc_tip">虚线为「反馈学习」闭环：人工解决的新问题会沉淀进知识库，让机器人下次能直接命中。</p>
+        </section>
+
+        <!-- 二、ER 图 -->
+        <section class="zxc_card">
+            <h2>二、智能客服数据库 ER 图 <small>erDiagram</small></h2>
+            <pre class="mermaid zxc_mermaid" id="zxc_er">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ MESSAGE : "包含"
+    MESSAGE }o--o| KNOWLEDGE : "命中"
+    AGENT ||--o{ TICKET : "处理"
+    USER ||--o{ TICKET : "提交"
+    SESSION ||--o| TICKET : "升级为"
+    KNOWLEDGE }o--|| CATEGORY : "属于"
+
+    USER {
+        int zxc_user_id PK "用户编号"
+        string zxc_name "昵称"
+        string zxc_phone "手机号"
+        datetime zxc_create_time "注册时间"
+    }
+    SESSION {
+        int zxc_session_id PK "会话编号"
+        int zxc_user_id FK "所属用户"
+        string zxc_channel "渠道(App或网页)"
+        datetime zxc_start_time "开始时间"
+    }
+    MESSAGE {
+        int zxc_msg_id PK "消息编号"
+        int zxc_session_id FK "所属会话"
+        string zxc_role "角色(用户或机器人)"
+        text zxc_content "消息内容"
+        int zxc_knowledge_id FK "命中的知识条目"
+    }
+    KNOWLEDGE {
+        int zxc_knowledge_id PK "知识条目编号"
+        string zxc_question "标准问题"
+        text zxc_answer "标准答案"
+        float zxc_similarity "命中阈值"
+        int zxc_category_id FK "所属分类"
+    }
+    CATEGORY {
+        int zxc_category_id PK "分类编号"
+        string zxc_name "分类名称"
+    }
+    AGENT {
+        int zxc_agent_id PK "客服编号"
+        string zxc_name "客服姓名"
+        string zxc_group "所属技能组"
+    }
+    TICKET {
+        int zxc_ticket_id PK "工单编号"
+        int zxc_session_id FK "来源会话"
+        int zxc_user_id FK "提交用户"
+        int zxc_agent_id FK "处理客服"
+        string zxc_status "状态(处理中或已关闭)"
+        text zxc_result "处理结果"
+    }
+            </pre>
+            <p class="zxc_tip">核心关系：一个用户可发起多个会话，每个会话包含多条消息；消息命中知识条目即机器人作答，未命中则升级为工单由人工处理。</p>
+        </section>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · Mermaid 10（本地 cdn/mermaid.min.js）· 文本生成图表
+        </footer>
+    </div>
+
+    <script>
+        // ================= Mermaid 初始化（深色主题适配本项目） =================
+        try {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: "base",
+                themeVariables: {
+                    primaryColor: "#1c2333",          // 节点填充
+                    primaryTextColor: "#a5d6ff",      // 节点文字
+                    primaryBorderColor: "#4ea8de",    // 节点边框
+                    lineColor: "#8b949e",             // 连线
+                    secondaryColor: "#122117",        // 决策/次要填充
+                    tertiaryColor: "#161b26",         // ER 实体表头
+                    fontSize: "14px",
+                    fontFamily: "Microsoft YaHei, sans-serif"
+                },
+                flowchart: { curve: "basis", htmlLabels: true },
+                er: { diagramPadding: 16 }
+            });
+        } catch (zxc_err) {
+            // 库加载失败时给出可见提示，而不是页面空白
+            var zxc_boxes = document.querySelectorAll(".zxc_mermaid");
+            for (var zxc_i = 0; zxc_i < zxc_boxes.length; zxc_i++) {
+                zxc_boxes[zxc_i].innerHTML = "<p class='zxc_error'>Mermaid 库加载失败：" + zxc_err.message + "，请确认 cdn/mermaid.min.js 存在。</p>";
+            }
+        }
+    </script>
+</body>
+</html>

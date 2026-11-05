@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-05，使用模型：GLM-5.3-Flash，功能名称：Canvas动画 星空粒子与发光文字张熙淳 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 动画 · 张熙淳 · 星空发光文字</title>
+    <style>
+        :root {
+            --zxc_bg: #070b14;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_gold: #e3b341;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 1.6rem 1rem 2.5rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: var(--zxc_bg);
+        }
+
+        .zxc_page { max-width: 58rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.4rem; font-size: 1.4rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.84rem; }
+
+        .zxc_stage {
+            border: 1px solid var(--zxc_border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #05080f;
+        }
+
+        canvas { display: block; width: 100%; }
+
+        .zxc_ctrl { text-align: center; margin-top: 1rem; }
+
+        .zxc_btn {
+            padding: 0.5rem 1.4rem;
+            font-size: 0.85rem;
+            color: #fff;
+            background: linear-gradient(135deg, #1f6feb, #4ea8de);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 0.4rem;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .zxc_btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+        .zxc_btn.zxc_gold { background: linear-gradient(135deg, #b3541e, #e3b341); }
+
+        .zxc_footer { margin-top: 1.6rem; text-align: center; font-size: 0.78rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>Canvas 动画：星空 · 光环 · 张熙淳</h1>
+            <p>张熙淳 24002060415 · 2026-11-05 · 闪烁星空 + 环绕粒子 + 呼吸发光文字，点击画布出现波纹</p>
+        </header>
+
+        <div class="zxc_stage">
+            <canvas id="zxc_canvas"></canvas>
+        </div>
+
+        <div class="zxc_ctrl">
+            <button class="zxc_btn" id="zxc_btn_toggle">暂停动画</button>
+            <button class="zxc_btn zxc_gold" id="zxc_btn_color">换配色</button>
+        </div>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · 原生 HTML + CSS + JavaScript（Canvas 2D）
+        </footer>
+    </div>
+
+    <script>
+        // ================= 画布与全局状态 =================
+        var zxc_canvas = document.getElementById("zxc_canvas");
+        var zxc_ctx = zxc_canvas.getContext("2d");
+        var zxc_H = 460;                       // 逻辑高度（CSS 像素）
+        var zxc_t = 0;                         // 帧计数
+        var zxc_anim_on = true;
+        var zxc_ripples = [];                  // 点击波纹
+
+        var zxc_palettes = [
+            { zxc_a: "#4ea8de", zxc_b: "#3fb950", zxc_c: "#e3b341", zxc_text: "#a5d6ff" },
+            { zxc_a: "#f778ba", zxc_b: "#b392f0", zxc_c: "#4ea8de", zxc_text: "#ffd6ec" },
+            { zxc_a: "#e3b341", zxc_b: "#f85149", zxc_c: "#39d2c0", zxc_text: "#ffe9b3" }
+        ];
+        var zxc_pi = 0;
+
+        // 星星：随机位置 + 闪烁相位
+        var zxc_stars = [];
+        function zxc_make_stars(zxc_w) {
+            zxc_stars = [];
+            for (var zxc_i = 0; zxc_i < 130; zxc_i++) {
+                zxc_stars.push({
+                    zxc_x: Math.random() * zxc_w,
+                    zxc_y: Math.random() * zxc_H,
+                    zxc_r: 0.4 + Math.random() * 1.4,
+                    zxc_phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        // 环绕粒子：三条椭圆轨道
+        var zxc_orbits = [];
+        function zxc_make_orbits() {
+            zxc_orbits = [];
+            for (var zxc_k = 0; zxc_k < 3; zxc_k++) {
+                var zxc_dots = [];
+                for (var zxc_i = 0; zxc_i < 14; zxc_i++) {
+                    zxc_dots.push(zxc_i / 14 + zxc_k * 0.2);   // 起始角度错开
+                }
+                zxc_orbits.push({
+                    zxc_rx: 210 + zxc_k * 55,      // 椭圆横向半径
+                    zxc_ry: 60 + zxc_k * 26,       // 椭圆纵向半径
+                    zxc_speed: (0.006 - zxc_k * 0.0015) * (zxc_k % 2 === 0 ? 1 : -1),  // 相邻轨道反向
+                    zxc_dots: zxc_dots,
+                    zxc_tilt: Math.sin(zxc_k) * 0.1
+                });
+            }
+        }
+
+        // 上升气泡
+        var zxc_bubbles = [];
+        function zxc_make_bubbles(zxc_w) {
+            zxc_bubbles = [];
+            for (var zxc_i = 0; zxc_i < 26; zxc_i++) {
+                zxc_bubbles.push({
+                    zxc_x: Math.random() * zxc_w,
+                    zxc_y: Math.random() * zxc_H,
+                    zxc_r: 1 + Math.random() * 2.4,
+                    zxc_speed: 0.3 + Math.random() * 0.8,
+                    zxc_phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        // ================= 绘制 =================
+        function zxc_tick() {
+            if (zxc_anim_on) { zxc_t++; }
+            var zxc_w = zxc_canvas.clientWidth || 800;
+            var zxc_cx = zxc_w / 2, zxc_cy = zxc_H / 2 - 10;
+            var zxc_pal = zxc_palettes[zxc_pi];
+
+            zxc_ctx.clearRect(0, 0, zxc_w, zxc_H);
+
+            // 一、星空
+            for (var zxc_i = 0; zxc_i < zxc_stars.length; zxc_i++) {
+                var zxc_s = zxc_stars[zxc_i];
+                var zxc_tw = 0.35 + 0.65 * Math.abs(Math.sin(zxc_s.zxc_phase + zxc_t / 30));
+                zxc_ctx.globalAlpha = zxc_tw;
+                zxc_ctx.beginPath();
+                zxc_ctx.arc(zxc_s.zxc_x, zxc_s.zxc_y, zxc_s.zxc_r, 0, Math.PI * 2);
+                zxc_ctx.fillStyle = "#cfe6ff";
+                zxc_ctx.fill();
+            }
+            zxc_ctx.globalAlpha = 1;
+
+            // 二、上升气泡（随波左右摆动）
+            for (var zxc_j = 0; zxc_j < zxc_bubbles.length; zxc_j++) {
+                var zxc_b = zxc_bubbles[zxc_j];
+                if (zxc_anim_on) {
+                    zxc_b.zxc_y -= zxc_b.zxc_speed;
+                    if (zxc_b.zxc_y < -6) { zxc_b.zxc_y = zxc_H + 6; zxc_b.zxc_x = Math.random() * zxc_w; }
+                }
+                zxc_ctx.globalAlpha = 0.35;
+                zxc_ctx.beginPath();
+                zxc_ctx.arc(zxc_b.zxc_x + Math.sin(zxc_b.zxc_phase + zxc_t / 40) * 10, zxc_b.zxc_y, zxc_b.zxc_r, 0, Math.PI * 2);
+                zxc_ctx.strokeStyle = zxc_pal.zxc_a;
+                zxc_ctx.lineWidth = 1;
+                zxc_ctx.stroke();
+            }
+            zxc_ctx.globalAlpha = 1;
+
+            // 三、三条椭圆轨道 + 环绕粒子
+            for (var zxc_k = 0; zxc_k < zxc_orbits.length; zxc_k++) {
+                var zxc_o = zxc_orbits[zxc_k];
+                var zxc_oc = [zxc_pal.zxc_a, zxc_pal.zxc_b, zxc_pal.zxc_c][zxc_k];
+
+                zxc_ctx.save();
+                zxc_ctx.translate(zxc_cx, zxc_cy);
+                zxc_ctx.rotate(zxc_o.zxc_tilt);
+                zxc_ctx.strokeStyle = zxc_oc;
+                zxc_ctx.globalAlpha = 0.22;
+                zxc_ctx.lineWidth = 1;
+                zxc_ctx.beginPath();
+                zxc_ctx.ellipse(0, 0, zxc_o.zxc_rx, zxc_o.zxc_ry, 0, 0, Math.PI * 2);
+                zxc_ctx.stroke();
+
+                // 轨道上的发光粒子
+                for (var zxc_d = 0; zxc_d < zxc_o.zxc_dots.length; zxc_d++) {
+                    if (!zxc_anim_on && zxc_d % 2 === 0) { continue; }   // 暂停时减少一半密度，仍有静态画面
+                    var zxc_ang = zxc_o.zxc_dots[zxc_d] * Math.PI * 2 + (zxc_anim_on ? zxc_t * zxc_o.zxc_speed : 0);
+                    var zxc_px = Math.cos(zxc_ang) * zxc_o.zxc_rx;
+                    var zxc_py = Math.sin(zxc_ang) * zxc_o.zxc_ry;
+                    zxc_ctx.globalAlpha = 0.9;
+                    zxc_ctx.beginPath();
+                    zxc_ctx.arc(zxc_px, zxc_py, 2.2, 0, Math.PI * 2);
+                    zxc_ctx.fillStyle = zxc_oc;
+                    zxc_ctx.shadowColor = zxc_oc;
+                    zxc_ctx.shadowBlur = 8;
+                    zxc_ctx.fill();
+                    zxc_ctx.shadowBlur = 0;
+                }
+                zxc_ctx.globalAlpha = 1;
+                zxc_ctx.restore();
+            }
+
+            // 四、中心发光大字「张熙淳」（渐变填充 + 呼吸光晕）
+            var zxc_fs = Math.min(zxc_w / 3.6, 150);
+            var zxc_grad = zxc_ctx.createLinearGradient(zxc_cx - zxc_fs * 1.6, zxc_cy - zxc_fs / 2, zxc_cx + zxc_fs * 1.6, zxc_cy + zxc_fs / 2);
+            zxc_grad.addColorStop(0, zxc_pal.zxc_a);
+            zxc_grad.addColorStop(0.5, "#ffffff");
+            zxc_grad.addColorStop(1, zxc_pal.zxc_b);
+
+            zxc_ctx.font = "bold " + zxc_fs + "px 'Microsoft YaHei', sans-serif";
+            zxc_ctx.textAlign = "center";
+            zxc_ctx.textBaseline = "middle";
+            zxc_ctx.shadowColor = zxc_pal.zxc_a;
+            zxc_ctx.shadowBlur = 26 + Math.sin(zxc_t / 25) * 12;    // 呼吸光晕
+            zxc_ctx.fillStyle = zxc_grad;
+            zxc_ctx.fillText("张熙淳", zxc_cx, zxc_cy);
+            zxc_ctx.shadowBlur = 0;
+
+            // 五、点击波纹
+            for (var zxc_r = zxc_ripples.length - 1; zxc_r >= 0; zxc_r--) {
+                var zxc_rp = zxc_ripples[zxc_r];
+                if (zxc_anim_on) { zxc_rp.zxc_r += 3.2; zxc_rp.zxc_a *= 0.965; }
+                if (zxc_rp.zxc_a < 0.02) { zxc_ripples.splice(zxc_r, 1); continue; }
+                zxc_ctx.globalAlpha = zxc_rp.zxc_a;
+                zxc_ctx.beginPath();
+                zxc_ctx.arc(zxc_rp.zxc_x, zxc_rp.zxc_y, zxc_rp.zxc_r, 0, Math.PI * 2);
+                zxc_ctx.strokeStyle = zxc_pal.zxc_c;
+                zxc_ctx.lineWidth = 2;
+                zxc_ctx.stroke();
+            }
+            zxc_ctx.globalAlpha = 1;
+
+            // 六、底部英文签名
+            zxc_ctx.font = "600 20px Consolas, monospace";
+            zxc_ctx.shadowColor = zxc_pal.zxc_a;
+            zxc_ctx.shadowBlur = 12 + Math.sin(zxc_t / 30) * 6;
+            zxc_ctx.fillStyle = zxc_pal.zxc_text;
+            zxc_ctx.fillText("ZHANG XICHUN · CANVAS ANIMATION", zxc_cx, zxc_H - 30);
+            zxc_ctx.shadowBlur = 0;
+
+            requestAnimationFrame(zxc_tick);
+        }
+
+        // ================= 初始化 =================
+        function zxc_setup() {
+            var zxc_w = zxc_canvas.clientWidth || 800;
+            var zxc_dpr = window.devicePixelRatio || 1;
+            zxc_canvas.width = zxc_w * zxc_dpr;
+            zxc_canvas.height = zxc_H * zxc_dpr;
+            zxc_canvas.style.height = zxc_H + "px";
+            zxc_ctx.setTransform(zxc_dpr, 0, 0, zxc_dpr, 0, 0);
+            zxc_make_stars(zxc_w);
+            zxc_make_orbits();
+            zxc_make_bubbles(zxc_w);
+        }
+
+        zxc_setup();
+        requestAnimationFrame(zxc_tick);
+
+        // 点击画布 → 波纹
+        zxc_canvas.addEventListener("click", function (zxc_e) {
+            var zxc_rect = zxc_canvas.getBoundingClientRect();
+            zxc_ripples.push({ zxc_x: zxc_e.clientX - zxc_rect.left, zxc_y: zxc_e.clientY - zxc_rect.top, zxc_r: 4, zxc_a: 0.8 });
+        });
+
+        document.getElementById("zxc_btn_toggle").addEventListener("click", function () {
+            zxc_anim_on = !zxc_anim_on;
+            this.textContent = zxc_anim_on ? "暂停动画" : "继续动画";
+        });
+
+        document.getElementById("zxc_btn_color").addEventListener("click", function () {
+            zxc_pi = (zxc_pi + 1) % zxc_palettes.length;
+        });
+
+        window.addEventListener("resize", zxc_setup);
+    </script>
+</body>
+</html>

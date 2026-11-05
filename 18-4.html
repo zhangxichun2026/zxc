@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 姓名：张熙淳，建立时间：2026-11-05，使用模型：GLM-5.3-Flash，功能名称：ECharts图表 雷达图与3D曲面图（本地cdn库） -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts 雷达图与 3D 曲面图 · 张熙淳</title>
+    <!-- 库文件已下载到本地 cdn 目录，不使用在线 CDN（符合项目规则） -->
+    <script src="cdn/echarts.min.js"></script>
+    <script src="cdn/echarts-gl.min.js"></script>
+    <style>
+        :root {
+            --zxc_bg: #0d1117;
+            --zxc_card: #161b26;
+            --zxc_border: #262d3d;
+            --zxc_ink: #e6edf3;
+            --zxc_muted: #8b949e;
+            --zxc_accent: #4ea8de;
+            --zxc_ok: #3fb950;
+            --zxc_warn: #e3b341;
+            --zxc_pink: #f778ba;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 1.6rem 1rem 2.5rem;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            color: var(--zxc_ink);
+            background: radial-gradient(1000px 460px at 80% -10%, #14263b 0%, var(--zxc_bg) 55%) fixed;
+        }
+
+        .zxc_page { max-width: 60rem; margin: 0 auto; }
+
+        .zxc_header { text-align: center; margin-bottom: 1.2rem; }
+
+        .zxc_header h1 { margin: 0 0 0.4rem; font-size: 1.4rem; }
+
+        .zxc_header p { margin: 0; color: var(--zxc_muted); font-size: 0.84rem; }
+
+        .zxc_card {
+            background: var(--zxc_card);
+            border: 1px solid var(--zxc_border);
+            border-radius: 12px;
+            padding: 1.1rem 1.2rem 1.25rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .zxc_card h2 { margin: 0 0 0.6rem; font-size: 1rem; color: var(--zxc_accent); }
+
+        .zxc_card h2 small { color: var(--zxc_muted); font-size: 0.75rem; font-weight: normal; margin-left: 0.5rem; }
+
+        #zxc_radar { width: 100%; height: 430px; }
+
+        #zxc_surface { width: 100%; height: 480px; }
+
+        .zxc_tip {
+            margin: 0.4rem 0 0;
+            font-size: 0.78rem;
+            color: var(--zxc_muted);
+        }
+
+        .zxc_footer { margin-top: 1.2rem; text-align: center; font-size: 0.78rem; color: var(--zxc_muted); }
+    </style>
+</head>
+<body>
+    <div class="zxc_page">
+        <header class="zxc_header">
+            <h1>ECharts 数据可视化：雷达图 与 3D 曲面图</h1>
+            <p>张熙淳 24002060415 · 2026-11-05 · echarts + echarts-gl 库文件已下载到本地 cdn 目录</p>
+        </header>
+
+        <!-- 一、雷达图 -->
+        <section class="zxc_card">
+            <h2>一、雷达图 Radar <small>个人能力多维评估</small></h2>
+            <div id="zxc_radar"></div>
+        </section>
+
+        <!-- 二、3D 曲面图 -->
+        <section class="zxc_card">
+            <h2>二、3D 曲面图 Surface3D <small>参考官方 image-surface 示例：以本地图片亮度作为曲面高度</small></h2>
+            <div id="zxc_surface"></div>
+            <p class="zxc_tip">拖动可旋转视角，滚轮缩放。图片像素亮度 → 曲面高度，同时把图片贴图为曲面纹理；file:// 直开受浏览器跨域限制时自动切换为数学曲面（山峰函数）。</p>
+        </section>
+
+        <footer class="zxc_footer">
+            高级网页设计 · 张熙淳 24002060415 · ECharts 5 + ECharts GL（本地 cdn/echarts.min.js · cdn/echarts-gl.min.js）
+        </footer>
+    </div>
+
+    <script>
+        // ================= 一、雷达图 =================
+        var zxc_radar_chart = echarts.init(document.getElementById("zxc_radar"));
+
+        zxc_radar_chart.setOption({
+            backgroundColor: "transparent",
+            tooltip: {},
+            legend: {
+                data: ["张熙淳", "班级平均"],
+                textStyle: { color: "#8b949e" },
+                bottom: 0
+            },
+            radar: {
+                indicator: [
+                    { name: "HTML / CSS", max: 100 },
+                    { name: "JavaScript", max: 100 },
+                    { name: "Canvas / SVG", max: 100 },
+                    { name: "接口与数据", max: 100 },
+                    { name: "团队协作", max: 100 },
+                    { name: "页面审美", max: 100 }
+                ],
+                radius: "62%",
+                splitNumber: 4,
+                axisName: { color: "#a5d6ff" },
+                splitLine: { lineStyle: { color: "rgba(78,168,222,0.25)" } },
+                splitArea: {
+                    areaStyle: { color: ["rgba(78,168,222,0.05)", "rgba(78,168,222,0.1)"] }
+                },
+                axisLine: { lineStyle: { color: "rgba(78,168,222,0.3)" } }
+            },
+            series: [{
+                type: "radar",
+                data: [
+                    {
+                        value: [92, 85, 88, 80, 90, 93],
+                        name: "张熙淳",
+                        areaStyle: { color: "rgba(78,168,222,0.35)" },
+                        lineStyle: { color: "#4ea8de", width: 2 },
+                        itemStyle: { color: "#4ea8de" },
+                        label: { show: true, color: "#a5d6ff", fontSize: 11 }
+                    },
+                    {
+                        value: [75, 70, 62, 65, 78, 72],
+                        name: "班级平均",
+                        areaStyle: { color: "rgba(247,120,186,0.15)" },
+                        lineStyle: { color: "#f778ba", width: 2 },
+                        itemStyle: { color: "#f778ba" }
+                    }
+                ]
+            }]
+        });
+
+        // ================= 二、3D 曲面图（image-surface 示例思路） =================
+        var zxc_surface_chart = echarts.init(document.getElementById("zxc_surface"));
+
+        // 把图片像素亮度转成高度数据；失败时用数学函数生成山峰曲面
+        function zxc_image_to_surface(zxc_img) {
+            var zxc_N = 40;   // 采样密度
+            var zxc_off = document.createElement("canvas");
+            zxc_off.width = zxc_N;
+            zxc_off.height = zxc_N;
+            var zxc_octx = zxc_off.getContext("2d");
+            zxc_octx.drawImage(zxc_img, 0, 0, zxc_N, zxc_N);
+
+            var zxc_pixels = zxc_octx.getImageData(0, 0, zxc_N, zxc_N).data;  // file:// 下可能抛跨域异常
+            var zxc_data = [];
+            for (var zxc_i = 0; zxc_i < zxc_N; zxc_i++) {
+                for (var zxc_j = 0; zxc_j < zxc_N; zxc_j++) {
+                    var zxc_idx = (zxc_i * zxc_N + zxc_j) * 4;
+                    // 像素亮度（0~1）作为高度
+                    var zxc_bright = (zxc_pixels[zxc_idx] * 0.299 + zxc_pixels[zxc_idx + 1] * 0.587 + zxc_pixels[zxc_idx + 2] * 0.114) / 255;
+                    zxc_data.push([zxc_j, zxc_i, zxc_bright * 6]);
+                }
+            }
+            return zxc_data;
+        }
+
+        // 兜底：数学山峰曲面 z = f(x, y)
+        function zxc_math_surface() {
+            var zxc_data = [];
+            for (var zxc_i = -25; zxc_i <= 25; zxc_i++) {
+                for (var zxc_j = -25; zxc_j <= 25; zxc_j++) {
+                    var zxc_z = 6 * Math.sin(Math.sqrt(zxc_i * zxc_i + zxc_j * zxc_j) / 4)
+                              + 2 * Math.sin(zxc_i / 5) * Math.cos(zxc_j / 5);
+                    zxc_data.push([zxc_j, zxc_i, zxc_z]);
+                }
+            }
+            return zxc_data;
+        }
+
+        function zxc_set_surface(zxc_data, zxc_texture) {
+            zxc_surface_chart.setOption({
+                backgroundColor: "transparent",
+                tooltip: {},
+                visualMap: {
+                    show: false,
+                    dimension: 2,
+                    min: 0,
+                    max: 6,
+                    inRange: { color: ["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027"] }
+                },
+                xAxis3D: { type: "value", name: "X" },
+                yAxis3D: { type: "value", name: "Y" },
+                zAxis3D: { type: "value", name: "高度" },
+                grid3D: {
+                    boxWidth: 120,
+                    boxDepth: 120,
+                    viewControl: {
+                        alpha: 40,          // 俯仰角
+                        beta: -40,          // 水平旋转角
+                        distance: 220,
+                        autoRotate: true,   // 自动旋转展示
+                        autoRotateSpeed: 4
+                    },
+                    light: {
+                        main: { intensity: 1.2, shadow: true },
+                        ambient: { intensity: 0.4 }
+                    }
+                },
+                series: [{
+                    type: "surface",
+                    wireframe: { show: true, lineStyle: { color: "rgba(255,255,255,0.25)", width: 0.5 } },
+                    shading: "color",                      // 用贴图本身着色
+                    texture: zxc_texture || null,          // 图片作为曲面纹理（示例核心点）
+                    data: zxc_data
+                }]
+            });
+        }
+
+        // 优先：本地图片 → 高度场；跨域失败则退化为数学曲面
+        var zxc_img = new Image();
+        zxc_img.onload = function () {
+            try {
+                zxc_set_surface(zxc_image_to_surface(zxc_img), zxc_img);
+            } catch (zxc_err) {
+                zxc_set_surface(zxc_math_surface(), null);
+            }
+        };
+        zxc_img.onerror = function () {
+            zxc_set_surface(zxc_math_surface(), null);
+        };
+        zxc_img.src = "images/16-4/1.jpg";   // 项目内已有的本地图片
+
+        // 窗口变化自适应
+        window.addEventListener("resize", function () {
+            zxc_radar_chart.resize();
+            zxc_surface_chart.resize();
+        });
+    </script>
+</body>
+</html>
