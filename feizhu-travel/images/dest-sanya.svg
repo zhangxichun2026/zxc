@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="三亚海边日落">
+  <defs>
+    <linearGradient id="sanya-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fc4ea"/>
+      <stop offset="0.45" stop-color="#a9e2f6"/>
+      <stop offset="0.8" stop-color="#fbe4c0"/>
+      <stop offset="1" stop-color="#ffd39b"/>
+    </linearGradient>
+    <radialGradient id="sanya-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff8d8" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#ffe9a8" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sanya-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3fb4d8"/>
+      <stop offset="0.5" stop-color="#1a86b4"/>
+      <stop offset="1" stop-color="#0a5c86"/>
+    </linearGradient>
+    <linearGradient id="sanya-sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbe8c4"/>
+      <stop offset="1" stop-color="#edd6a8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#sanya-sky)"/>
+  <circle cx="596" cy="196" r="150" fill="url(#sanya-sun)"/>
+  <circle cx="596" cy="196" r="58" fill="#fff4cd"/>
+
+  <!-- 远处岛屿 -->
+  <path d="M0 330 Q70 300 132 316 Q196 332 250 330 L250 360 L0 360 Z" fill="#4b8fa2" opacity="0.55"/>
+  <path d="M520 332 Q580 308 640 326 Q700 344 760 330 L800 336 L800 360 L520 360 Z" fill="#4b8fa2" opacity="0.45"/>
+
+  <!-- 海面 -->
+  <path d="M0 352 H800 V520 H0 Z" fill="url(#sanya-sea)"/>
+  <g fill="#ffffff" opacity="0.45">
+    <path d="M470 392 h96 l-8 4 h-88 z"/>
+    <path d="M430 414 h60 l-6 4 h-54 z"/>
+    <path d="M520 436 h120 l-10 5 h-110 z"/>
+    <path d="M380 458 h70 l-6 4 h-64 z"/>
+    <path d="M600 470 h150 l-12 5 h-138 z"/>
+  </g>
+  <!-- 太阳倒影 -->
+  <g fill="#ffe9a8" opacity="0.55">
+    <rect x="566" y="366" width="60" height="5" rx="2.5"/>
+    <rect x="552" y="384" width="88" height="5" rx="2.5"/>
+    <rect x="562" y="404" width="70" height="4" rx="2"/>
+    <rect x="540" y="424" width="110" height="4" rx="2"/>
+  </g>
+
+  <!-- 帆船 -->
+  <g transform="translate(300 388)">
+    <path d="M0 44 L38 44 L30 56 L8 56 Z" fill="#1b3d4d"/>
+    <path d="M16 4 L16 44 L46 44 Z" fill="#ffffff" opacity="0.95"/>
+    <path d="M12 12 L12 44 L-6 44 Z" fill="#e8f4f8" opacity="0.8"/>
+  </g>
+
+  <!-- 沙滩 -->
+  <path d="M0 520 Q180 486 360 512 Q560 540 800 498 L800 600 L0 600 Z" fill="url(#sanya-sand)"/>
+  <path d="M0 520 Q180 486 360 512 Q560 540 800 498" fill="none" stroke="#ffffff" stroke-width="7" opacity="0.55"/>
+
+  <!-- 椰子树 -->
+  <g transform="translate(96 300)">
+    <path d="M44 220 C40 150 52 96 74 44" fill="none" stroke="#6b4a30" stroke-width="15" stroke-linecap="round"/>
+    <g fill="#1f6b4a">
+      <path d="M74 44 C40 30 10 40 -8 66 C16 60 36 62 52 74 Z"/>
+      <path d="M74 44 C64 6 74 -18 96 -38 C92 -8 88 16 84 38 Z"/>
+      <path d="M74 44 C96 12 126 4 152 16 C126 26 108 38 94 58 Z"/>
+      <path d="M74 44 C104 40 132 52 146 76 C120 66 100 62 82 64 Z"/>
+      <path d="M74 44 C44 56 24 80 18 108 C38 86 58 74 76 68 Z"/>
+    </g>
+    <g fill="#8a5a36">
+      <circle cx="66" cy="62" r="7"/>
+      <circle cx="82" cy="58" r="7"/>
+    </g>
+  </g>
+
+  <!-- 近景浪花 -->
+  <path d="M0 596 Q140 566 280 590 Q420 612 560 586 Q700 562 800 584 L800 600 L0 600 Z" fill="#ffffff" opacity="0.55"/>
+  <g fill="#0b2a38" opacity="0.12">
+    <ellipse cx="640" cy="560" rx="70" ry="8"/>
+  </g>
+</svg>

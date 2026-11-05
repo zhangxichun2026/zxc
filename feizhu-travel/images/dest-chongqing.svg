@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="重庆山城夜景">
+  <defs>
+    <linearGradient id="cq-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121a3d"/>
+      <stop offset="0.55" stop-color="#2b3566"/>
+      <stop offset="1" stop-color="#5c4a72"/>
+    </linearGradient>
+    <linearGradient id="cq-river" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b3560"/>
+      <stop offset="1" stop-color="#0d1226"/>
+    </linearGradient>
+    <radialGradient id="cq-moon" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff4cc" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#fff4cc" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="cq-window" width="16" height="20" patternUnits="userSpaceOnUse">
+      <rect x="3" y="4" width="6" height="8" rx="1" fill="#ffcf7a" opacity="0.9"/>
+    </pattern>
+    <pattern id="cq-window-dim" width="16" height="20" patternUnits="userSpaceOnUse">
+      <rect x="3" y="4" width="6" height="8" rx="1" fill="#ffcf7a" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#cq-sky)"/>
+  <circle cx="646" cy="118" r="120" fill="url(#cq-moon)"/>
+  <circle cx="646" cy="118" r="40" fill="#fff6d8" opacity="0.95"/>
+  <g fill="#ffffff">
+    <circle cx="120" cy="76" r="2.6" opacity="0.8"/>
+    <circle cx="212" cy="132" r="2" opacity="0.65"/>
+    <circle cx="304" cy="62" r="2.2" opacity="0.7"/>
+    <circle cx="386" cy="150" r="1.8" opacity="0.55"/>
+    <circle cx="500" cy="78" r="2.4" opacity="0.7"/>
+    <circle cx="742" cy="196" r="2" opacity="0.6"/>
+    <circle cx="86" cy="186" r="1.8" opacity="0.5"/>
+  </g>
+
+  <!-- 远山 -->
+  <path d="M0 300 Q120 250 220 292 Q330 336 440 296 Q560 252 660 300 Q736 334 800 312 L800 360 L0 360 Z" fill="#1b2244" opacity="0.85"/>
+
+  <!-- 楼群 -->
+  <g>
+    <!-- 后排 -->
+    <rect x="40" y="228" width="62" height="180" fill="#161d3a"/>
+    <rect x="40" y="228" width="62" height="180" fill="url(#cq-window-dim)"/>
+    <rect x="124" y="188" width="54" height="220" fill="#182041"/>
+    <rect x="124" y="188" width="54" height="220" fill="url(#cq-window)"/>
+    <rect x="206" y="248" width="72" height="160" fill="#141a35"/>
+    <rect x="206" y="248" width="72" height="160" fill="url(#cq-window-dim)"/>
+    <rect x="300" y="206" width="46" height="202" fill="#182041"/>
+    <rect x="300" y="206" width="46" height="202" fill="url(#cq-window)"/>
+    <rect x="368" y="252" width="66" height="156" fill="#141a35"/>
+    <rect x="368" y="252" width="66" height="156" fill="url(#cq-window-dim)"/>
+    <rect x="560" y="216" width="58" height="192" fill="#182041"/>
+    <rect x="560" y="216" width="58" height="192" fill="url(#cq-window)"/>
+    <rect x="646" y="256" width="70" height="152" fill="#141a35"/>
+    <rect x="646" y="256" width="70" height="152" fill="url(#cq-window-dim)"/>
+    <rect x="736" y="230" width="52" height="178" fill="#182041"/>
+    <rect x="736" y="230" width="52" height="178" fill="url(#cq-window)"/>
+    <!-- 前排 -->
+    <rect x="10" y="286" width="70" height="122" fill="#0e1430"/>
+    <rect x="10" y="286" width="70" height="122" fill="url(#cq-window)"/>
+    <rect x="170" y="300" width="56" height="108" fill="#0f1531"/>
+    <rect x="170" y="300" width="56" height="108" fill="url(#cq-window)"/>
+    <rect x="462" y="282" width="60" height="126" fill="#0e1430"/>
+    <rect x="462" y="282" width="60" height="126" fill="url(#cq-window)"/>
+    <rect x="694" y="296" width="64" height="112" fill="#0f1531"/>
+    <rect x="694" y="296" width="64" height="112" fill="url(#cq-window)"/>
+    <!-- 顶部尖塔 -->
+    <path d="M151 188 L151 150 L158 150 L158 188 Z" fill="#1d2749"/>
+    <path d="M323 206 L323 160 L329 160 L329 206 Z" fill="#1d2749"/>
+  </g>
+
+  <!-- 江面 -->
+  <path d="M0 408 H800 V600 H0 Z" fill="url(#cq-river)"/>
+  <g fill="#ffcf7a" opacity="0.35">
+    <rect x="60" y="420" width="6" height="52" rx="3"/>
+    <rect x="132" y="432" width="5" height="70" rx="2.5"/>
+    <rect x="216" y="424" width="8" height="44" rx="4"/>
+    <rect x="310" y="440" width="5" height="64" rx="2.5"/>
+    <rect x="390" y="428" width="7" height="50" rx="3.5"/>
+    <rect x="486" y="444" width="5" height="60" rx="2.5"/>
+    <rect x="586" y="430" width="7" height="52" rx="3.5"/>
+    <rect x="668" y="438" width="5" height="68" rx="2.5"/>
+    <rect x="752" y="426" width="7" height="46" rx="3.5"/>
+  </g>
+
+  <!-- 拱桥 -->
+  <g stroke="#8f7bd0" stroke-width="7" fill="none" opacity="0.85">
+    <path d="M0 476 Q200 386 400 476"/>
+    <path d="M0 496 Q200 406 400 496" stroke-width="4" opacity="0.6"/>
+  </g>
+  <g fill="#a394e0">
+    <circle cx="60" cy="452" r="4"/><circle cx="140" cy="428" r="4"/>
+    <circle cx="220" cy="412" r="4"/><circle cx="300" cy="410" r="4"/>
+    <circle cx="372" cy="424" r="4"/>
+  </g>
+
+  <!-- 江面波光 -->
+  <g stroke="#7d8fd4" stroke-width="2" opacity="0.35">
+    <path d="M80 520 h90"/><path d="M260 546 h120"/><path d="M480 528 h140"/><path d="M620 566 h120"/>
+  </g>
+</svg>

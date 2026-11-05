@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="飞猪标志">
+  <defs>
+    <linearGradient id="lg-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a3d"/>
+      <stop offset="1" stop-color="#ff4300"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="15" fill="url(#lg-bg)"/>
+  <!-- 耳朵 -->
+  <path d="M13.8 18.2 C12.2 13.8 11.9 10.6 13.3 9.5 C14.9 8.4 17.6 10.3 19.6 13.4 Z" fill="#ffffff"/>
+  <path d="M34.2 18.2 C35.8 13.8 36.1 10.6 34.7 9.5 C33.1 8.4 30.4 10.3 28.4 13.4 Z" fill="#ffffff"/>
+  <!-- 脸 -->
+  <ellipse cx="24" cy="27.4" rx="13" ry="12.2" fill="#ffffff"/>
+  <!-- 眼睛 -->
+  <circle cx="19.2" cy="24.4" r="1.95" fill="#ff4d00"/>
+  <circle cx="28.8" cy="24.4" r="1.95" fill="#ff4d00"/>
+  <!-- 猪鼻 -->
+  <ellipse cx="24" cy="32" rx="6.5" ry="4.9" fill="#ff7a1a"/>
+  <ellipse cx="21.9" cy="32" rx="1.1" ry="1.6" fill="#ffffff"/>
+  <ellipse cx="26.1" cy="32" rx="1.1" ry="1.6" fill="#ffffff"/>
+</svg>

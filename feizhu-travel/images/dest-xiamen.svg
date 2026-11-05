@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="厦门鼓浪屿海滨">
+  <defs>
+    <linearGradient id="xm-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7ec4e8"/>
+      <stop offset="0.5" stop-color="#bfe3f4"/>
+      <stop offset="0.8" stop-color="#fbe3cd"/>
+      <stop offset="1" stop-color="#fff2e2"/>
+    </linearGradient>
+    <linearGradient id="xm-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4fa9c9"/>
+      <stop offset="0.6" stop-color="#2b7fa6"/>
+      <stop offset="1" stop-color="#175b7d"/>
+    </linearGradient>
+    <radialGradient id="xm-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffdfa8" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffdfa8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#xm-sky)"/>
+  <circle cx="214" cy="212" r="130" fill="url(#xm-sun)"/>
+  <circle cx="214" cy="212" r="44" fill="#ffe6b8" opacity="0.9"/>
+
+  <!-- 海 -->
+  <path d="M0 336 H800 V600 H0 Z" fill="url(#xm-sea)"/>
+  <g fill="#ffffff" opacity="0.4">
+    <path d="M120 380 h120 l-10 5 h-110 z"/>
+    <path d="M320 412 h90 l-8 4 h-82 z"/>
+    <path d="M560 396 h140 l-12 5 h-128 z"/>
+    <path d="M200 452 h100 l-8 4 h-92 z"/>
+    <path d="M470 470 h150 l-12 5 h-138 z"/>
+  </g>
+
+  <!-- 鼓浪屿岛 -->
+  <path d="M430 340 Q520 292 620 318 Q710 340 800 320 L800 372 L430 372 Z" fill="#4f7d63"/>
+  <path d="M430 356 Q540 336 660 352 Q740 362 800 352 L800 380 L430 380 Z" fill="#3c6350"/>
+
+  <!-- 红顶别墅群 -->
+  <g>
+    <g transform="translate(486 268)">
+      <rect x="0" y="22" width="56" height="44" fill="#f4ecdc"/>
+      <path d="M-8 22 L28 0 L64 22 Z" fill="#c0503f"/>
+      <rect x="12" y="38" width="12" height="16" fill="#f7d9a0"/>
+      <rect x="34" y="38" width="12" height="16" fill="#f7d9a0"/>
+      <path d="M28 0 L28 -14" stroke="#e8dcc6" stroke-width="4"/>
+    </g>
+    <g transform="translate(558 250)">
+      <rect x="0" y="26" width="64" height="54" fill="#fbf3e4"/>
+      <path d="M-10 26 L32 0 L74 26 Z" fill="#b8483a"/>
+      <rect x="14" y="44" width="14" height="20" fill="#f5cf94"/>
+      <rect x="38" y="44" width="14" height="20" fill="#f5cf94"/>
+      <rect x="26" y="6" width="12" height="14" fill="#fbf3e4"/>
+      <path d="M26 6 L32 -6 L38 6 Z" fill="#b8483a"/>
+    </g>
+    <g transform="translate(644 276)">
+      <rect x="0" y="18" width="48" height="38" fill="#f4ecdc"/>
+      <path d="M-8 18 L24 0 L56 18 Z" fill="#c0503f"/>
+      <rect x="10" y="32" width="10" height="14" fill="#f7d9a0"/>
+      <rect x="28" y="32" width="10" height="14" fill="#f7d9a0"/>
+    </g>
+  </g>
+  <!-- 树 -->
+  <g fill="#2f5a44">
+    <circle cx="470" cy="318" r="22"/>
+    <circle cx="618" cy="322" r="18"/>
+    <circle cx="706" cy="316" r="24"/>
+    <circle cx="756" cy="330" r="16"/>
+  </g>
+
+  <!-- 渡轮 -->
+  <g transform="translate(120 400)">
+    <path d="M0 26 L104 26 L92 44 L12 44 Z" fill="#f3f0e8"/>
+    <path d="M0 26 L104 26 L104 30 L0 30 Z" fill="#2b6a8c"/>
+    <rect x="18" y="6" width="66" height="20" rx="4" fill="#ffffff"/>
+    <g fill="#7fb6cf">
+      <rect x="24" y="11" width="10" height="9" rx="1.5"/>
+      <rect x="40" y="11" width="10" height="9" rx="1.5"/>
+      <rect x="56" y="11" width="10" height="9" rx="1.5"/>
+      <rect x="72" y="11" width="6" height="9" rx="1.5"/>
+    </g>
+    <rect x="46" y="-6" width="10" height="12" fill="#e8e3d8"/>
+  </g>
+
+  <!-- 椰子 -->
+  <g transform="translate(60 180)">
+    <path d="M52 190 C48 132 58 92 76 56" fill="none" stroke="#6d5136" stroke-width="12" stroke-linecap="round"/>
+    <g fill="#276b4c">
+      <path d="M76 56 C46 40 18 48 0 70 C24 64 42 68 58 78 Z"/>
+      <path d="M76 56 C68 22 78 0 98 -18 C94 10 90 32 86 50 Z"/>
+      <path d="M76 56 C96 26 124 18 148 30 C124 40 108 50 94 68 Z"/>
+      <path d="M76 56 C104 52 130 64 142 86 C118 76 100 72 84 74 Z"/>
+    </g>
+  </g>
+
+  <!-- 前景浪 -->
+  <path d="M0 588 Q160 558 320 582 Q480 606 640 580 Q720 568 800 578 L800 600 L0 600 Z" fill="#ffffff" opacity="0.5"/>
+</svg>

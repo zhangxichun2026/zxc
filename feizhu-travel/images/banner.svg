@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" preserveAspectRatio="xMidYMid slice" role="img" aria-label="落日海岸与远山旅行风景">
+  <defs>
+    <linearGradient id="bn-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff8a4c"/>
+      <stop offset="0.32" stop-color="#ffa968"/>
+      <stop offset="0.62" stop-color="#ffcf9c"/>
+      <stop offset="1" stop-color="#fff0d8"/>
+    </linearGradient>
+    <radialGradient id="bn-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff8dd" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#ffe39f" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#ffe39f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bn-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e0a173"/>
+      <stop offset="0.25" stop-color="#bd7c55"/>
+      <stop offset="1" stop-color="#5f403a"/>
+    </linearGradient>
+    <linearGradient id="bn-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c07d55"/>
+      <stop offset="1" stop-color="#a9663f"/>
+    </linearGradient>
+    <linearGradient id="bn-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9b5638"/>
+      <stop offset="1" stop-color="#713d2d"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="420" fill="url(#bn-sky)"/>
+
+  <!-- 太阳 -->
+  <circle cx="922" cy="212" r="250" fill="url(#bn-glow)"/>
+  <circle cx="922" cy="212" r="82" fill="#fffbe8"/>
+  <circle cx="922" cy="212" r="112" fill="#fff1c6" opacity="0.45"/>
+
+  <!-- 云带 -->
+  <g fill="#ffffff" opacity="0.38">
+    <ellipse cx="200" cy="74" rx="150" ry="14"/>
+    <ellipse cx="330" cy="58" rx="90" ry="9"/>
+    <ellipse cx="700" cy="46" rx="170" ry="12"/>
+    <ellipse cx="1120" cy="96" rx="120" ry="11"/>
+  </g>
+  <g fill="#ffd7a6" opacity="0.55">
+    <ellipse cx="520" cy="116" rx="210" ry="12"/>
+    <ellipse cx="1030" cy="140" rx="160" ry="10"/>
+  </g>
+
+  <!-- 远山（只占右半边，给左侧文案留白） -->
+  <path d="M540 302 Q600 240 660 266 Q722 290 780 226 Q838 166 896 230 Q948 288 1006 244 Q1066 198 1122 250 Q1164 286 1200 266 L1200 302 Z" fill="#d39770" opacity="0.7"/>
+  <path d="M640 306 Q700 258 760 282 Q818 304 872 250 Q918 204 966 262 Q1014 316 1070 278 Q1128 240 1200 292 L1200 312 L640 312 Z" fill="url(#bn-mid)" opacity="0.8"/>
+
+  <!-- 海面 -->
+  <path d="M0 300 H1200 V420 H0 Z" fill="url(#bn-sea)"/>
+  <rect y="284" width="1200" height="20" fill="#ffe9c6" opacity="0.35"/>
+  <rect y="298" width="1200" height="3" fill="#fff2d8" opacity="0.75"/>
+  <!-- 太阳倒影 -->
+  <g fill="#ffe8b8" opacity="0.65">
+    <rect x="884" y="306" width="76" height="5" rx="2.5"/>
+    <rect x="858" y="322" width="128" height="5" rx="2.5"/>
+    <rect x="880" y="340" width="86" height="4" rx="2"/>
+    <rect x="846" y="360" width="154" height="4" rx="2"/>
+    <rect x="874" y="382" width="100" height="4" rx="2"/>
+  </g>
+  <!-- 水波 -->
+  <g fill="#ffffff" opacity="0.22">
+    <path d="M80 322 h160 l-14 5 h-146 z"/>
+    <path d="M330 338 h130 l-12 5 h-118 z"/>
+    <path d="M210 372 h180 l-16 6 h-164 z"/>
+    <path d="M520 352 h150 l-14 5 h-136 z"/>
+    <path d="M1080 344 h110 l-10 5 h-100 z"/>
+  </g>
+
+  <!-- 远山倒影 -->
+  <g fill="#5a3529" opacity="0.22">
+    <path d="M766 300 h150 l-24 34 h-110 Z"/>
+    <path d="M960 300 h180 l-30 38 h-130 Z"/>
+  </g>
+
+  <!-- 帆船 -->
+  <g transform="translate(700 322)">
+    <path d="M0 26 Q26 36 52 26 L44 34 Q26 40 8 34 Z" fill="#4a2e26"/>
+    <path d="M24 2 L24 26 L46 26 Z" fill="#fff6e2" opacity="0.95"/>
+    <path d="M21 8 L21 26 L6 26 Z" fill="#f4e4c9" opacity="0.85"/>
+  </g>
+
+  <!-- 前景海岸 -->
+  <path d="M0 420 V392 Q140 372 280 388 Q400 402 470 384 L470 420 Z" fill="#6a3f2f" opacity="0.75"/>
+  <path d="M1200 420 V368 Q1120 352 1050 372 Q986 390 940 374 L912 420 Z" fill="#6a3f2f" opacity="0.85"/>
+
+  <!-- 海鸥 -->
+  <g stroke="#8a4a33" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round">
+    <path d="M742 156 q13 -11 26 0 q13 -11 26 0"/>
+    <path d="M830 122 q10 -9 20 0 q10 -9 20 0"/>
+    <path d="M672 196 q9 -8 18 0 q9 -8 18 0"/>
+  </g>
+
+  <!-- 飞机云 -->
+  <path d="M360 66 Q520 38 690 58" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.4" stroke-linecap="round"/>
+</svg>

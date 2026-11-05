@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="大理苍山洱海">
+  <defs>
+    <linearGradient id="dl-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9ccbee"/>
+      <stop offset="0.55" stop-color="#d8ecfa"/>
+      <stop offset="1" stop-color="#f4fbff"/>
+    </linearGradient>
+    <linearGradient id="dl-mount" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6f8fa8"/>
+      <stop offset="0.55" stop-color="#8ea6b8"/>
+      <stop offset="1" stop-color="#b6c7d2"/>
+    </linearGradient>
+    <linearGradient id="dl-lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fcfe6"/>
+      <stop offset="0.5" stop-color="#5fb2d4"/>
+      <stop offset="1" stop-color="#2f7fa8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#dl-sky)"/>
+  <g fill="#ffffff" opacity="0.85">
+    <ellipse cx="180" cy="104" rx="58" ry="20"/>
+    <ellipse cx="226" cy="88" rx="42" ry="16"/>
+    <ellipse cx="612" cy="140" rx="52" ry="17"/>
+    <ellipse cx="656" cy="126" rx="36" ry="14"/>
+  </g>
+
+  <!-- 苍山 -->
+  <path d="M0 330 L90 196 L150 250 L236 150 L320 246 L400 176 L492 268 L560 214 L650 300 L720 240 L800 322 L800 380 L0 380 Z" fill="url(#dl-mount)"/>
+  <!-- 雪顶 -->
+  <g fill="#ffffff" opacity="0.95">
+    <path d="M236 150 L268 190 L246 186 L232 200 L218 186 L200 192 Z"/>
+    <path d="M400 176 L428 214 L410 208 L396 220 L382 208 L368 214 Z"/>
+    <path d="M560 214 L586 246 L570 242 L556 254 L542 242 L530 246 Z"/>
+    <path d="M90 196 L116 228 L100 224 L88 236 L74 224 L60 228 Z"/>
+  </g>
+  <!-- 山体阴影 -->
+  <g fill="#5d7c95" opacity="0.35">
+    <path d="M236 150 L268 190 L246 186 L236 210 L210 260 L170 330 L236 330 Z"/>
+    <path d="M400 176 L428 214 L410 208 L396 236 L360 330 L400 330 Z"/>
+    <path d="M560 214 L586 246 L570 242 L556 268 L530 330 L560 330 Z"/>
+  </g>
+
+  <!-- 湖面 -->
+  <path d="M0 352 H800 V600 H0 Z" fill="url(#dl-lake)"/>
+  <g stroke="#ffffff" stroke-width="3" opacity="0.4">
+    <path d="M60 400 h140"/><path d="M260 424 h180"/><path d="M520 404 h170"/>
+    <path d="M120 470 h160"/><path d="M420 492 h200"/><path d="M60 528 h120"/>
+  </g>
+  <!-- 山影倒影 -->
+  <path d="M180 352 L236 352 L236 420 L214 396 L196 414 Z" fill="#3f6f8c" opacity="0.18"/>
+  <path d="M360 352 L400 352 L400 430 L380 404 L364 424 Z" fill="#3f6f8c" opacity="0.18"/>
+
+  <!-- 白族民居 -->
+  <g transform="translate(520 300)">
+    <rect x="0" y="20" width="150" height="46" fill="#f7f5ef"/>
+    <path d="M-14 20 L75 -14 L164 20 Z" fill="#4a5560"/>
+    <path d="M-14 20 L164 20 L164 26 L-14 26 Z" fill="#37414c"/>
+    <g fill="#9aa8b4">
+      <rect x="18" y="34" width="18" height="20"/>
+      <rect x="52" y="34" width="18" height="20"/>
+      <rect x="86" y="34" width="18" height="20"/>
+      <rect x="118" y="34" width="18" height="20"/>
+    </g>
+    <path d="M-6 8 Q75 -22 156 8" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.7"/>
+  </g>
+
+  <!-- 小船 -->
+  <g transform="translate(240 430)">
+    <path d="M0 14 Q40 26 80 14 L70 24 Q40 32 10 24 Z" fill="#efe9dc"/>
+    <path d="M0 14 Q40 26 80 14" fill="none" stroke="#c9c0ad" stroke-width="2"/>
+  </g>
+
+  <!-- 飞鸟 -->
+  <g stroke="#5b7a90" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round">
+    <path d="M330 120 q9 -8 18 0 q9 -8 18 0"/>
+    <path d="M380 92 q7 -6 14 0 q7 -6 14 0"/>
+  </g>
+</svg>
