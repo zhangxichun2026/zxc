@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="西安钟楼夕阳">
+  <defs>
+    <linearGradient id="xa-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2b48a"/>
+      <stop offset="0.45" stop-color="#f6c9a2"/>
+      <stop offset="0.75" stop-color="#fbe0c2"/>
+      <stop offset="1" stop-color="#fdf0dd"/>
+    </linearGradient>
+    <radialGradient id="xa-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff3d0" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#fff3d0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="xa-ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a6a52"/>
+      <stop offset="1" stop-color="#4d382b"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#xa-sky)"/>
+  <circle cx="610" cy="176" r="168" fill="url(#xa-glow)"/>
+  <circle cx="610" cy="176" r="54" fill="#fff6dc"/>
+
+  <!-- 飞鸟 -->
+  <g stroke="#7a4a30" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round">
+    <path d="M132 150 q10 -9 20 0 q10 -9 20 0"/>
+    <path d="M196 112 q8 -7 16 0 q8 -7 16 0"/>
+    <path d="M104 196 q7 -6 14 0 q7 -6 14 0"/>
+    <path d="M700 104 q9 -8 18 0 q9 -8 18 0"/>
+  </g>
+
+  <!-- 远景城墙与树 -->
+  <path d="M0 372 H800 V410 H0 Z" fill="#a9835f" opacity="0.55"/>
+  <g fill="#8f6a4c" opacity="0.5">
+    <circle cx="80" cy="356" r="22"/><circle cx="124" cy="362" r="16"/>
+    <circle cx="690" cy="358" r="20"/><circle cx="738" cy="364" r="15"/>
+  </g>
+
+  <!-- 地面 -->
+  <path d="M0 404 H800 V600 H0 Z" fill="url(#xa-ground)"/>
+
+  <!-- 钟楼 -->
+  <g transform="translate(400 398)">
+    <!-- 台基 -->
+    <path d="M-150 0 L150 0 L136 -34 L-136 -34 Z" fill="#6f4f39"/>
+    <rect x="-132" y="-96" width="264" height="64" fill="#8c6042"/>
+    <g fill="#5b3d2b">
+      <path d="M-92 -96 h20 v44 h-20 z"/><path d="M-34 -96 h20 v44 h-20 z"/>
+      <path d="M24 -96 h20 v44 h-20 z"/><path d="M82 -96 h20 v44 h-20 z"/>
+      <path d="M-44 -52 h88 v18 h-88 z"/>
+    </g>
+    <!-- 一层屋檐 -->
+    <path d="M-166 -92 Q-150 -118 -118 -118 H118 Q150 -118 166 -92 Q120 -104 0 -104 Q-120 -104 -166 -92 Z" fill="#4a3325"/>
+    <path d="M-166 -92 Q-180 -100 -186 -112 Q-166 -104 -150 -104 Z" fill="#3d2a1e"/>
+    <path d="M166 -92 Q180 -100 186 -112 Q166 -104 150 -104 Z" fill="#3d2a1e"/>
+    <!-- 二层 -->
+    <rect x="-78" y="-166" width="156" height="50" fill="#8c6042"/>
+    <g fill="#5b3d2b">
+      <path d="M-52 -166 h16 v38 h-16 z"/><path d="M-8 -166 h16 v38 h-16 z"/>
+      <path d="M36 -166 h16 v38 h-16 z"/>
+    </g>
+    <!-- 二层屋檐 -->
+    <path d="M-118 -162 Q-100 -190 -66 -190 H66 Q100 -190 118 -162 Q70 -174 0 -174 Q-70 -174 -118 -162 Z" fill="#4a3325"/>
+    <path d="M-118 -162 Q-132 -170 -138 -182 Q-118 -174 -102 -174 Z" fill="#3d2a1e"/>
+    <path d="M118 -162 Q132 -170 138 -182 Q118 -174 102 -174 Z" fill="#3d2a1e"/>
+    <!-- 顶 -->
+    <path d="M-58 -190 Q-40 -216 -18 -218 H18 Q40 -216 58 -190 Q0 -202 -58 -190 Z" fill="#3d2a1e"/>
+    <path d="M0 -218 L0 -244" stroke="#3d2a1e" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="0" cy="-248" r="7" fill="#e2a03f"/>
+  </g>
+
+  <!-- 红灯笼 -->
+  <g>
+    <path d="M132 0 L132 92" stroke="#5b3d2b" stroke-width="3"/>
+    <ellipse cx="132" cy="112" rx="17" ry="21" fill="#d8402f"/>
+    <rect x="124" y="90" width="16" height="6" rx="2" fill="#e2a03f"/>
+    <rect x="124" y="128" width="16" height="6" rx="2" fill="#e2a03f"/>
+    <path d="M132 134 v18" stroke="#e2a03f" stroke-width="3"/>
+    <path d="M700 0 L700 76" stroke="#5b3d2b" stroke-width="3"/>
+    <ellipse cx="700" cy="96" rx="15" ry="19" fill="#d8402f"/>
+    <rect x="693" y="76" width="14" height="6" rx="2" fill="#e2a03f"/>
+    <rect x="693" y="110" width="14" height="6" rx="2" fill="#e2a03f"/>
+  </g>
+
+  <!-- 前景剪影 -->
+  <path d="M0 600 V520 Q60 500 120 520 Q180 540 240 522 L240 600 Z" fill="#2f2118" opacity="0.55"/>
+</svg>

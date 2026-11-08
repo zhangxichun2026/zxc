@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="杭州西湖">
+  <defs>
+    <linearGradient id="hz-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfe9e2"/>
+      <stop offset="0.6" stop-color="#eef8f4"/>
+      <stop offset="1" stop-color="#fdfefd"/>
+    </linearGradient>
+    <linearGradient id="hz-lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9dd3bd"/>
+      <stop offset="0.55" stop-color="#6bb096"/>
+      <stop offset="1" stop-color="#3d8171"/>
+    </linearGradient>
+    <linearGradient id="hz-hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fb7a6"/>
+      <stop offset="1" stop-color="#6d9d8c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#hz-sky)"/>
+  <circle cx="176" cy="128" r="46" fill="#ffffff" opacity="0.85"/>
+  <circle cx="176" cy="128" r="78" fill="#ffffff" opacity="0.35"/>
+
+  <!-- 远山 -->
+  <path d="M0 300 Q90 232 186 274 Q270 310 340 286 Q430 254 512 292 Q600 332 690 288 Q748 260 800 286 L800 380 L0 380 Z" fill="#a9c9ba" opacity="0.55"/>
+  <path d="M0 330 Q120 286 230 318 Q340 350 452 322 Q560 296 660 330 Q736 354 800 336 L800 420 L0 420 Z" fill="url(#hz-hill)" opacity="0.75"/>
+
+  <!-- 雷峰塔 -->
+  <g transform="translate(606 226)" fill="#5f7c72">
+    <path d="M26 0 L58 22 L-6 22 Z"/>
+    <rect x="0" y="22" width="52" height="16"/>
+    <path d="M-8 38 L60 38 L54 54 L-2 54 Z"/>
+    <rect x="2" y="54" width="48" height="14"/>
+    <path d="M-8 68 L60 68 L54 86 L-2 86 Z"/>
+    <rect x="6" y="86" width="40" height="18"/>
+    <rect x="30" y="-18" width="4" height="20"/>
+  </g>
+
+  <!-- 湖面 -->
+  <path d="M0 372 H800 V600 H0 Z" fill="url(#hz-lake)"/>
+  <g stroke="#ffffff" stroke-width="3" opacity="0.35">
+    <path d="M90 412 h120"/>
+    <path d="M300 448 h150"/>
+    <path d="M540 418 h120"/>
+    <path d="M160 492 h180"/>
+    <path d="M470 508 h160"/>
+    <path d="M60 540 h120"/>
+  </g>
+
+  <!-- 拱桥 -->
+  <g transform="translate(190 350)">
+    <path d="M0 78 Q70 6 140 78 L140 92 Q70 24 0 92 Z" fill="#cfd8d2"/>
+    <path d="M0 92 Q70 24 140 92 L140 104 L0 104 Z" fill="#aebbb4"/>
+    <path d="M14 84 Q70 30 126 84" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.7"/>
+  </g>
+
+  <!-- 小舟 -->
+  <g transform="translate(430 470)">
+    <path d="M0 16 Q34 30 68 16 L60 26 Q34 34 8 26 Z" fill="#4a3a2c"/>
+    <path d="M30 2 L30 16" stroke="#4a3a2c" stroke-width="3"/>
+    <path d="M30 2 Q46 8 44 18 Q36 12 30 14 Z" fill="#f6f1e2"/>
+    <path d="M26 2 Q12 8 14 18 Q22 12 26 14 Z" fill="#f6f1e2"/>
+  </g>
+
+  <!-- 前景柳枝 -->
+  <g stroke="#3f7d61" stroke-width="4" fill="none" opacity="0.85">
+    <path d="M0 0 Q64 26 96 96"/>
+    <path d="M0 0 Q96 10 138 62"/>
+    <path d="M0 8 Q40 44 52 108"/>
+    <path d="M18 0 Q86 40 104 110"/>
+  </g>
+  <g fill="#4f8f6d">
+    <ellipse cx="60" cy="60" rx="12" ry="5" transform="rotate(38 60 60)"/>
+    <ellipse cx="92" cy="46" rx="12" ry="5" transform="rotate(20 92 46)"/>
+    <ellipse cx="42" cy="92" rx="11" ry="5" transform="rotate(62 42 92)"/>
+    <ellipse cx="110" cy="86" rx="11" ry="5" transform="rotate(35 110 86)"/>
+  </g>
+
+  <!-- 雾气 -->
+  <rect y="330" width="800" height="48" fill="#ffffff" opacity="0.28"/>
+</svg>

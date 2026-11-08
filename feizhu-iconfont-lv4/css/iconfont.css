@@ -1,0 +1,52 @@
+/* ============================================================
+   飞猪旅行 · 下导航字体图标
+   学号：24002060415   姓名：张熙淳
+   说明：本项目下导航使用“字体图标”方案，图标被打包成
+         feizhu-iconfont.ttf / .woff，通过 @font-face 引入，
+         用 content 属性把图标“当文字”写在页面里，
+         因此可以像文字一样改字号（font-size）和颜色（color）。
+   ============================================================ */
+
+@font-face {
+    font-family: "feizhu-iconfont";
+    src: url("../fonts/feizhu-iconfont.woff") format("woff"),
+         url("../fonts/feizhu-iconfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+/* 图标统一基础类：font-family 指向字体文件，继承字号与颜色 */
+.fz-icon {
+    font-family: "feizhu-iconfont" !important;
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: -0.125em;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 五个图标对应的 Unicode 编码（与字体文件的 cmap 一一对应） */
+.fz-icon-home:before {
+    content: "\e601";
+}
+
+.fz-icon-pin:before {
+    content: "\e602";
+}
+
+.fz-icon-order:before {
+    content: "\e603";
+}
+
+.fz-icon-msg:before {
+    content: "\e604";
+}
+
+.fz-icon-user:before {
+    content: "\e605";
+}

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- 学号：24002060415   姓名：张熙淳 -->
+    <title>飞猪旅行 · 下导航（图像解决方案）</title>
+    <meta name="description" content="飞猪旅行移动端首页与固定下导航，下导航图标使用字体图标，其余图标使用 SVG。">
+    <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ============================================================
+         SVG 图标精灵：页面里所有“非下导航”的图标都从这里 <use> 取用
+         （下导航用的是字体图标，两种方案分工，互不重复）
+         ============================================================ -->
+    <svg class="fz-sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-location" viewBox="0 0 24 24">
+            <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/>
+            <circle cx="12" cy="10" r="2.6"/>
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="6.5"/>
+            <path d="m16 16 4.5 4.5"/>
+        </symbol>
+        <symbol id="i-bell" viewBox="0 0 24 24">
+            <path d="M18 9a6 6 0 0 0-12 0c0 5-2 7-2 7h16s-2-2-2-7Z"/>
+            <path d="M10 20a2.2 2.2 0 0 0 4 0"/>
+        </symbol>
+        <symbol id="i-caret" viewBox="0 0 24 24">
+            <path d="m8 10 4 4 4-4"/>
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+            <path d="M5 12h14"/>
+            <path d="m13 6 6 6-6 6"/>
+        </symbol>
+        <symbol id="i-flight" viewBox="0 0 24 24">
+            <path d="M22 2 11 13"/>
+            <path d="M22 2 15 22l-4-9-9-4 20-7Z"/>
+        </symbol>
+        <symbol id="i-hotel" viewBox="0 0 24 24">
+            <path d="M3 21V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v16"/>
+            <path d="M16 9h3a2 2 0 0 1 2 2v10"/>
+            <path d="M3 21h18"/>
+            <path d="M7 7h2M7 11h2M7 15h2M12 7h2M12 11h2M12 15h2"/>
+        </symbol>
+        <symbol id="i-home" viewBox="0 0 24 24">
+            <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9.5Z"/>
+            <path d="M9.5 21v-6h5v6"/>
+        </symbol>
+        <symbol id="i-ticket" viewBox="0 0 24 24">
+            <path d="M4 7h16v3a2 2 0 0 0 0 4v3H4v-3a2 2 0 0 0 0-4V7Z"/>
+            <path d="M9.5 7v10" stroke-dasharray="2 2.6"/>
+        </symbol>
+        <symbol id="i-holiday" viewBox="0 0 24 24">
+            <path d="M3 12a9 9 0 0 1 18 0H3Z"/>
+            <path d="M12 12v7a2.5 2.5 0 0 0 5 0"/>
+        </symbol>
+        <symbol id="i-train" viewBox="0 0 24 24">
+            <rect x="5" y="3" width="14" height="13" rx="3"/>
+            <path d="M5 9.5h14M9 16l-2.5 5M15 16l2.5 5M8 21h8"/>
+            <circle cx="9" cy="12.5" r="1"/>
+            <circle cx="15" cy="12.5" r="1"/>
+        </symbol>
+        <symbol id="i-car" viewBox="0 0 24 24">
+            <path d="M4 16v-4l2.2-5h11.6L20 12v4"/>
+            <path d="M3 16h18v3H3z"/>
+            <circle cx="7.5" cy="19" r="1.8"/>
+            <circle cx="16.5" cy="19" r="1.8"/>
+        </symbol>
+        <symbol id="i-visa" viewBox="0 0 24 24">
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+            <circle cx="12" cy="10" r="3.2"/>
+            <path d="M8.8 10h6.4M12 6.8c2 2.2 2 4.4 0 6.4M12 6.8c-2 2.2-2 4.4 0 6.4"/>
+        </symbol>
+    </svg>
+
+    <div class="fz-app">
+
+        <!-- ---------- 顶栏：定位 + 搜索 + 消息 ---------- -->
+        <header class="fz-topbar">
+            <a class="fz-topbar-city" href="#">
+                <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-location"></use></svg>
+                大连
+                <svg class="fz-svg fz-svg-sm" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-caret"></use></svg>
+            </a>
+            <form class="fz-search" role="search">
+                <svg class="fz-svg fz-svg-sm" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"></use></svg>
+                <input class="fz-search-input" type="search" name="keyword"
+                       placeholder="搜目的地 / 酒店 / 机票" aria-label="搜索关键词">
+            </form>
+            <a class="fz-topbar-bell" href="#" aria-label="消息通知">
+                <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bell"></use></svg>
+                <span class="fz-dot">3</span>
+            </a>
+        </header>
+
+        <main class="fz-main">
+
+            <!-- ================= 首页 ================= -->
+            <section class="fz-panel fz-panel-active" data-panel="home">
+                <a class="fz-hero" href="#">
+                    <img class="fz-hero-img" src="images/banner.svg" alt="落日海岸与远山风景">
+                    <span class="fz-hero-copy">
+                        <span class="fz-hero-tag">秋季大促 · 限时 5 折起</span>
+                        <strong class="fz-hero-title">去想去的地方</strong>
+                        <span class="fz-hero-desc">机票 · 酒店 · 门票 · 度假</span>
+                    </span>
+                </a>
+
+                <!-- 快捷入口：图标来自 SVG 精灵（与下导航的字体图标形成两种方案） -->
+                <ul class="fz-quick">
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-orange">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flight"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">机票</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-pink">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-hotel"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">酒店</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-blue">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">民宿</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-yellow">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ticket"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">门票</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-green">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-holiday"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">度假</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-indigo">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-train"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">火车票</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-teal">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-car"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">租车</span>
+                    </a></li>
+                    <li><a class="fz-quick-item" href="#">
+                        <span class="fz-quick-icon fz-quick-icon-purple">
+                            <svg class="fz-svg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-visa"></use></svg>
+                        </span>
+                        <span class="fz-quick-name">签证</span>
+                    </a></li>
+                </ul>
+
+                <div class="fz-section-head">
+                    <h2 class="fz-section-title">限时特惠</h2>
+                    <a class="fz-section-more" href="#">全部
+                        <svg class="fz-svg fz-svg-sm" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"></use></svg>
+                    </a>
+                </div>
+                <ul class="fz-deals">
+                    <li class="fz-deal">
+                        <figure class="fz-deal-figure">
+                            <img src="images/dest-sanya.svg" alt="三亚海边日落">
+                            <figcaption class="fz-deal-tag">5 折</figcaption>
+                        </figure>
+                        <div class="fz-deal-body">
+                            <h3 class="fz-deal-title">三亚亚龙湾 5 日自由行</h3>
+                            <p class="fz-deal-desc">往返机票 + 海景酒店 + 接送机</p>
+                            <p class="fz-price"><span class="fz-price-symbol">¥</span>1999<span class="fz-price-unit">起</span>
+                                <s class="fz-price-old">¥2599</s></p>
+                        </div>
+                    </li>
+                    <li class="fz-deal">
+                        <figure class="fz-deal-figure">
+                            <img src="images/dest-hangzhou.svg" alt="杭州西湖">
+                            <figcaption class="fz-deal-tag">热卖</figcaption>
+                        </figure>
+                        <div class="fz-deal-body">
+                            <h3 class="fz-deal-title">杭州西湖 2 日精选酒店</h3>
+                            <p class="fz-deal-desc">湖景大床房 + 双人早餐</p>
+                            <p class="fz-price"><span class="fz-price-symbol">¥</span>599<span class="fz-price-unit">起</span>
+                                <s class="fz-price-old">¥899</s></p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="fz-section-head">
+                    <h2 class="fz-section-title">热门目的地</h2>
+                    <a class="fz-section-more" href="#">更多
+                        <svg class="fz-svg fz-svg-sm" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"></use></svg>
+                    </a>
+                </div>
+                <ul class="fz-dest-list">
+                    <li class="fz-dest-row">
+                        <img class="fz-dest-thumb" src="images/dest-chengdu.svg" alt="成都">
+                        <div class="fz-dest-info">
+                            <h3 class="fz-dest-name">成都</h3>
+                            <p class="fz-dest-desc">大熊猫 · 火锅 · 都江堰</p>
+                            <p class="fz-dest-meta">4.8 分 · 1.2 万人已预订</p>
+                        </div>
+                        <p class="fz-dest-price">¥799<span>起</span></p>
+                    </li>
+                    <li class="fz-dest-row">
+                        <img class="fz-dest-thumb" src="images/dest-xian.svg" alt="西安">
+                        <div class="fz-dest-info">
+                            <h3 class="fz-dest-name">西安</h3>
+                            <p class="fz-dest-desc">城墙 · 兵马俑 · 大唐不夜城</p>
+                            <p class="fz-dest-meta">4.7 分 · 8600 人已预订</p>
+                        </div>
+                        <p class="fz-dest-price">¥699<span>起</span></p>
+                    </li>
+                    <li class="fz-dest-row">
+                        <img class="fz-dest-thumb" src="images/dest-chongqing.svg" alt="重庆">
+                        <div class="fz-dest-info">
+                            <h3 class="fz-dest-name">重庆</h3>
+                            <p class="fz-dest-desc">洪崖洞 · 轻轨穿楼 · 夜景</p>
+                            <p class="fz-dest-meta">4.7 分 · 1.1 万人已预订</p>
+                        </div>
+                        <p class="fz-dest-price">¥629<span>起</span></p>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ================= 目的地 ================= -->
+            <section class="fz-panel" data-panel="dest" hidden>
+                <div class="fz-page-head">
+                    <h1 class="fz-page-title">热门目的地</h1>
+                    <p class="fz-page-sub">当季最值得去的 8 座城市</p>
+                </div>
+                <ul class="fz-dest-grid">
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-sanya.svg" alt="三亚">
+                            <figcaption class="fz-dest-badge">热销</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">三亚 <span>Sanya</span></p>
+                        <p class="fz-dest-card-price">¥999 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-hangzhou.svg" alt="杭州">
+                            <figcaption class="fz-dest-badge">口碑</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">杭州 <span>Hangzhou</span></p>
+                        <p class="fz-dest-card-price">¥599 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-chengdu.svg" alt="成都">
+                            <figcaption class="fz-dest-badge">人气</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">成都 <span>Chengdu</span></p>
+                        <p class="fz-dest-card-price">¥799 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-xian.svg" alt="西安">
+                            <figcaption class="fz-dest-badge">古城</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">西安 <span>Xi'an</span></p>
+                        <p class="fz-dest-card-price">¥699 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-chongqing.svg" alt="重庆">
+                            <figcaption class="fz-dest-badge">夜景</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">重庆 <span>Chongqing</span></p>
+                        <p class="fz-dest-card-price">¥629 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-dali.svg" alt="大理">
+                            <figcaption class="fz-dest-badge">慢旅</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">大理 <span>Dali</span></p>
+                        <p class="fz-dest-card-price">¥859 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-xiamen.svg" alt="厦门">
+                            <figcaption class="fz-dest-badge">海岛</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">厦门 <span>Xiamen</span></p>
+                        <p class="fz-dest-card-price">¥729 起</p>
+                    </li>
+                    <li class="fz-dest-card">
+                        <figure class="fz-dest-figure">
+                            <img src="images/dest-guilin.svg" alt="桂林">
+                            <figcaption class="fz-dest-badge">山水</figcaption>
+                        </figure>
+                        <p class="fz-dest-card-name">桂林 <span>Guilin</span></p>
+                        <p class="fz-dest-card-price">¥669 起</p>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ================= 订单 ================= -->
+            <section class="fz-panel" data-panel="order" hidden>
+                <div class="fz-page-head">
+                    <h1 class="fz-page-title">我的订单</h1>
+                    <p class="fz-page-sub">全部订单 6 笔 · 待出行 2 笔</p>
+                </div>
+                <article class="fz-order">
+                    <header class="fz-order-head">
+                        <span class="fz-order-type">机票</span>
+                        <span class="fz-order-state">待出行</span>
+                    </header>
+                    <div class="fz-order-body">
+                        <p class="fz-order-route">大连 → 三亚</p>
+                        <p class="fz-order-time">11 月 10 日 周二 08:35 · 南方航空 CZ6368</p>
+                    </div>
+                    <footer class="fz-order-foot">
+                        <span class="fz-order-price">¥1 480</span>
+                        <a class="fz-order-btn" href="#">去值机</a>
+                    </footer>
+                </article>
+                <article class="fz-order">
+                    <header class="fz-order-head">
+                        <span class="fz-order-type">酒店</span>
+                        <span class="fz-order-state fz-order-state-done">已完成</span>
+                    </header>
+                    <div class="fz-order-body">
+                        <p class="fz-order-route">杭州西湖 · 湖景大床房</p>
+                        <p class="fz-order-time">10 月 18 日 — 10 月 19 日 · 1 晚</p>
+                    </div>
+                    <footer class="fz-order-foot">
+                        <span class="fz-order-price">¥599</span>
+                        <a class="fz-order-btn fz-order-btn-plain" href="#">再订一次</a>
+                    </footer>
+                </article>
+            </section>
+
+            <!-- ================= 消息 ================= -->
+            <section class="fz-panel" data-panel="msg" hidden>
+                <div class="fz-page-head">
+                    <h1 class="fz-page-title">消息</h1>
+                    <p class="fz-page-sub">共 3 条未读</p>
+                </div>
+                <ul class="fz-msg-list">
+                    <li class="fz-msg">
+                        <span class="fz-msg-avatar fz-msg-avatar-orange">航</span>
+                        <div class="fz-msg-body">
+                            <p class="fz-msg-title">航班变动提醒</p>
+                            <p class="fz-msg-text">您预订的 CZ6368 起飞时间调整至 08:35，请留意值机时间。</p>
+                        </div>
+                        <time class="fz-msg-time">09:12</time>
+                    </li>
+                    <li class="fz-msg">
+                        <span class="fz-msg-avatar fz-msg-avatar-blue">酒</span>
+                        <div class="fz-msg-body">
+                            <p class="fz-msg-title">酒店优惠券到账</p>
+                            <p class="fz-msg-text">满 500 减 80，有效期 30 天，可在预订时直接使用。</p>
+                        </div>
+                        <time class="fz-msg-time">昨天</time>
+                    </li>
+                    <li class="fz-msg">
+                        <span class="fz-msg-avatar fz-msg-avatar-green">活</span>
+                        <div class="fz-msg-body">
+                            <p class="fz-msg-title">秋季大促开始了</p>
+                            <p class="fz-msg-text">热门目的地 5 折起，机票、酒店、门票均有优惠。</p>
+                        </div>
+                        <time class="fz-msg-time">11-06</time>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ================= 我的 ================= -->
+            <section class="fz-panel" data-panel="me" hidden>
+                <div class="fz-me-head">
+                    <span class="fz-me-avatar">张</span>
+                    <div class="fz-me-info">
+                        <p class="fz-me-name">张熙淳</p>
+                        <p class="fz-me-level">飞猪 F2 会员 · 积分 3 860</p>
+                    </div>
+                    <a class="fz-me-login" href="#">登录</a>
+                </div>
+                <ul class="fz-me-menu">
+                    <li><a class="fz-me-item" href="#"><span>我的收藏</span><span class="fz-me-count">12</span></a></li>
+                    <li><a class="fz-me-item" href="#"><span>常用旅客</span><span class="fz-me-count">2</span></a></li>
+                    <li><a class="fz-me-item" href="#"><span>优惠券</span><span class="fz-me-count">3</span></a></li>
+                    <li><a class="fz-me-item" href="#"><span>设置</span><span class="fz-me-count">›</span></a></li>
+                </ul>
+                <p class="fz-credit">学号 24002060415 · 张熙淳 · 《高级网页设计I》四级项目</p>
+            </section>
+
+        </main>
+
+        <!-- ============================================================
+             下导航：5 个 tab，图标使用字体图标（iconfont 方案）
+             移动端贴底全宽，宽屏下收成居中的悬浮胶囊，均为固定定位
+             ============================================================ -->
+        <nav class="fz-tabbar" aria-label="底部导航">
+            <button class="fz-tabbar-item fz-tabbar-item-active" type="button"
+                    data-tab="home" aria-selected="true">
+                <i class="fz-icon fz-icon-home" aria-hidden="true"></i>
+                <span class="fz-tabbar-text">首页</span>
+            </button>
+            <button class="fz-tabbar-item" type="button" data-tab="dest" aria-selected="false">
+                <i class="fz-icon fz-icon-pin" aria-hidden="true"></i>
+                <span class="fz-tabbar-text">目的地</span>
+            </button>
+            <button class="fz-tabbar-item" type="button" data-tab="order" aria-selected="false">
+                <i class="fz-icon fz-icon-order" aria-hidden="true"></i>
+                <span class="fz-tabbar-text">订单</span>
+            </button>
+            <button class="fz-tabbar-item" type="button" data-tab="msg" aria-selected="false">
+                <i class="fz-icon fz-icon-msg" aria-hidden="true"></i>
+                <span class="fz-tabbar-dot" aria-hidden="true">3</span>
+                <span class="fz-tabbar-text">消息</span>
+            </button>
+            <button class="fz-tabbar-item" type="button" data-tab="me" aria-selected="false">
+                <i class="fz-icon fz-icon-user" aria-hidden="true"></i>
+                <span class="fz-tabbar-text">我的</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

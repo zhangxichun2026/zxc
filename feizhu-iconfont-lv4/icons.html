@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 学号：24002060415   姓名：张熙淳 -->
+    <title>图像解决方案对照 · 字体图标 vs SVG</title>
+    <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <style>
+        /* 本页只看图标，样式写在这里，说明文字与主站保持同一套配色 */
+        :root {
+            color-scheme: light;
+            --fz-orange: #ff5000;
+            --fz-ink: #1a1a1a;
+            --fz-text: #333333;
+            --fz-sub: #6b7280;
+            --fz-mute: #9aa0a6;
+            --fz-line: #ecedef;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 40px 24px 64px;
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            color: var(--fz-text);
+            background-color: #f7f8fa;
+            background-image: radial-gradient(circle at 8% 0%, rgba(255, 80, 0, 0.10), transparent 40%);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .doc {
+            max-width: 940px;
+            margin: 0 auto;
+        }
+
+        .doc-head {
+            padding-bottom: 18px;
+            border-bottom: 2px solid var(--fz-ink);
+        }
+
+        .doc-kicker {
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            color: var(--fz-orange);
+        }
+
+        .doc-title {
+            margin: 8px 0 0;
+            font-size: 30px;
+            line-height: 1.25;
+            color: var(--fz-ink);
+            letter-spacing: 0.01em;
+        }
+
+        .doc-meta {
+            margin: 10px 0 0;
+            font-size: 13px;
+            color: var(--fz-sub);
+        }
+
+        .doc-meta b {
+            color: var(--fz-ink);
+            font-weight: 600;
+        }
+
+        .card {
+            margin-top: 26px;
+            padding: 22px 24px 26px;
+            border-radius: 14px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(26, 26, 26, 0.06), 0 12px 28px rgba(26, 26, 26, 0.05);
+        }
+
+        .card-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 10px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--fz-line);
+        }
+
+        .card-no {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: var(--fz-orange);
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 18px;
+            color: var(--fz-ink);
+        }
+
+        .card-tip {
+            font-size: 12px;
+            color: var(--fz-mute);
+        }
+
+        .card p {
+            margin: 14px 0 0;
+            font-size: 13.5px;
+            line-height: 1.75;
+            color: var(--fz-text);
+        }
+
+        .card p code,
+        .legend code {
+            padding: 1px 5px;
+            border-radius: 4px;
+            background-color: #f4f5f7;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12.5px;
+            color: #b23b00;
+        }
+
+        /* 尺寸对照表：左列是尺寸，右列是 5 个图标 */
+        .scale-table {
+            margin-top: 18px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scale-table th,
+        .scale-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--fz-line);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .scale-table th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--fz-sub);
+            letter-spacing: 0.04em;
+        }
+
+        .scale-table td:first-child {
+            width: 92px;
+            font-size: 12px;
+            color: var(--fz-sub);
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .icon-set {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .icon-cell {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 64px;
+        }
+
+        .icon-cell small {
+            font-size: 10px;
+            color: var(--fz-mute);
+        }
+
+        /* 字体图标尺寸：改 font-size 就是改图标大小 */
+        .fz-s16 { font-size: 16px; }
+        .fz-s24 { font-size: 24px; }
+        .fz-s32 { font-size: 32px; }
+        .fz-s48 { font-size: 48px; }
+        .fz-s64 { font-size: 64px; }
+
+        /* SVG 精灵图标：改 width/height 就是改大小；fill 跟随 currentColor */
+        .spr {
+            display: inline-block;
+            fill: currentColor;
+            flex: none;
+            vertical-align: middle;
+        }
+
+        .spr-16 { width: 16px; height: 16px; }
+        .spr-24 { width: 24px; height: 24px; }
+        .spr-32 { width: 32px; height: 32px; }
+        .spr-48 { width: 48px; height: 48px; }
+        .spr-64 { width: 64px; height: 64px; }
+
+        /* 颜色对照 */
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            padding: 14px 0;
+            border-bottom: 1px dashed var(--fz-line);
+        }
+
+        .color-row:last-child {
+            border-bottom: 0;
+        }
+
+        .color-name {
+            width: 118px;
+            font-size: 12px;
+            color: var(--fz-sub);
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .c-orange { color: #ff5000; }
+        .c-ink { color: #1a1a1a; }
+        .c-blue { color: #2f7cf6; }
+        .c-grey { color: #c9ced6; }
+
+        .legend {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--fz-orange);
+            border-radius: 0 8px 8px 0;
+            background-color: #fff8f5;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--fz-text);
+        }
+
+        .legend b {
+            color: var(--fz-ink);
+        }
+
+        .doc-foot {
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--fz-mute);
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 24px 14px 48px; }
+            .doc-title { font-size: 23px; }
+            .card { padding: 18px 16px 20px; }
+            .icon-set { gap: 12px; }
+            .color-name { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 与主站同一套图标，但这里用 SVG 精灵的写法，便于和字体图标逐像素对照 -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+    <symbol id="s-home" viewBox="0 0 1024 1024">
+        <path d="M512 96L952 486L952 936L64 936L64 486ZM512 564C454.6 564 408 610.6 408 668C408 725.4 454.6 772 512 772C569.4 772 616 725.4 616 668C616 610.6 569.4 564 512 564Z"/>
+    </symbol>
+    <symbol id="s-pin" viewBox="0 0 1024 1024">
+        <path d="M512 96C336 96 192 240 192 416C192 536 264 632 372 720C448 782 492 850 512 928C532 850 576 782 652 720C760 632 832 536 832 416C832 240 688 96 512 96ZM512 292C443.5 292 388 347.5 388 416C388 484.5 443.5 540 512 540C580.5 540 636 484.5 636 416C636 347.5 580.5 292 512 292Z"/>
+    </symbol>
+    <symbol id="s-order" viewBox="0 0 1024 1024">
+        <path d="M272 96L752 96C805 96 848 139 848 192L848 832C848 885 805 928 752 928L272 928C219 928 176 885 176 832L176 192C176 139 219 96 272 96ZM320 320C302.3 320 288 334.3 288 352C288 369.7 302.3 384 320 384L704 384C721.7 384 736 369.7 736 352C736 334.3 721.7 320 704 320L320 320ZM320 480C302.3 480 288 494.3 288 512C288 529.7 302.3 544 320 544L704 544C721.7 544 736 529.7 736 512C736 494.3 721.7 480 704 480L320 480ZM320 640C302.3 640 288 654.3 288 672C288 689.7 302.3 704 320 704L544 704C561.7 704 576 689.7 576 672C576 654.3 561.7 640 544 640L320 640Z"/>
+    </symbol>
+    <symbol id="s-msg" viewBox="0 0 1024 1024">
+        <path d="M224 96L800 96C870.7 96 928 153.3 928 224L928 568C928 638.7 870.7 696 800 696L224 696C153.3 696 96 638.7 96 568L96 224C96 153.3 153.3 96 224 96ZM352 660L352 928L600 660ZM320 340C289.1 340 264 365.1 264 396C264 426.9 289.1 452 320 452C350.9 452 376 426.9 376 396C376 365.1 350.9 340 320 340ZM512 340C481.1 340 456 365.1 456 396C456 426.9 481.1 452 512 452C542.9 452 568 426.9 568 396C568 365.1 542.9 340 512 340ZM704 340C673.1 340 648 365.1 648 396C648 426.9 673.1 452 704 452C734.9 452 760 426.9 760 396C760 365.1 734.9 340 704 340Z"/>
+    </symbol>
+    <symbol id="s-user" viewBox="0 0 1024 1024">
+        <path d="M512 144C614.7 144 698 227.3 698 330C698 432.7 614.7 516 512 516C409.3 516 326 432.7 326 330C326 227.3 409.3 144 512 144ZM144 936L144 792C144 624 288 528 512 528C736 528 880 624 880 792L880 936Z"/>
+    </symbol>
+</svg>
+
+<div class="doc">
+
+    <header class="doc-head">
+        <p class="doc-kicker">高级网页设计I · 四级项目 · 图像解决方案</p>
+        <h1 class="doc-title">下导航图标：字体图标 与 SVG 对照</h1>
+        <p class="doc-meta">学号 <b>24002060415</b>　姓名 <b>张熙淳</b>　班级 <b>计算机 24006 班</b></p>
+        <p class="doc-meta">选题 <b>飞猪旅行（fliggy.com）移动端下导航</b></p>
+    </header>
+
+    <!-- ============ 01 字体图标 ============ -->
+    <section class="card">
+        <div class="card-head">
+            <span class="card-no">01</span>
+            <h2 class="card-title">字体图标（下导航实际采用的方案）</h2>
+            <span class="card-tip">feizhu-iconfont.ttf / .woff · 5 个字形 · 私有区 U+E601–U+E605</span>
+        </div>
+        <p>5 个图标被画成 1024 × 1024 的字形，编译进字体文件，通过 <code>@font-face</code> 引入，再用伪元素的
+            <code>content: "\e601"</code> 写到页面上。所以它本质上是“文字”：改 <code>font-size</code> 就是改尺寸，
+            改 <code>color</code> 就是改颜色，写 <code>text-shadow</code> 还能直接加阴影。</p>
+
+        <table class="scale-table">
+            <thead>
+                <tr>
+                    <th>字号</th>
+                    <th>首页 · 目的地 · 订单 · 消息 · 我的</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>16px</td>
+                    <td><span class="icon-set c-orange">
+                        <i class="fz-icon fz-icon-home fz-s16"></i>
+                        <i class="fz-icon fz-icon-pin fz-s16"></i>
+                        <i class="fz-icon fz-icon-order fz-s16"></i>
+                        <i class="fz-icon fz-icon-msg fz-s16"></i>
+                        <i class="fz-icon fz-icon-user fz-s16"></i>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>24px</td>
+                    <td><span class="icon-set c-orange">
+                        <i class="fz-icon fz-icon-home fz-s24"></i>
+                        <i class="fz-icon fz-icon-pin fz-s24"></i>
+                        <i class="fz-icon fz-icon-order fz-s24"></i>
+                        <i class="fz-icon fz-icon-msg fz-s24"></i>
+                        <i class="fz-icon fz-icon-user fz-s24"></i>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>32px</td>
+                    <td><span class="icon-set c-orange">
+                        <i class="fz-icon fz-icon-home fz-s32"></i>
+                        <i class="fz-icon fz-icon-pin fz-s32"></i>
+                        <i class="fz-icon fz-icon-order fz-s32"></i>
+                        <i class="fz-icon fz-icon-msg fz-s32"></i>
+                        <i class="fz-icon fz-icon-user fz-s32"></i>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>48px</td>
+                    <td><span class="icon-set c-orange">
+                        <i class="fz-icon fz-icon-home fz-s48"></i>
+                        <i class="fz-icon fz-icon-pin fz-s48"></i>
+                        <i class="fz-icon fz-icon-order fz-s48"></i>
+                        <i class="fz-icon fz-icon-msg fz-s48"></i>
+                        <i class="fz-icon fz-icon-user fz-s48"></i>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>64px</td>
+                    <td><span class="icon-set c-orange">
+                        <i class="fz-icon fz-icon-home fz-s64"></i>
+                        <i class="fz-icon fz-icon-pin fz-s64"></i>
+                        <i class="fz-icon fz-icon-order fz-s64"></i>
+                        <i class="fz-icon fz-icon-msg fz-s64"></i>
+                        <i class="fz-icon fz-icon-user fz-s64"></i>
+                    </span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="legend">
+            <b>优点：</b>一个字体文件装下全部图标，页面里只写一个字符；能继承字号和颜色，选中态只改一处 <code>color</code>；
+            矢量渲染，放大到 64px 依然锐利。<br>
+            <b>缺点：</b>每个图标只能是单色（除非用多字体叠加），首次加载前会有一瞬间空白，需要 <code>font-display: block</code> 兜底。
+        </div>
+    </section>
+
+    <!-- ============ 02 SVG ============ -->
+    <section class="card">
+        <div class="card-head">
+            <span class="card-no">02</span>
+            <h2 class="card-title">SVG 精灵（主站其它图标的写法）</h2>
+            <span class="card-tip">同尺寸矢量源 · 内联 &lt;symbol&gt; + &lt;use&gt;</span>
+        </div>
+        <p>同样的五个图形，换一种存储方式：把 <code>&lt;symbol&gt;</code> 写在页面顶部，用
+            <code>&lt;use href="#s-home"&gt;</code> 引用。因为没有转成字形，每个图标的路径细节可以单独控制，
+            甚至能一个图标里用两种颜色。</p>
+
+        <table class="scale-table">
+            <thead>
+                <tr>
+                    <th>尺寸</th>
+                    <th>首页 · 目的地 · 订单 · 消息 · 我的</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>16px</td>
+                    <td><span class="icon-set c-orange">
+                        <svg class="spr spr-16" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                        <svg class="spr spr-16" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                        <svg class="spr spr-16" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                        <svg class="spr spr-16" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                        <svg class="spr spr-16" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>24px</td>
+                    <td><span class="icon-set c-orange">
+                        <svg class="spr spr-24" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                        <svg class="spr spr-24" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                        <svg class="spr spr-24" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                        <svg class="spr spr-24" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                        <svg class="spr spr-24" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>32px</td>
+                    <td><span class="icon-set c-orange">
+                        <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                        <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                        <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                        <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                        <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>48px</td>
+                    <td><span class="icon-set c-orange">
+                        <svg class="spr spr-48" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                        <svg class="spr spr-48" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                        <svg class="spr spr-48" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                        <svg class="spr spr-48" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                        <svg class="spr spr-48" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>64px</td>
+                    <td><span class="icon-set c-orange">
+                        <svg class="spr spr-64" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                        <svg class="spr spr-64" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                        <svg class="spr spr-64" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                        <svg class="spr spr-64" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                        <svg class="spr spr-64" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+                    </span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="legend">
+            <b>优点：</b>不必依赖字体，天然支持多色、渐变、描边和 CSS 动画；不会出现字体加载前的空白。<br>
+            <b>缺点：</b>每个图标都要写一段标签，页面 HTML 会变长；元素数量多时渲染开销略高于文字。
+        </div>
+    </section>
+
+    <!-- ============ 03 多颜色 ============ -->
+    <section class="card">
+        <div class="card-head">
+            <span class="card-no">03</span>
+            <h2 class="card-title">多颜色测试（36px）</h2>
+            <span class="card-tip">同一批图形，四种颜色</span>
+        </div>
+        <p>两种方案都靠 <code>currentColor</code> 取色，所以更换颜色只需要改父元素的 <code>color</code>，
+            这对下导航的选中态（灰 → 橙）非常关键。</p>
+
+        <div class="color-row c-orange">
+            <span class="color-name">#ff5000</span>
+            <span class="icon-set">
+                <i class="fz-icon fz-icon-home fz-s32"></i>
+                <i class="fz-icon fz-icon-pin fz-s32"></i>
+                <i class="fz-icon fz-icon-order fz-s32"></i>
+                <i class="fz-icon fz-icon-msg fz-s32"></i>
+                <i class="fz-icon fz-icon-user fz-s32"></i>
+            </span>
+            <span class="icon-set">
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+            </span>
+        </div>
+
+        <div class="color-row c-ink">
+            <span class="color-name">#1a1a1a</span>
+            <span class="icon-set">
+                <i class="fz-icon fz-icon-home fz-s32"></i>
+                <i class="fz-icon fz-icon-pin fz-s32"></i>
+                <i class="fz-icon fz-icon-order fz-s32"></i>
+                <i class="fz-icon fz-icon-msg fz-s32"></i>
+                <i class="fz-icon fz-icon-user fz-s32"></i>
+            </span>
+            <span class="icon-set">
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+            </span>
+        </div>
+
+        <div class="color-row c-blue">
+            <span class="color-name">#2f7cf6</span>
+            <span class="icon-set">
+                <i class="fz-icon fz-icon-home fz-s32"></i>
+                <i class="fz-icon fz-icon-pin fz-s32"></i>
+                <i class="fz-icon fz-icon-order fz-s32"></i>
+                <i class="fz-icon fz-icon-msg fz-s32"></i>
+                <i class="fz-icon fz-icon-user fz-s32"></i>
+            </span>
+            <span class="icon-set">
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+            </span>
+        </div>
+
+        <div class="color-row c-grey">
+            <span class="color-name">#c9ced6</span>
+            <span class="icon-set">
+                <i class="fz-icon fz-icon-home fz-s32"></i>
+                <i class="fz-icon fz-icon-pin fz-s32"></i>
+                <i class="fz-icon fz-icon-order fz-s32"></i>
+                <i class="fz-icon fz-icon-msg fz-s32"></i>
+                <i class="fz-icon fz-icon-user fz-s32"></i>
+            </span>
+            <span class="icon-set">
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-home"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-pin"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-order"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-msg"></use></svg>
+                <svg class="spr spr-32" viewBox="0 0 1024 1024"><use href="#s-user"></use></svg>
+            </span>
+        </div>
+
+        <div class="legend">
+            每行左边是字体图标，右边是 SVG 精灵，同尺寸并排显示，视觉效果一致。
+            字体图标的最小可读尺寸约 12px，低于这个值笔画容易糊在一起，所以下导航里用的是 23px。
+        </div>
+    </section>
+
+    <!-- ============ 04 选型结论 ============ -->
+    <section class="card">
+        <div class="card-head">
+            <span class="card-no">04</span>
+            <h2 class="card-title">为什么下导航选字体图标</h2>
+            <span class="card-tip">结合三级项目已经用过 SVG，本次换一种技术</span>
+        </div>
+        <p>下导航只有 5 个图标，尺寸固定、颜色单一，并且需要整组随选中态一起变色。字体图标在这种场景下最省事：
+            5 个图标合起来只有 1.2 KB 的 woff，页面里每个 tab 只要一个 <code>&lt;i&gt;</code> 标签，
+            切换选中态时改一个 <code>color</code> 就能让图标和文字同时变橙。</p>
+        <p>三级项目里已经用过内联 SVG 精灵，四级项目有“技术要与上一步有区别”的要求，所以下导航改用字体图标，
+            同时保留 SVG 处理页面中需要多色、需要细描边的图标（定位、搜索、铃铛、八个宫格），两种方案分工协作。</p>
+    </section>
+
+    <p class="doc-foot">学号 24002060415 · 张熙淳 · 《高级网页设计I》四级项目「图像解决方案」</p>
+
+</div>
+
+</body>
+</html>
