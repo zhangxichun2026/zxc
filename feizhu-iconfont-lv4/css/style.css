@@ -151,6 +151,16 @@ input {
     padding: 0 var(--fz-gap);
 }
 
+/* 首页内容容器：手机/平板是单列；≥1024px 变 2×2 网格（见第 15 节）
+   用两个块把「分区标题 + 卡片」绑在一起，宽屏时才能整块换列 */
+.fz-home {
+    display: block;
+}
+
+.fz-home-block {
+    display: block;
+}
+
 /* 面板切换（由 js/script.js 控制 hidden 属性 + 淡入动画） */
 .fz-panel {
     animation: fz-fade-in 0.26s var(--fz-ease) both;
@@ -1142,10 +1152,86 @@ input {
     }
 }
 
-/* 桌面：外壳到 760px 封顶，内容用两栏排版，避免中间一条过窄 */
+/* 桌面：外壳放宽到 1120px，首页改成 2×2 网格 ——
+   左边 banner + 限时特惠，右边八宫格 + 热门目的地，
+   把宽屏的横向空间用完，两侧不再是一条窄内容加大片空白 */
 @media (min-width: 1024px) {
     :root {
-        --fz-shell: 760px;
+        --fz-shell: 1120px;
+        --fz-gap: 20px;
+    }
+
+    /* 视口比外壳窄时也留出左右边距，卡片不贴屏幕边缘 */
+    .fz-app {
+        width: calc(100% - 40px);
+    }
+
+    .fz-home {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+        gap: 20px;
+        align-items: stretch;
+        padding-top: 10px;
+    }
+
+    .fz-hero {
+        grid-column: 1;
+        grid-row: 1;
+        margin-top: 0;
+    }
+
+    .fz-hero-copy {
+        padding: 40px 24px 22px;
+    }
+
+    .fz-hero-title {
+        font-size: 32px;
+    }
+
+    .fz-hero-desc {
+        font-size: 13px;
+    }
+
+    .fz-quick {
+        grid-column: 2;
+        grid-row: 1;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-content: space-evenly;
+        gap: 20px 6px;
+        margin-top: 0;
+        padding: 24px 18px;
+    }
+
+    .fz-quick-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .fz-home-deals {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .fz-home-side {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    /* 网格行间距已经给了留白，块内标题不再加顶部外边距 */
+    .fz-home-block .fz-section-head {
+        margin-top: 0;
+    }
+
+    .fz-deals {
+        gap: 16px;
+    }
+
+    /* 订单 / 消息 / 我的：内容本身偏表单式，限制到舒适阅读宽度并居中 */
+    .fz-panel[data-panel="order"],
+    .fz-panel[data-panel="msg"],
+    .fz-panel[data-panel="me"] {
+        max-width: 820px;
+        margin: 0 auto;
     }
 
     .fz-dest-grid {
@@ -1158,10 +1244,14 @@ input {
     }
 }
 
-/* 超大屏：外壳不再变宽，保持阅读舒适宽度 */
+/* 超大屏：外壳到 1200px 封顶，仍保持两侧留白，避免行宽过长 */
 @media (min-width: 1440px) {
     :root {
-        --fz-shell: 780px;
+        --fz-shell: 1200px;
+    }
+
+    .fz-hero-title {
+        font-size: 36px;
     }
 }
 
