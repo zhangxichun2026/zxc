@@ -1,15 +1,20 @@
 /* ============================================================
    飞猪旅行 · 下导航字体图标
    学号：24002060415   姓名：张熙淳
-   说明：本项目下导航使用“字体图标”方案，图标被打包成
-         feizhu-iconfont.ttf / .woff，通过 @font-face 引入，
-         用 content 属性把图标“当文字”写在页面里，
-         因此可以像文字一样改字号（font-size）和颜色（color）。
+   ------------------------------------------------------------
+   图标来源：iconfont 阿里巴巴矢量图标库（www.iconfont.cn）
+   项目名称：feizhu-lv4        项目 ID：5251377
+   流程：搜索图标 → 加入购物车 → 添加至项目 → 下载至本地
+   下载得到的字体文件为 feizhu-iconfont.woff2 / .woff / .ttf，
+   由 @font-face 引入，再用 content 把图标“当文字”写在页面里，
+   因此可以像文字一样改字号（font-size）和颜色（color）。
    ============================================================ */
 
 @font-face {
     font-family: "feizhu-iconfont";
-    src: url("../fonts/feizhu-iconfont.woff") format("woff"),
+    /* iconfont 同时提供三种格式：woff2 体积最小优先，旧浏览器依次回退 */
+    src: url("../fonts/feizhu-iconfont.woff2") format("woff2"),
+         url("../fonts/feizhu-iconfont.woff") format("woff"),
          url("../fonts/feizhu-iconfont.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
@@ -30,23 +35,24 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* 五个图标对应的 Unicode 编码（与字体文件的 cmap 一一对应） */
+/* 五个下导航图标的 Unicode 编码，与 iconfont 项目里分配的编码一一对应
+   （编码来自 iconfont.css / iconfont.json，不可随意改动） */
 .fz-icon-home:before {
-    content: "\e601";
+    content: "\e600";   /* 首页 */
 }
 
 .fz-icon-pin:before {
-    content: "\e602";
+    content: "\e633";   /* 目的地（iconfont 里名为“定位”，图形更简洁） */
 }
 
 .fz-icon-order:before {
-    content: "\e603";
+    content: "\e607";   /* 订单 */
 }
 
 .fz-icon-msg:before {
-    content: "\e604";
+    content: "\e612";   /* 消息 */
 }
 
 .fz-icon-user:before {
-    content: "\e605";
+    content: "\e601";   /* 我的 */
 }
